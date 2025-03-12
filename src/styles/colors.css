@@ -1,0 +1,40 @@
+/* Background */
+.bg-btn-blue {
+  /* background: #333333 !important; */
+  background: #1371ff !important;
+}
+.bg-dark-black2 {
+  /* background: #333333 !important; */
+  background: rgb(174, 186, 192) !important;
+}
+.bg-light-black {
+  /* background: #706c61 !important; */
+  background: #146389 !important;
+}
+.bg-white {
+  background: #ffffff !important;
+}
+.bg-light-white {
+  background: #f8fafb !important;
+}
+
+/* Color */
+.color-white {
+  color: #ffffff !important;
+}
+.color-dark-black {
+  /* color: #333333 !important; */
+  color: #333333 !important;
+}
+.color-light-black {
+  color: #4a4a4a !important;
+}
+.color-red {
+  color: rgb(211, 47, 47);
+}
+.color-submit {
+  color: #ff9800 !important;
+}
+.color-blue {
+  color: #146389 !important;
+}

@@ -1,0 +1,54 @@
+.enquiry-form
+{
+    border: 1px solid rgba(6, 6, 90, 0.507);
+    border-radius: .3rem;
+    height: 100%;
+    width: 100%;
+     padding: .5rem;
+
+}
+.enquiry-form .form-heading
+{
+    /* border: 1px solid black; */
+    /* padding: .5rem; */
+    /* box-shadow: 1px 0px 10px 1px lightgray; */
+    display: flex;
+    justify-content: space-between;
+    
+}
+.enquiry-form .form-heading h6
+{
+    text-align: center;
+    color: rgb(6, 6, 90);
+}
+.enquiry-form .form-heading button
+{
+    background-color: transparent!important;
+    color: rgb(6, 6, 90)!important;
+    padding: 0!important;
+    min-width: 0;
+
+}
+
+.enquiry-form .enquiry-field,.enquiry-form .enquiry-field-button
+{
+    /* border: 2px solid pink; */
+    margin-top: .6rem;
+    /* width: 100%!important; */
+}
+.enquiry-form .enquiry-field-button
+{
+    text-align: center;
+    /* border: 1px solid red; */
+}
+.enquiry-form .enquiry-field-button button
+{
+    border-radius: .3rem;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+
+}
+.enquiry-form .enquiry-field textarea
+{
+    width: 100%!important;
+}

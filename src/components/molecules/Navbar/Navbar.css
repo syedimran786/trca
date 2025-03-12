@@ -1,0 +1,86 @@
+nav
+{
+    background-color: white!important;
+    max-width: 100vw;
+    box-shadow: 1px 0px 30px #042c686c!important;
+    position: fixed;
+    top: 0;
+}
+nav img
+{
+    width: 55px!important
+}
+nav a
+{
+    text-decoration: none!important;
+    color: #45545d!important;
+    text-transform: capitalize;
+    font-family: "Tilt Neon", sans-serif!important;
+    font-size: 1rem!important;
+}
+nav button:last-child a
+{
+    color: #ffffff!important;
+}
+
+nav h6
+{
+    font-family: "Tilt Neon", sans-serif!important;
+}
+.css-kxs2no-MuiButtonBase-root-MuiIconButton-root
+{
+    color: black!important;
+}
+
+ /* ? media quries */
+        /* Custom, iPhone Retina */ 
+        @media (min-width:320px) and  (max-width:479.98px) {
+            
+            nav
+            {
+                height: 56px;
+            }
+            nav img
+            {
+                width: 58px!important;
+            }
+            nav .MuiToolbar-root
+            {
+                justify-content: space-between;
+            }
+
+        }
+/* Extra Small Devices, Phones */ 
+        @media (min-width: 480px) and (max-width: 575.98px) {
+
+            nav
+            {
+                height: 56px;
+            }
+            nav img
+            {
+                width: 58px!important;
+            }
+            nav .MuiToolbar-root
+            {
+                justify-content: space-between;
+            }
+        }
+/* Small Devices, Tablets */
+        @media (min-width: 576px) and (max-width:767.98px) {
+
+            
+        }
+/* Medium Devices, Desktops */
+        
+        @media (min-width: 768px) and (max-width:991.98px ) {
+
+           
+        }
+
+        /* Large Devices, Wide Screens */
+
+        @media (min-width: 992px) and (max-width:1200px ) {
+
+           
+        }

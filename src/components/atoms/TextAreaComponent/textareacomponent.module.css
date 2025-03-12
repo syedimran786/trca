@@ -1,0 +1,32 @@
+.containerStyle{
+    position: relative;
+}
+
+.labelStyle{
+    font-size: 0.8rem !important;
+    color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: -8px;
+    background-color: #fff;
+    left: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+    text-align: center;
+}
+
+.textarea{
+    border-color: rgba(126, 126, 126, 0.6);
+    border-radius: 5px;
+    resize: none;
+    outline: none ;
+}
+
+.textarea:focus{
+    border-color: #2196f3;
+    border-width: 2px;
+}
+
+.textarea:hover:not(:focus) {
+    border-color: #000;
+}
+

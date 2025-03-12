@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800;900&display=swap");
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+/* scrollbar styles */
+/* width  */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 5px;
+}
+
+/* Track  */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle  */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover  */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox  */
+.hide-scrollbar {
+  -ms-overflow-style: none !important;
+  /* IE and Edge  */
+  scrollbar-width: none !important;
+  /* Firefox  */
+}
+
+/* cursor pointer */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* overflow */
+.overflowX-scroll {
+  overflow-x: scroll;
+}
+
+.overflowX-hidden {
+  overflow-x: hidden;
+}
+
+.overflowY-scroll {
+  overflow-y: scroll;
+}
+
+.overflowY-hidden {
+  overflow-y: hidden;
+}
+
+fieldset > legend {
+  width: unset;
+}
+
+.page-height {
+  height: calc(100vh - 62px);
+}
+
+.panel-height {
+  width: 100%;
+  height: calc(100vh - 9vh);
+}
+
+/* Toast */
+.Toastify__toast--info {
+  background: #3498db !important;
+  color: #ffffff !important;
+}
+
+.Toastify__toast--success {
+  background: #07bc0c !important;
+  color: #ffffff !important;
+}
+
+.Toastify__toast--warning {
+  background: #f1c40f !important;
+  color: #ffffff !important;
+}
+
+.Toastify__toast--error {
+  background: #e74c3c !important;
+  color: #ffffff !important;
+}
+
+/* z-index */
+.z-index-1000 {
+  z-index: 1000;
+}

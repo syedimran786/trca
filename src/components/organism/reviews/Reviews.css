@@ -1,0 +1,182 @@
+.reviews
+{
+    /* border: 2px solid red; */
+    padding-left: 20px!important;
+    /* height: 600px; */
+}
+.reviews hr
+{
+    width: 5%;
+    margin: 1rem auto;
+    height: .18rem;
+    background-color: #1976d2;
+}
+.reviews .MuiGrid-container
+{
+    width: 100%!important;
+    /* border: 2px solid orange; */ 
+    margin: 0;
+}
+.reviews .MuiGrid-container .MuiGrid-item
+{
+    border-radius: 0;
+    width: 100%!important;
+    /* border: 2px solid green; */
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem;
+
+}
+.slider-container
+{
+    /* border: 2px  dotted pink; */
+    width: 100%;
+}
+.slick-slide {
+    /* margin: 10px 1rem; */
+}
+
+/* the parent */
+.slick-list {
+    /* margin: 0 -27px; */
+}
+.slick-slide img {
+    /* display: block; */
+    /* width: 100%; */
+    /* height: auto; */
+ }
+/* .reviews .MuiGrid-container
+{
+    padding: 0;
+} */
+.reviews .MuiGrid-container  .card
+{
+    width: 96%!important;
+    border: rgba(61, 61, 61, 0.11) 1px solid;
+    /* box-shadow: 0px 2px 15px rgba(156, 156, 156, 0.075); */
+    border-radius: .3rem;
+    /* margin: 1rem; */
+    margin-left: 8px;
+   
+
+}
+
+.reviews .MuiGrid-container .card img
+{
+    width: 5.7rem;
+    /* height: 25%; */
+    border-radius: 50%;
+}
+
+.reviews .card-content
+{
+/* border: 2px solid brown; */
+   /* width: 80%; */
+   /* display: flex;
+   justify-content: center; */
+}
+
+.reviews .card-content p:last-child
+{
+    color: rgb(71, 66, 66);
+    line-height: 1.3rem;
+    text-align: justify;
+    margin-top: 1rem;
+    
+}
+
+/* .reviews .card-content p:last-child::before {
+    content: open-quote;
+    font-size: 2.5rem;
+}
+.reviews .card-content p:last-child::after {
+    content: close-quote;
+    font-size: 2.5rem;
+} */
+.reviews .card svg
+{
+    /* font-size: 1.2rem; */
+    /* background-color: #1976d2; */
+    /* color: white; */
+    /* border-radius: 100%; */
+    /* padding: 9px; */
+}
+.reviews .slick-prev
+{
+    left: -50px;
+}
+.reviews .slick-next
+{
+    right: -50px;
+}
+.reviews .slick-next,.slick-prev
+{
+    height: 3rem;
+    width: 3rem;
+}
+
+
+.reviews .slick-prev:before, .slick-next:before
+{
+    font-size: 2rem;
+    opacity: 1!important;
+    color: rgba(5, 9, 63, 0.493);
+}
+
+
+/* ? media quries */
+        /* Custom, iPhone Retina */ 
+        @media (min-width:320px) and  (max-width:479.98px) {
+            .reviews
+            {
+                /* padding: 0!important; */
+                margin-left: 0!important;
+                margin-right: 0!important;
+
+            }
+            /* .reviews .MuiGrid-container .MuiGrid-item
+            {
+                padding: .8rem 1.6rem;
+            } */
+         
+          
+            .reviews .MuiGrid-container .card 
+            {
+                box-shadow: none!important;
+                /* border: none; */
+                /* width: 364px!important; */
+                margin-left: 8px;
+                box-shadow: 0px 2px 15px rgba(156, 156, 156, 0.137)!important;
+
+            }
+
+        }
+/* Extra Small Devices, Phones */ 
+        @media (min-width: 480px) and (max-width: 575.98px) {
+
+            
+        }
+/* Small Devices, Tablets */
+        @media (min-width: 576px) and (max-width:767.98px) {
+
+            
+        }
+/* Medium Devices, Desktops */
+        
+        @media (min-width: 768px) and (max-width:991.98px ) {
+
+           .reviews .card-content
+           {
+            /* opacity: 0; */
+           }
+           
+
+        }
+
+        /* Large Devices, Wide Screens */
+
+        @media (min-width: 992px) and (max-width:1200px ) {
+
+           
+        }
