@@ -52,3 +52,37 @@
 {
     width: 100%!important;
 }
+
+/* ? media quries */
+        /* Custom, iPhone Retina */ 
+        @media (min-width:320px) and  (max-width:479.98px) {
+            
+            .enquiry-form .enquiry-field textarea
+            {
+                background-color: white!important;
+                color: black!important;
+            }
+
+        }
+/* Extra Small Devices, Phones */ 
+        @media (min-width: 480px) and (max-width: 575.98px) {
+
+        }
+/* Small Devices, Tablets */
+        @media (min-width: 576px) and (max-width:767.98px) {
+
+            
+        }
+/* Medium Devices, Desktops */
+        
+        @media (min-width: 768px) and (max-width:991.98px ) {
+
+           
+        }
+
+        /* Large Devices, Wide Screens */
+
+        @media (min-width: 992px) and (max-width:1200px ) {
+
+           
+        }

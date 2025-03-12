@@ -48,6 +48,10 @@ nav h6
             {
                 justify-content: space-between;
             }
+            .css-kxs2no-MuiButtonBase-root-MuiIconButton-root
+            {
+                color: black!important;
+            }
 
         }
 /* Extra Small Devices, Phones */ 
