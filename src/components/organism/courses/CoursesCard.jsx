@@ -11,7 +11,7 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import { useAuth } from '../../../App';
 
 
- function CoursesCard({name,backend,audience,frontend}) {
+ function CoursesCard({name,backend,audience,frontend,syllabus}) {
     let {openModal}=useAuth()
   return (
     <Card sx={{ }} className='card'>
@@ -35,9 +35,9 @@ import { useAuth } from '../../../App';
             variant="h6"
             sx={{}}
             component="h6"
-            text={"Backend"}
+            text={backend?"Backend":""}
         />
-              {backend.map((link,id)=>
+              {backend && backend.map((link,id)=>
               {
                return <ListItem  key={id} sx={{ display: link?'list-item':"none" }}>
                     <ListItemText
@@ -53,9 +53,9 @@ import { useAuth } from '../../../App';
             variant="h6"
             sx={{}}
             component="h6"
-            text={"Front End"}
+            text={frontend?"Front End":"Syllabus"}
         />
-              {frontend.map((link,id)=>
+              {frontend && frontend.map((link,id)=>
               {
                return <ListItem  key={id} sx={{ display: 'list-item',visibility:link?"visible":"hidden"}}>
                     <ListItemText
@@ -63,7 +63,20 @@ import { useAuth } from '../../../App';
                     />
               </ListItem>
           
+          
               })}
+{/* Syllabud  */}
+        {syllabus && syllabus.map((link,id)=>
+              {
+               return <ListItem  key={id} sx={{ display: 'list-item',visibility:link?"visible":"hidden"}}>
+                    <ListItemText
+                      primary={link}
+                    />
+              </ListItem>
+          
+          
+              })}
+               
                
           </List>
   {/* <Typography variant="body2" color="text.secondary">

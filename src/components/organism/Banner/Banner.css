@@ -1,7 +1,7 @@
 .banner
 {
     /* border: 2px solid red; */
-    height: 100vh;
+    /* height: 100vh; */
     margin-top: 4rem;
 }
 .banner .MuiGrid-container
@@ -53,6 +53,7 @@
             .banner
             {
                 margin: 2rem!important;
+                margin-top: 4rem!important;
             }
             .banner .MuiGrid-item .grid-content-box h2
             {

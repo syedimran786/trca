@@ -53,7 +53,7 @@
 }
 .batches .card-content ul
 {
-    padding: 8px;
+    padding: 10px;
 }
 .batches .card-content li
 {
@@ -93,6 +93,7 @@
     justify-content: center;
     padding-bottom: .8rem;
     padding-top: .8rem;
+    margin-top: 0.4rem;
     
 }
 

@@ -1,17 +1,22 @@
+import profile from "../../../assets/trainers/uday.png"
+
 export let mentors=[
     {
-        name:"Walter White",
-        designation:"Chief Executive Officer",
-        image:"https://bootstrapmade.com/content/demo/HeroBiz/assets/img/team/team-1.jpg"
+        name:"Jhon Miller",
+        designation:"Software Engineer and Trainer",
+        image:"https://bootstrapmade.com/content/demo/HeroBiz/assets/img/team/team-1.jpg",
+        // image:profile
     },
     {
-        name:"Sarah Jhonson",
-        designation:"Product Manager",
-        image:"https://bootstrapmade.com/content/demo/HeroBiz/assets/img/team/team-2.jpg"
+         name:"Jhon Miller",
+        designation:"Software Engineer and Trainer",
+        image:"https://bootstrapmade.com/content/demo/HeroBiz/assets/img/team/team-2.jpg",
+        // image:profile
     },
     {
-        name:"William Anderson",
-        designation:"Chief Technical Officer",
-        image:"https://bootstrapmade.com/content/demo/HeroBiz/assets/img/team/team-3.jpg"
+        name:"Jhon Miller",
+        designation:"Software Engineer and Trainer",
+        image:"https://bootstrapmade.com/content/demo/HeroBiz/assets/img/team/team-3.jpg",
+        // image:profile
     }
 ]
