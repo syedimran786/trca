@@ -24,9 +24,9 @@ export let courses=[
         id:"4",
         name:"Devops",
         audience:"For Freshers and Working Professionals",
-        // backend:["Core Java","Advance Java","Springs","Hybernate","Microservices","Rest Api's"],
-        // frontend:["HTML","CSS","Javascript","Tailwind CSS","Microservices","Rest Api's"],
-        syllabus:["SDLC","Waterfall Model","Agile Methodology","DevOps Overview","AWS","GIT","Linux OS","Shell Scripting","Maven","Jenkins","Docker","Kubernetes","Projects"]
+        backend:["Core Java","Advance Java","Springs","Hybernate","Microservices","Rest Api's"],
+        frontend:["HTML","CSS","Javascript","Tailwind CSS","Microservices","Rest Api's"],
+        // syllabus:["SDLC","Waterfall Model","Agile Methodology","DevOps Overview","AWS","GIT","Linux OS","Shell Scripting","Maven","Jenkins","Docker","Kubernetes","Projects"]
     },
     {
         id:"5",
