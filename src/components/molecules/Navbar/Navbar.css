@@ -27,10 +27,10 @@ nav h6
 {
     font-family: "Tilt Neon", sans-serif!important;
 }
-.css-kxs2no-MuiButtonBase-root-MuiIconButton-root
+/* .css-13pctpc-MuiSvgIcon-root
 {
-    color: black!important;
-}
+    color: rgb(73, 7, 62)!important;
+} */
 
  /* ? media quries */
         /* Custom, iPhone Retina */ 
@@ -50,7 +50,7 @@ nav h6
             }
             .css-kxs2no-MuiButtonBase-root-MuiIconButton-root
             {
-                color: black!important;
+                color: rgb(53, 5, 99)!important;
             }
 
         }
