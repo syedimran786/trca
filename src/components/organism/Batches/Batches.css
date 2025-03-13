@@ -36,6 +36,10 @@
     box-shadow: 1px 1px 10px 1px #071a2c33;
  
 }
+.batches .css-1qm8dkc
+{
+    margin-bottom: -18px!important;
+}
 
 .batches .card-content
 {
@@ -44,12 +48,16 @@
     /* flex-direction: row-reverse; */
     justify-content: space-between;
     /* border: 2px solid red; */
-    padding-bottom: 0;
+    padding: 0;
 
+}
+.batches .card-content ul
+{
+    padding: 8px;
 }
 .batches .card-content li
 {
-    padding: 0;
+    padding: 0!important;
     
 }
 .batches .css-4bx69l-MuiButtonBase-root-MuiListItemButton-root
@@ -59,7 +67,9 @@
 }
 .batches .css-cokf1l-MuiListItemIcon-root,.css-1k80kex
 {
-    min-width: 2.2rem;
+    min-width: 2.2rem!important;
+    color: #042d57!important;
+
 }
 .batches .css-1umw9bq-MuiSvgIcon-root
 {
