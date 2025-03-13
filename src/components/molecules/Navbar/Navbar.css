@@ -48,7 +48,7 @@ nav h6
             {
                 justify-content: space-between;
             }
-            .css-13pctpc-MuiSvgIcon-root
+            .css-13pctpc-MuiSvgIcon-root,.css-q7mezt
             {
                 color: rgb(46, 7, 82)!important;
             }
@@ -69,9 +69,9 @@ nav h6
             {
                 justify-content: space-between;
             }
-            .css-kxs2no-MuiButtonBase-root-MuiIconButton-root
+            .css-13pctpc-MuiSvgIcon-root,.css-q7mezt
             {
-                color: black!important;
+                color: rgb(46, 7, 82)!important;
             }
         }
 /* Small Devices, Tablets */
