@@ -15,7 +15,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import "../Navbar/Navbar.css"
-import logo from "../../../assets/logo.jpg";
+import logo from "../../../assets/delet.gif";
 import ButtonComponent from '../../atoms/ButtonComponent/ButtonComponent';
 import { useAuth } from '../../../App';
 import { Link, animateScroll as scroll } from 'react-scroll';
