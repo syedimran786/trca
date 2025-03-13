@@ -48,10 +48,10 @@ nav h6
             {
                 justify-content: space-between;
             }
-            .css-13pctpc-MuiSvgIcon-root,.css-q7mezt
+            /* .css-13pctpc-MuiSvgIcon-root,.css-q7mezt
             {
                 color: rgb(46, 7, 82)!important;
-            }
+            } */
 
         }
 /* Extra Small Devices, Phones */ 
@@ -69,10 +69,10 @@ nav h6
             {
                 justify-content: space-between;
             }
-            .css-13pctpc-MuiSvgIcon-root,.css-q7mezt
+            /* .css-13pctpc-MuiSvgIcon-root,.css-q7mezt
             {
                 color: rgb(46, 7, 82)!important;
-            }
+            } */
         }
 /* Small Devices, Tablets */
         @media (min-width: 576px) and (max-width:767.98px) {

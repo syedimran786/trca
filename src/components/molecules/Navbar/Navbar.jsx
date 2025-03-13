@@ -43,7 +43,7 @@ function Navbar(props) {
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={<Link to={item} smooth={true} offset={-62}>{item}</Link>} />
+              <ListItemText primary={<Link to={item} smooth={true} offset={-62}  onClick={handleDrawerToggle}>{item}</Link>} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -63,9 +63,9 @@ function Navbar(props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { sm: 'block',xs:"block"} }}
           >
-            <MenuIcon />
+            <MenuIcon  sx={{ color: { sm: 'black' ,xs:"black",lg:"white"} }} />
           </IconButton>
           {/* <Typography
             variant="h6"

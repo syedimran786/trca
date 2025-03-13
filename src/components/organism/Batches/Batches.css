@@ -57,7 +57,7 @@
     padding: 0;
     
 }
-.batches .css-cokf1l-MuiListItemIcon-root
+.batches .css-cokf1l-MuiListItemIcon-root,.css-1k80kex
 {
     min-width: 2.2rem;
 }
@@ -148,5 +148,8 @@
 
         @media (min-width: 992px) and (max-width:1200px ) {
 
-           
+            .css-83kh4z
+            {
+                max-width: 50%;
+            }
         }
