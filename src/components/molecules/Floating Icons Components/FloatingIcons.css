@@ -1,0 +1,56 @@
+.floating-icons
+{
+    /* border: 2px solid red; */
+    padding: 0.3rem;
+    position: fixed;
+    bottom: 2rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.floating-icons .whatsapp
+{
+    color: green;
+    border-radius: 100%;
+    padding: 0.1rem;
+    cursor: pointer;
+    animation: whatsapp 1s linear 2s infinite alternate;
+
+}
+
+.floating-icons .call
+{
+    color: blue;
+    border-radius: 100%;
+    margin-top: 1rem;
+    padding: 0.1rem;
+    cursor: pointer;
+    animation: call 1s linear 2s infinite alternate;
+
+}
+.floating-icons .arrow
+{
+    color: white;
+    margin-top: 1rem;
+    border-radius: 100%;
+    background-color: rgb(5, 5, 77);
+}
+
+
+@keyframes whatsapp
+{
+    0% {transform:scale(1.1)}
+    25% {transform:scale(1.2)}
+    75% {transform:scale(1.1)}
+    100% {transform:scale(1.2)}
+}
+
+@keyframes call
+{
+    0% {transform:scale(1.1)}
+    25% {transform:scale(1.2)}
+    75% {transform:scale(1.1)}
+    100% {transform:scale(1.2)}
+}

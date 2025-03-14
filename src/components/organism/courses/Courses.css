@@ -42,7 +42,7 @@
 {
     padding: 1rem 3rem;
     display: flex;
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
     justify-content: space-between;
     /* border: 2px solid red; */
     padding-bottom: 0;

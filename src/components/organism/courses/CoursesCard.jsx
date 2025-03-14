@@ -11,7 +11,7 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import { useAuth } from '../../../App';
 
 
- function CoursesCard({name,backend,audience,frontend,syllabus}) {
+ function CoursesCard({name,backend,audience,frontend,syllabus1,syllabus2}) {
     let {openModal}=useAuth()
   return (
     <Card sx={{ }} className='card'>
@@ -30,24 +30,7 @@ import { useAuth } from '../../../App';
         />
         </Box>
     <CardContent className='card-content'>
-    <List className='links' sx={{listStyleType:"disc"}}>
-    <TypoGraphyComponent
-            variant="h6"
-            sx={{}}
-            component="h6"
-            text={backend?"Backend":""}
-        />
-              {backend && backend.map((link,id)=>
-              {
-               return <ListItem  key={id} sx={{ display: link?'list-item':"none" }}>
-                    <ListItemText
-                      primary={link}
-                    />
-              </ListItem>
-          
-              })}
-               
-          </List>
+    
           <List className='links' sx={{listStyleType:"disc"}}>
           <TypoGraphyComponent
             variant="h6"
@@ -65,8 +48,8 @@ import { useAuth } from '../../../App';
           
           
               })}
-{/* Syllabud  */}
-        {syllabus && syllabus.map((link,id)=>
+{/* Syllabus  */}
+        {syllabus1 && syllabus1.map((link,id)=>
               {
                return <ListItem  key={id} sx={{ display: 'list-item',visibility:link?"visible":"hidden"}}>
                     <ListItemText
@@ -77,6 +60,35 @@ import { useAuth } from '../../../App';
           
               })}
                
+               
+          </List>
+          <List className='links' sx={{listStyleType:"disc"}}>
+    <TypoGraphyComponent
+            variant="h6"
+            sx={{}}
+            component="h6"
+            text={backend?"Backend":"syllabus"}
+        />
+              {backend && backend.map((link,id)=>
+              {
+               return <ListItem  key={id} sx={{ display: link?'list-item':"none" }}>
+                    <ListItemText
+                      primary={link}
+                    />
+              </ListItem>
+          
+              })}
+              {/* Syllabus  */}
+        {syllabus2 && syllabus2.map((link,id)=>
+              {
+               return <ListItem  key={id} sx={{ display: 'list-item',visibility:link?"visible":"hidden"}}>
+                    <ListItemText
+                      primary={link}
+                    />
+              </ListItem>
+          
+          
+              })}
                
           </List>
   {/* <Typography variant="body2" color="text.secondary">

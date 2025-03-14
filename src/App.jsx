@@ -6,6 +6,7 @@ import Home from "./components/Pages/Home";
 import Modal from 'react-modal';
 import EnquiryForm from './components/forms/Enquiry Form/EnquiryForm';
 import "./App.css"
+import FloatingIcons from './components/molecules/Floating Icons Components/FloatingIcons';
 
 
  let AuthContext=createContext(null)
@@ -50,6 +51,7 @@ function App() {
         <EnquiryForm />
       </Modal>
       <Home />
+      <FloatingIcons/>
       <Footer />
     </AuthContext.Provider>
   );
