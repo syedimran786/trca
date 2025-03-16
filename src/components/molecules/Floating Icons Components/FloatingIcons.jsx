@@ -49,7 +49,7 @@ function FloatingIcons() {
   };
   return (
     <Box className="floating-icons">
-       <a href="https://wa.me/9731661294?Welcome to%20Rest%20Code%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
+       <a href="https://wa.me/9611224400?text=Welcome%20to%20Rest%20Code%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
        <WhatsAppIcon fontSize='large' className='whatsapp'  style={whatsappStyle}/>
        </a>
         <CallIcon fontSize='large' className='call'  style={callStyle}/>
