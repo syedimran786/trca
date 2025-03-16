@@ -4,14 +4,16 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CallIcon from '@mui/icons-material/Call';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import "./FloatingIcons.css"
+import ScrollToHome from './ScrollToHome';
+import {animateScroll as scroll } from 'react-scroll';
+
 
 
 
 function FloatingIcons() {
     const [isScrolled, setIsScrolled] = useState(false);
   const threshold = 4250; // Adjust this value as needed
-  const elementRef = useRef(null);
-  console.log(window.scrollY)
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > threshold) {
@@ -19,9 +21,10 @@ function FloatingIcons() {
       } else {
         setIsScrolled(false);
       }
-    };
-  
 
+      
+    };
+   
     window.addEventListener('scroll', handleScroll);
 
     // Clean up the event listener
@@ -47,13 +50,21 @@ function FloatingIcons() {
     color: isScrolled ? 'rgb(5, 5, 77)' : 'white',
     transition: 'background-color 0.3s ease', // Smooth transition
   };
+
+  let scrollToTop=()=>
+    {
+      scroll.scrollToTop()
+    }
+
   return (
     <Box className="floating-icons">
-       <a href="https://wa.me/9611224400?text=Welcome%20to%20Rest%20Code%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
+       <a href="https://wa.me/919611224400?text=Welcome%20to%20Rest%20Code%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
        <WhatsAppIcon fontSize='large' className='whatsapp'  style={whatsappStyle}/>
        </a>
-        <CallIcon fontSize='large' className='call'  style={callStyle}/>
-        <ArrowUpwardIcon fontSize='large' className='arrow'  style={arrowStyle}/>
+       <a href="tel:+919611224400">
+            <CallIcon fontSize='large' className='call'  style={callStyle}/>
+       </a>
+        <ArrowUpwardIcon fontSize='large' className='arrow'  style={arrowStyle} onClick={scrollToTop}/>
     </Box>
   )
 }

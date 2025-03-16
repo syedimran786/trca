@@ -4,6 +4,7 @@
     color: #ffffff;
     /* position: fixed;
     bottom: 0; */
+    position: relative;
 
 }
 
@@ -35,6 +36,7 @@
     padding-left: 0px;
      padding-top: 0px;
     margin-bottom: -10px;
+    cursor: pointer;
 }
 
 .footer .links li span
@@ -61,10 +63,10 @@ hr
 
 }
 
-.footer .MuiGrid-item:nth-child(1) .grid-content-box
+/* .footer .MuiGrid-item:nth-child(1) .grid-content-box
 {
     width: 80%;
-}
+} */
 
 .map-icon
 {
@@ -72,7 +74,18 @@ hr
     cursor: pointer;
     animation:map 1s linear 2s infinite alternate;
 }
-
+.footer .arrow1
+{ 
+    display: none;
+    
+}
+@keyframes arrow1
+{
+    0% {transform:scale(1.1)}
+    25% {transform:scale(1.2)}
+    75% {transform:scale(1.1)}
+    100% {transform:scale(1.2)}
+}
 @keyframes map
 {
     0% {transform:scale(1.1);color: #e54033;}
@@ -110,6 +123,22 @@ hr
             {
                 font-size: 3rem!important;
             }
+            .footer .arrow1
+            {
+                color: rgb(5, 5, 77);
+                margin-top: 1rem;
+                border-radius: 100%;
+                background-color: white;
+                position: absolute;
+                bottom: 1rem;
+                padding: 0.1rem;
+                right: .4rem;
+                display: inline;
+                animation: arrow1 1s linear 2s infinite alternate;
+
+
+            }
+           
 
         }
 /* Extra Small Devices, Phones */ 

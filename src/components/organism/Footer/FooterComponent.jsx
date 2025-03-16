@@ -9,6 +9,7 @@ import FooterSearch from "../../molecules/Footer Components/FooterSearch"
 
 import TypoGraphyComponent from '../../atoms/TypoGraphyComponent/TypoGraphyComponent'
 import FooterLocation from '../../molecules/Footer Components/FooterLocation'
+import ScrollToHome from '../../molecules/Floating Icons Components/ScrollToHome'
 
 function FooterComponent() {
     let mapdataContent=[<FooterSearch/>,<FooterLinks/>,<FooterAddress/>,<FooterLocation/>]
@@ -24,7 +25,7 @@ function FooterComponent() {
          mapdata={mapdataContent} sx={{textAlign:"center",mb:"2rem"}} />
          <hr />
          <TypoGraphyComponent variant='body' sx={{mt:"2rem"}}  component='p' text={`© ${new Date().getFullYear()} Rest Coder Academy. All Rights Reserved`}/>
-
+        <ScrollToHome/>
     </Box>
   )
 }

@@ -119,6 +119,8 @@
 
 .placements .MuiGrid-container .card .card-content>img {
     width: 5.5rem;
+    height: 5.5rem;
+
     /* height: 100%!important; */
     /* border: .1rem solid rgba(110, 110, 112, 0.61); */
     border-radius: 50%;

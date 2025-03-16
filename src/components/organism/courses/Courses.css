@@ -99,10 +99,8 @@
             }
             .courses .card-actions button
             {
-                color: black!important;
-                padding: .5rem 3rem;
-                border-radius: 30px;
-                font-size: 1.2rem;
+               
+                border-radius: 30px!important
             }
             .courses .card-content
             {

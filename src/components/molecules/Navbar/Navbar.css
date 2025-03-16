@@ -27,6 +27,11 @@ nav h6
 {
     font-family: "Tilt Neon", sans-serif!important;
 }
+
+.active
+{
+    color: blue!important;
+}
 /* .css-13pctpc-MuiSvgIcon-root
 {
     color: rgb(73, 7, 62)!important;

@@ -43,7 +43,7 @@ function Navbar(props) {
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={<Link to={item} smooth={true} offset={-62}  onClick={handleDrawerToggle}>{item}</Link>} />
+              <ListItemText primary={<Link to={item} smooth={true} offset={-62}  onClick={handleDrawerToggle} activeClass='active' spy={true}>{item}</Link>} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -77,7 +77,7 @@ function Navbar(props) {
           <Box sx={{ display: { xs: 'none', sm: 'block',marginLeft:"auto" } }}>
             {navItems.map((item) => (
               <ButtonComponent key={item} sx={{ color: '#fff', }} variant='text'>
-                  <Link to={item} smooth={true} offset={-62}>{item}</Link>
+                  <Link to={item} smooth={true} offset={-62} activeClass='active' spy={true}>{item}</Link>
                   
                 </ButtonComponent>
                 

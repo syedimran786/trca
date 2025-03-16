@@ -8,7 +8,6 @@ import EnquiryForm from './components/forms/Enquiry Form/EnquiryForm';
 import "./App.css"
 import FloatingIcons from './components/molecules/Floating Icons Components/FloatingIcons';
 
-
  let AuthContext=createContext(null)
  Modal.setAppElement('#root');
 
@@ -36,6 +35,7 @@ function App() {
     //   transform: 'translate(-50%, -50%)',
     // },
   };
+  
   
 
   return (

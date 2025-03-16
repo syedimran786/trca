@@ -76,6 +76,12 @@
                 text-align: center;
             }
 
+            .banner .banner-content-btns button
+            {
+                border-radius: 30px!important
+
+            }
+
         }
 /* Extra Small Devices, Phones */ 
         @media (min-width: 480px) and (max-width: 575.98px) {

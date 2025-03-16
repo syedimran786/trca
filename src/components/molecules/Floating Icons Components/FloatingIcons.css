@@ -8,6 +8,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    z-index: 999;
 }
 
 .floating-icons .whatsapp
@@ -34,23 +35,76 @@
 {
     color: white;
     margin-top: 1rem;
+    padding: 0.1rem;
     border-radius: 100%;
+    cursor: pointer;
     background-color: rgb(5, 5, 77);
 }
+
 
 
 @keyframes whatsapp
 {
     0% {transform:scale(1.1)}
-    25% {transform:scale(1.2)}
+    25% {transform:scale(1.3)}
     75% {transform:scale(1.1)}
-    100% {transform:scale(1.2)}
+    100% {transform:scale(1.3)}
 }
 
 @keyframes call
 {
     0% {transform:scale(1.1)}
-    25% {transform:scale(1.2)}
+    25% {transform:scale(1.3)}
     75% {transform:scale(1.1)}
-    100% {transform:scale(1.2)}
+    100% {transform:scale(1.3)}
 }
+
+/* ? media quries */
+        /* Custom, iPhone Retina */ 
+        @media (min-width:320px) and  (max-width:479.98px) {
+            .floating-icons
+            {
+                right: 0;
+            }
+            .floating-icons .whatsapp,.floating-icons .call,.floating-icons .arrow
+            {
+                /* font-size: 1.4rem; */
+                /* background-color: transparent!important; */
+            }
+            .floating-icons .call
+            {
+                margin-bottom: 2rem;
+            }
+
+            .floating-icons .arrow
+            {
+                display: none!important;
+            }
+
+          
+
+        }
+/* Extra Small Devices, Phones */ 
+        @media (min-width: 480px) and (max-width: 575.98px) {
+
+            
+        }
+/* Small Devices, Tablets */
+        @media (min-width: 576px) and (max-width:767.98px) {
+
+            
+        }
+/* Medium Devices, Desktops */
+        
+        @media (min-width: 768px) and (max-width:991.98px ) {
+
+           
+
+        }
+
+        /* Large Devices, Wide Screens */
+
+        @media (min-width: 992px) and (max-width:1200px ) {
+
+           
+        }

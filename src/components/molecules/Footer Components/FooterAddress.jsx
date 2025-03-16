@@ -6,9 +6,10 @@ import TypoGraphyComponent from '../../atoms/TypoGraphyComponent/TypoGraphyCompo
 
 
 function FooterAddress() {
-  let address=`Keremane Sy No 6/8, Shivanahalli Village, Ragihalli Post, Jigani Hobli, Anekal Taluk, Bengaluru, Karnataka 560083, INDIA`
-let contact=`Mobile: 9876543212`;
-let email=`Email: training@gmail.com`;
+  let address=`No.58, 1st floor, 2nd cross, chikkaramaiah layout, near Sri Rama gas
+godown, Varanasi main road, Ramamurthy Nagar, 560036`
+let contact=`Mobile: 9611224400`;
+let email=`Email: enquiry@restcoderacademy.com`;
 
 
   return (

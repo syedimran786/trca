@@ -8,7 +8,7 @@ function FooterSearch() {
   return (
     <>
       
-      <TypoGraphyComponent variant='h5' component='h5' text='Lake View Aquatics'/>
+      <TypoGraphyComponent variant='h5' component='h5' text='Rest Coder Academy'/>
       <TypoGraphyComponent variant='body2' component='p' text={quote} sx={{textAlign:"justify"}}/>
 
       
