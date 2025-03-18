@@ -58,6 +58,8 @@ function Navbar(props) {
       <CssBaseline />
       <AppBar component="nav">
         <Toolbar>
+
+        <img src={logo} alt=""  />
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -67,12 +69,8 @@ function Navbar(props) {
           >
             <MenuIcon  sx={{ color: { sm: 'black' ,xs:"black",lg:"white"} }} />
           </IconButton>
-          {/* <Typography
-            variant="h6"
-            sx={{}}
-          > */}
-            {/* Lake View Aquatics */}
-            <img src={logo} alt=""  />
+        
+           
           {/* </Typography> */}
           <Box sx={{ display: { xs: 'none', sm: 'block',marginLeft:"auto" } }}>
             {navItems.map((item) => (

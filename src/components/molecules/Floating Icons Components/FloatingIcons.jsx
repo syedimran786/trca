@@ -35,19 +35,19 @@ function FloatingIcons() {
 
   const whatsappStyle = {
     backgroundColor: isScrolled ? 'white' : 'none',
-    // color: isScrolled ? 'rgb(5, 5, 77)' : 'white',
+    // color: isScrolled ? '#06065abd' : 'white',
     transition: 'background-color 0.3s ease', // Smooth transition
   };
   const callStyle = {
     backgroundColor: isScrolled ? 'white' : 'none',
-    // color: isScrolled ? 'rgb(5, 5, 77)' : 'white',
+    // color: isScrolled ? '#06065abd' : 'white',
     transition: 'background-color 0.3s ease', // Smooth transition
   };
 
   const arrowStyle = {
     backgroundColor: isScrolled ? 'white' : 'none',
     display:isScrolled?"block":"none",
-    color: isScrolled ? 'rgb(5, 5, 77)' : 'white',
+    color: isScrolled ? '#06065abd' : 'white',
     transition: 'background-color 0.3s ease', // Smooth transition
   };
 
@@ -58,7 +58,7 @@ function FloatingIcons() {
 
   return (
     <Box className="floating-icons">
-       <a href="https://wa.me/919611224400?text=Welcome%20to%20Rest%20Code%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
+       <a href="https://wa.me/919611224400?text=Welcome%20to%20Rest%20Coder%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
        <WhatsAppIcon fontSize='large' className='whatsapp'  style={whatsappStyle}/>
        </a>
        <a href="tel:+919611224400">

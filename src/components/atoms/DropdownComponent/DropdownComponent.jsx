@@ -13,7 +13,7 @@ const DropdownComponent = ({
   helperText = "",
   isOptionEqualTo = () => {},
 }) => {
-  console.log(value)
+
   return (
     <Autocomplete
       fullWidth={fullWidth}

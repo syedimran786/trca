@@ -5,10 +5,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"2",
@@ -16,10 +16,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"3",
@@ -27,10 +27,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"4",
@@ -38,10 +38,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"5",
@@ -49,10 +49,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"6",
@@ -60,10 +60,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"7",
@@ -71,10 +71,10 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Syed Imran",
+        trainer:"Uday Pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     },
     {
         id:"8",
@@ -82,9 +82,9 @@ export let batches=[
         date:"02-04-2025",
         day:"Wednesday",
         time:"10:00 AM",
-        trainer:"Jhon Miller",
+        trainer:"Uday pawar S",
         mode:"offline",
         duration:"4 months",
-        contact:"+919988002277"
+        contact:"9611224400"
     }
 ]

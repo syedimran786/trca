@@ -24,7 +24,7 @@ function App() {
 
   const customStyles = {
     overlay:{
-      backgroundColor:"rgba(6, 6, 90, 0.744)"
+      backgroundColor:"#06065abd"
     },
     // content: {
     //   top: '55%',

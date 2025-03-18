@@ -25,7 +25,7 @@ function FooterComponent() {
          mapdata={mapdataContent} sx={{textAlign:"center",mb:"2rem"}} />
          <hr />
          <TypoGraphyComponent variant='body' sx={{mt:"2rem"}}  component='p' text={`© ${new Date().getFullYear()} Rest Coder Academy. All Rights Reserved`}/>
-        <ScrollToHome/>
+        {/* <ScrollToHome/> */}
     </Box>
   )
 }

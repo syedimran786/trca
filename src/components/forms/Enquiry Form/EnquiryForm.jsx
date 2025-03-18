@@ -7,11 +7,18 @@ import "./EnquiryForm.css"
 import TypoGraphyComponent from '../../atoms/TypoGraphyComponent/TypoGraphyComponent';
 import ButtonComponent from '../../atoms/ButtonComponent/ButtonComponent';
 import { useAuth } from '../../../App';
+import { useForm } from "react-hook-form";
+import { regex } from '../../../regex/regex';
+
+
 
 function EnquiryForm() {
-    let {closeModal}=useAuth()
 
-    let [enquiryData,setenquiryData]=useState({fullname:"",mobile:"",email:"",experience:"",message:""})
+  let [enquiryData,setenquiryData]=useState({fullname:"",mobile:"",email:"",experience:"",message:""})
+  // const { register, handleSubmit, watch, formState: { errors } , control, reset} = useForm();
+  let [enquiryErrors,setenquiryErrors]=useState({})
+  let {closeModal}=useAuth()
+
     let  options =[
         { label: "Working professional - Technical roles", id: 1 },
         { label: "Working professional - Non technical", id: 2 },
@@ -19,7 +26,7 @@ function EnquiryForm() {
         { label: "College student - 1st to pre-final year", id: 4 },
         { label: "Others", id: 5 }]
     
-
+      
 let changeEnquiryData=({target:{name,value}})=>
 {
     setenquiryData({...enquiryData,[name]:value})
@@ -29,9 +36,67 @@ let changeDropDown=(value)=>
     setenquiryData({...enquiryData,experience: value.label})
 }
     
+const sendEnquiry = (e)=>
+  {
+    e.preventDefault();
+    console.log(enquiryData)
+    setenquiryErrors(validateEnquiryForm(enquiryData))
+  };
 
+
+  let validateEnquiryForm=({fullname,mobile,email,experience,message})=>
+  {
+    let errors={}
+    
+    //! fullname
+    if(!fullname)
+    {
+      errors.fullname="Full Name is Required"
+    }
+    else if(fullname.length<3)
+    {
+      errors.fullname="Full Name should be more than 3 characters"
+    }
+    else if(!regex.nameRegex.test(fullname))
+    {
+      errors.fullname="Full Name Should Contain Only Alphabets"
+    }
+
+    //! mobile
+    if(!mobile)
+      {
+        errors.mobile="Mobile is Required"
+      }
+      else if(!regex.mobileRegex.test(mobile))
+      {
+        errors.mobile="Invalid Mobile Number"
+      }
+
+      //! email
+
+      if(!email)
+      {
+        errors.email="Email is Required"
+      }
+      else if(!regex.emailRegex.test(email))
+      {
+        errors.email="Invalid Email Number"
+      }
+
+         //! experience
+    if(!experience)
+      {
+        errors.experience="Experience is Required"
+      }
+      // else if(!regex.emailRegex.test(email))
+      // {
+      //   errors.email="Invalid Email Number"
+      // }
+
+      return errors;
+  }
   return (
-    <Box   className="enquiry-form">
+    <form   className="enquiry-form" onSubmit={sendEnquiry}>
       <Box className="form-heading">
         <TypoGraphyComponent
           component="h6"
@@ -56,8 +121,8 @@ let changeDropDown=(value)=>
             variant="outlined"
             onChange={changeEnquiryData}
             name="fullname"
-            error={""}
-            helperText={""}
+            error={enquiryErrors.fullname?true:false}
+            helperText={enquiryErrors.fullname}
           />
         </Box>
         <Box className="enquiry-field">
@@ -67,8 +132,8 @@ let changeDropDown=(value)=>
             variant="outlined"
             onChange={changeEnquiryData}
             name="mobile"
-            error={""}
-            helperText={""}
+            error={enquiryErrors.mobile?true:false}
+            helperText={enquiryErrors.mobile}
           />
         </Box>
         <Box className="enquiry-field">
@@ -78,8 +143,8 @@ let changeDropDown=(value)=>
             variant="outlined"
             onChange={changeEnquiryData}
             name="email"
-            error={""}
-            helperText={""}
+            error={enquiryErrors.email?true:false}
+            helperText={enquiryErrors.email}
           />
         </Box>
         <Box className="enquiry-field">
@@ -89,6 +154,8 @@ let changeDropDown=(value)=>
             name="experience"
             onChange={changeDropDown}
             value={options}
+            helperText={enquiryErrors.experience}
+            error={enquiryErrors.experience?true:false}
           />
         </Box>
         <Box className="enquiry-field">
@@ -98,6 +165,7 @@ let changeDropDown=(value)=>
             name="message"
             value={enquiryData.message}
             onChange={changeEnquiryData}
+          
           />
         </Box>
         <Box className="enquiry-field-button">
@@ -107,12 +175,13 @@ let changeDropDown=(value)=>
             borderRadius="0px"
             paddingX={1.5}
             paddingY={0.7}
+            type="submit"
           >
             Submit
           </ButtonComponent>
         </Box>
       </Box>
-    </Box>
+    </form>
   );
 }
 

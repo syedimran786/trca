@@ -64,7 +64,7 @@ function PlacementCard() {
     <>
       <section className="slider-container">
       <Slider {...settings} className="ss">
-      {placements.map(({ name, branch, image, description, ratings }, id) => {
+      {placements.map(({ name, branch, image, description, company }, id) => {
         return ( 
           // <CardGridItem xs={12} sm={12} md={6} lg={4}>
           <Card sx={{}} className="card" key={id}>
@@ -98,7 +98,7 @@ function PlacementCard() {
               />
              </Box>
              <Box className="company">
-              <img src={"https://community.sap.com/legacyfs/online/storage/blog_attachments/2016/07/sap_hybris_blue_800_995491.jpg"} alt="" />
+              <img src={company} alt="" width={200} height={50} />
              </Box>
               </CardContent>
           </Card>

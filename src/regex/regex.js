@@ -1,5 +1,5 @@
 const regex = {
-  nameRegex: /^[A-Za-z]+$/,
+  nameRegex: /^[A-Za-z\s\.]+$/,
   mobileRegex: /^(\+|\d)[0-9]{7,16}$/,
   emailRegex: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+(\.\w{2,3})$/,
   notAllowSpecialChar: /[^a-zA-Z0-9]/,
