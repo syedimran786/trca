@@ -1,5 +1,5 @@
 import { Box, Typography,Grid, Paper } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputBoxComponent from '../../atoms/InputBoxComponent/InputBoxComponent';
 import TextAreaComponent from '../../atoms/TextAreaComponent/TextAreaComponent';
 import DropdownComponent from '../../atoms/DropdownComponent/DropdownComponent';
@@ -7,8 +7,8 @@ import "./EnquiryForm.css"
 import TypoGraphyComponent from '../../atoms/TypoGraphyComponent/TypoGraphyComponent';
 import ButtonComponent from '../../atoms/ButtonComponent/ButtonComponent';
 import { useAuth } from '../../../App';
-import { useForm } from "react-hook-form";
 import { regex } from '../../../regex/regex';
+import axios from 'axios';
 
 
 
@@ -17,7 +17,9 @@ function EnquiryForm() {
   let [enquiryData,setenquiryData]=useState({fullname:"",mobile:"",email:"",experience:"",message:""})
   // const { register, handleSubmit, watch, formState: { errors } , control, reset} = useForm();
   let [enquiryErrors,setenquiryErrors]=useState({})
-  let {closeModal}=useAuth()
+  let [issubmit,setissubmit]=useState(false)
+
+  let {closeModal,notify}=useAuth()
 
     let  options =[
         { label: "Working professional - Technical roles", id: 1 },
@@ -36,12 +38,38 @@ let changeDropDown=(value)=>
     setenquiryData({...enquiryData,experience: value.label})
 }
     
-const sendEnquiry = (e)=>
+const handleSubmit = (e)=>
   {
     e.preventDefault();
-    console.log(enquiryData)
-    setenquiryErrors(validateEnquiryForm(enquiryData))
+    
+    setenquiryErrors(()=>
+    {
+      return validateEnquiryForm(enquiryData)
+    })
+    setissubmit(true)
   };
+
+  let sendEnquiry=async ()=>
+  {
+    try
+    {
+      await axios.post('http://localhost:4005/enquiries/create/enquiry',enquiryData)
+    }
+    catch(err)
+    {
+      console.log(err)
+    }
+  }
+
+useEffect(()=>
+{
+  if(Object.keys(enquiryErrors).length===0 && issubmit)
+    {
+      sendEnquiry();
+      notify(enquiryData.fullname);
+      closeModal()
+    }
+},[enquiryErrors])
 
 
   let validateEnquiryForm=({fullname,mobile,email,experience,message})=>
@@ -96,7 +124,7 @@ const sendEnquiry = (e)=>
       return errors;
   }
   return (
-    <form   className="enquiry-form" onSubmit={sendEnquiry}>
+    <form   className="enquiry-form" onSubmit={handleSubmit}>
       <Box className="form-heading">
         <TypoGraphyComponent
           component="h6"
@@ -181,6 +209,7 @@ const sendEnquiry = (e)=>
           </ButtonComponent>
         </Box>
       </Box>
+     
     </form>
   );
 }

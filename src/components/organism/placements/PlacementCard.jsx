@@ -23,10 +23,10 @@ function PlacementCard() {
   
       dots: true,
       infinite: true,
-      slidesToShow: 3,
+      slidesToShow: 4,
       slidesToScroll: 1,
       autoplay: true,
-      arrows:false,
+      arrows:true,
       // speed: 100,
       autoplaySpeed: 3000,
       cssEase: "linear",
@@ -55,7 +55,8 @@ function PlacementCard() {
             breakpoint: 479.98,
             settings: {
               slidesToShow: 1,
-              slidesToScroll: 1
+              slidesToScroll: 1,
+              arrows:false,
             }
           }
         ]
@@ -64,7 +65,7 @@ function PlacementCard() {
     <>
       <section className="slider-container">
       <Slider {...settings} className="ss">
-      {placements.map(({ name, branch, image, description, company }, id) => {
+      {placements.map(({ name, designation, image, company }, id) => {
         return ( 
           // <CardGridItem xs={12} sm={12} md={6} lg={4}>
           <Card sx={{}} className="card" key={id}>
@@ -81,22 +82,22 @@ function PlacementCard() {
               />
               <TypoGraphyComponent
                 variant="p"
-                text={branch}
+                text={designation}
                 component="p"
-                sx={{fontWeight: "bold",color:"gray"}}
+                sx={{fontWeight: "bold",color:"#3c036b"}}
               />
           </Box>
              
-             <Box className="card-text">
+             {/* <Box className="card-text">
             
-              {/* <PlacementIcon value={ratings}/> */}
+              <PlacementIcon value={ratings}/>
               <TypoGraphyComponent
                 variant="p"
                 text={description}
                 component="p"
                 sx={{fontWeight: "normal" }}
               />
-             </Box>
+             </Box> */}
              <Box className="company">
               <img src={company} alt="" width={200} height={50} />
              </Box>

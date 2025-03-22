@@ -58,7 +58,7 @@
     border-radius: .3rem;
     /* margin: 1rem; */
     margin-left: 8px;
-    height: 380px;
+    height: 400px;
    
 
 }
@@ -81,8 +81,8 @@
 .reviews .card-content p:last-child
 {
     color: rgb(71, 66, 66);
-    line-height: 1.3rem;
-    text-align: justify;
+    line-height: 1.1rem;
+    /* text-align: justify; */
     margin-top: 1rem;
     
 }

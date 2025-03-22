@@ -5,10 +5,12 @@ nav
     box-shadow: 1px 0px 30px #042c686c!important;
     position: fixed;
     top: 0;
+    padding: .3rem 3rem;
 }
 nav img
 {
-    width: 55px!important
+    width: 100px!important;
+    transform: scale(1.3);
 }
 nav a
 {
@@ -37,17 +39,24 @@ nav h6
     color: rgb(73, 7, 62)!important;
 } */
 
+.css-1coayy3-MuiButtonBase-root-MuiIconButton-root
+{
+    margin-right: 0!important
+}
  /* ? media quries */
         /* Custom, iPhone Retina */ 
         @media (min-width:320px) and  (max-width:479.98px) {
             
             nav
             {
-                height: 56px;
+                height: 70px;
+                padding-left: 0;
+                padding-right: 0;
             }
             nav img
             {
-                width: 58px!important;
+                width: 75px!important;
+                /* transform: scale(); */
             }
             nav .MuiToolbar-root
             {

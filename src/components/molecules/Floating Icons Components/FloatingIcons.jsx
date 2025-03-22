@@ -12,7 +12,7 @@ import {animateScroll as scroll } from 'react-scroll';
 
 function FloatingIcons() {
     const [isScrolled, setIsScrolled] = useState(false);
-  const threshold = 4250; // Adjust this value as needed
+  const threshold = 3200; // Adjust this value as needed
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,10 +58,10 @@ function FloatingIcons() {
 
   return (
     <Box className="floating-icons">
-       <a href="https://wa.me/919611224400?text=Welcome%20to%20Rest%20Coder%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
+       <a href="https://wa.me/918073762257?text=Welcome%20to%20Rest%20Coder%20Academy.You%20may%20ask%20your%20queries%20here." target='_blank'>
        <WhatsAppIcon fontSize='large' className='whatsapp'  style={whatsappStyle}/>
        </a>
-       <a href="tel:+919611224400">
+       <a href="tel:+918073762257">
             <CallIcon fontSize='large' className='call'  style={callStyle}/>
        </a>
         <ArrowUpwardIcon fontSize='large' className='arrow'  style={arrowStyle} onClick={scrollToTop}/>

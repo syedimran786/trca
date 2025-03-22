@@ -8,7 +8,7 @@ import TypoGraphyComponent from '../../atoms/TypoGraphyComponent/TypoGraphyCompo
 function FooterAddress() {
   let address=`No.58, 1st floor, 2nd cross, chikkaramaiah layout, near Sri Rama gas
 godown, Varanasi main road, Ramamurthy Nagar, 560036`
-let contact=`Mobile: 9611224400`;
+let contact=`Mobile: 8073762257`;
 let email=`Email: enquiry@restcoderacademy.com`;
 
 

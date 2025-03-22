@@ -7,7 +7,7 @@
 
 .placements hr {
     width: 5%;
-    margin: 1rem auto .5rem auto ;
+    margin: 1.5rem auto ;
     height: .18rem;
     background-color: #1976d2;
 }
@@ -38,8 +38,8 @@
 .placements .slick-slide {
     /* margin: 10px 1rem; */
     /* border: 5px  dotted blue; */
-    padding-top:25px;
-    margin-top:25px;
+    /* padding-top:25px;
+    margin-top:25px; */
     /* overflow:  visible!important; */
 
 
@@ -63,7 +63,14 @@
 } */
 .placements .MuiGrid-container .card {
     width: 94% !important;
-    /* background-color: #032353; */
+    /* background-image: linear-gradient(#0054b4,#40e0d0); */
+    /* background-image: linear-gradient(#a7a6ba,#909eae); */
+    background-image: linear-gradient(#1ca9c9,#0047ab);
+    /* background-image: linear-gradient(#4b0082,#0892d0,#4b0082); */
+    /* background-image: linear-gradient(#000080,#00bfff,#000080); */
+
+
+
     box-shadow: none;
     /* color: white; */
     border-radius: .3rem;
@@ -73,7 +80,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 30rem;
+    /* height: 30rem; */
 
 
 
@@ -88,11 +95,11 @@
     justify-content: space-between;
     align-items: center;
     color: white;
-    background-color:#06065a;
+    /* background-color:#06065a; */
     border-radius: .3rem;
     height: 82%;
     text-align: center;
-    position: relative;
+    /* position: relative; */
 
 }
 .placements .card-content h6
@@ -102,20 +109,20 @@
 .placements .name-desig
 {
     /* border: 2px solid rgb(240, 240, 237)!important; */
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
-.placements .card-text
+/* .placements .card-text
 {
     width: 100%;
-    /* border: 2px solid yellow!important; */
+    border: 2px solid yellow!important;
     display: flex !important;
-    /* flex-direction: column;
+    flex-direction: column;
     justify-content: center;
-    align-items: center; */
+    align-items: center;
     height: 60%;
     position: relative;
     margin-top: 2rem;
-}
+} */
 
 .placements .MuiGrid-container .card .card-content>img {
     width: 5.5rem;
@@ -124,22 +131,22 @@
     /* height: 100%!important; */
     /* border: .1rem solid rgba(110, 110, 112, 0.61); */
     border-radius: 50%;
-    position: absolute;
-    top: -40px;
+    /* position: absolute;
+    top: -40px; */
     /* box-shadow: 1px 1px 10px 1px #03235342; */
-    /* margin-bottom: 2rem!important; */
+    margin-top: 1rem!important;
 
 }
 
-.placements .card-content .card-text p {
+/* .placements .card-content .card-text p {
     color: white;
     line-height: 1.3rem;
     text-align: justify;
-    /* margin-top: 1rem; */
+    margin-top: 1rem;
     font-size: .8rem;
     width: 100%;
 
-}
+} */
 .placements .card-content .company  img
 {
     /* border: 2px solid rgb(255, 30, 0)!important; */
@@ -151,7 +158,7 @@
     align-items: center;
     height: 80%;
     position: relative; */
-    margin-top: .5rem;
+    margin-top: 1rem;
 }
 
 /* .placements .card-content p:last-child::before {

@@ -14,7 +14,7 @@ function Home() {
     <section>
         <Banner/>
         <Courses/>
-        <Mentors/>
+        {/* <Mentors/> */}
         <Reviews/>
         <Clients/>
         <Batches/>

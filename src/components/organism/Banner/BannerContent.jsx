@@ -6,7 +6,7 @@ import { useAuth } from "../../../App";
 
 function BannerContent() {
   let {openModal}=useAuth()
-  let quote = `Level up your coding skills with personalized guidance from industry experts. Our mentors provide one-on-one support, tailored learning plans, and real-world project experience to help you master in-demand programming languages and build a portfolio that shines.  Get the practical skills you need to succeed in the tech world.`;
+  let quote = `, we are dedicated to shaping the future of coding. Our mission is to provide quality training that empowers individuals to master the skills needed for success in the tech industry. With expert instructors, practical courses, and a passion for innovation, we strive to create an environment where learners thrive and unlock their full potential. Join us as we build the next generation of coders, one line of code at a time`;
   return (
     <>
       <TypoGraphyComponent
@@ -15,19 +15,20 @@ function BannerContent() {
         component="h2"
         text={`Code Your Dreams into Reality`}
       />
-      <TypoGraphyComponent
+      {/* <TypoGraphyComponent
         variant="h4"
         sx={{fontSize:"2.6rem"}}
         component="h4"
         text={`Unlock Your Future with Code`}
         className="color-blue"
-      />
+      /> */}
       <TypoGraphyComponent
         variant="body"
         sx={{my:"1rem",color:"#45545d",fontSize:"1.1rem"}}
         component="p"
-        text={quote}
-      />
+      >
+        At <span className="color-blue">REST CODER ACADEMY</span>{quote}
+        </TypoGraphyComponent>
       <Box className="banner-content-btns">
               <ButtonComponent  sx={{px:"2rem"}} variant='contained' size="large" color="" borderRadius="0" onBtnClick={openModal}>
                     Register Now

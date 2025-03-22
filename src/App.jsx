@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import EnquiryForm from './components/forms/Enquiry Form/EnquiryForm';
 import "./App.css"
 import FloatingIcons from './components/molecules/Floating Icons Components/FloatingIcons';
-
+import { ToastContainer, toast } from 'react-toastify';
  let AuthContext=createContext(null)
  Modal.setAppElement('#root');
 
@@ -21,6 +21,7 @@ function App() {
   let closeModal=()=> {
     setIsOpen(false);
   }
+  const notify = (fullname) => toast(`Thanks ${fullname}.We will reach you soon`);
 
   const customStyles = {
     overlay:{
@@ -39,8 +40,9 @@ function App() {
   
 
   return (
-    <AuthContext.Provider className="app" value={{ openModal, closeModal }}>
+    <AuthContext.Provider className="app" value={{ openModal, closeModal,notify }}>
       <Navbar />
+      <ToastContainer className={"toast"} autoClose={2500}/>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

@@ -24,7 +24,7 @@ function ReviewsCard() {
       slidesToShow: 3,
       slidesToScroll: 1,
       autoplay: true,
-      arrows:false,
+      arrows:true,
       // speed: 100,
       autoplaySpeed: 3000,
       cssEase: "linear",
@@ -53,7 +53,9 @@ function ReviewsCard() {
             breakpoint: 479.98,
             settings: {
               slidesToShow: 1,
-              slidesToScroll: 1
+              slidesToScroll: 1,
+              arrows:false,
+
             }
           }
         ]

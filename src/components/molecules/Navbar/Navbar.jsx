@@ -15,13 +15,13 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import "../Navbar/Navbar.css"
-import logo from "../../../assets/delete.gif";
+import logo from "../../../assets/new logo1.png";
 import ButtonComponent from '../../atoms/ButtonComponent/ButtonComponent';
 import { useAuth } from '../../../App';
 import { Link, animateScroll as scroll } from 'react-scroll';
 const drawerWidth = 240;
 // const navItems = ['Home', 'Fish', 'Stones','Plants','Food','Lights','Air Pumps','Tanks & Bowls'];
-const navItems = ['Courses', 'Mentors', 'Reviews','Clients','Placements','Batches'];
+const navItems = ['Courses',  'Reviews','Clients','Placements','Batches'];
 
 
 function Navbar(props) {

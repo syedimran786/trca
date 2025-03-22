@@ -6,6 +6,8 @@ import capgemini from "../../../assets/clients/capgemini.jpg"
 import mindtree from "../../../assets/clients/mindtree.png" 
 import wipro from "../../../assets/clients/wipro.jpg" 
 import techmahindra from "../../../assets/clients/tech mahindra.jpg" 
+import skad from "../../../assets/clients/skad.jpg" 
+
 
 
 
@@ -14,6 +16,9 @@ import techmahindra from "../../../assets/clients/tech mahindra.jpg"
 export let clients=[
     {
         image:hcl,
+    },
+    {
+        image:skad,
     },
     {
         image:infosys,
