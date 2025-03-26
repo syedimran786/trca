@@ -58,7 +58,7 @@
     border-radius: .3rem;
     /* margin: 1rem; */
     margin-left: 8px;
-    height: 400px;
+    height: 380px;
    
 
 }
@@ -82,8 +82,9 @@
 {
     color: rgb(71, 66, 66);
     line-height: 1.1rem;
-    /* text-align: justify; */
+    text-align: justify;
     margin-top: 1rem;
+    font-size: 13px;
     
 }
 
