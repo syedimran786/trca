@@ -42,10 +42,8 @@ const handleSubmit = (e)=>
   {
     e.preventDefault();
     
-    setenquiryErrors(()=>
-    {
-      return validateEnquiryForm(enquiryData)
-    })
+    setenquiryErrors(
+    validateEnquiryForm(enquiryData))
     setissubmit(true)
   };
 
