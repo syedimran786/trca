@@ -2,7 +2,7 @@ export let batches=[
     {
         id:"1",
         name:"Java Full Stack",
-        date:"24-03-2025",
+        date:"24-05-2025",
         day:"Wednesday",
         time:"10:00 AM",
         trainer:"Uday pawar S",
@@ -13,7 +13,7 @@ export let batches=[
     {
         id:"2",
         name:"Python Full Stack",
-        date:"24-03-2025",
+        date:"24-05-2025",
         day:"Wednesday",
         time:"10:00 AM",
         trainer:"Uday pawar S",
@@ -24,7 +24,7 @@ export let batches=[
     {
         id:"3",
         name:"MERN Stack",
-        date:"24-03-2025",
+        date:"24-05-2025",
         day:"Wednesday",
         time:"10:00 AM",
         trainer:"Uday pawar S",
@@ -32,17 +32,28 @@ export let batches=[
         duration:"4 months",
         contact:"8073762257"
     },
-    {
+      {
         id:"4",
-        name:"Devops",
-        date:"24-03-2025",
+        name:"Reactjs & Nextjs",
+        date:"24-05-2025",
         day:"Wednesday",
         time:"10:00 AM",
         trainer:"Uday pawar S",
         mode:"offline",
-        duration:"4 months",
+        duration:"2 months",
         contact:"8073762257"
     },
+    // {
+    //     id:"4",
+    //     name:"Devops",
+    //     date:"24-03-2025",
+    //     day:"Wednesday",
+    //     time:"10:00 AM",
+    //     trainer:"Uday pawar S",
+    //     mode:"offline",
+    //     duration:"4 months",
+    //     contact:"8073762257"
+    // },
 //     {
 //         id:"5",
 //         name:"Artificial Intelligence",

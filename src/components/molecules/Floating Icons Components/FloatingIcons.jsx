@@ -12,7 +12,11 @@ import {animateScroll as scroll } from 'react-scroll';
 
 function FloatingIcons() {
     const [isScrolled, setIsScrolled] = useState(false);
-  const threshold = 3200; // Adjust this value as needed
+
+    //! for four cards in batches and courses use below value
+  // const threshold = 3200; // Adjust this value as needed
+  const threshold = 2700; // Adjust this value as needed
+
 
   useEffect(() => {
     const handleScroll = () => {

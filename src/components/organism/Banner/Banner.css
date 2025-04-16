@@ -47,12 +47,12 @@
     /* border:2px solid red */
 }
 
-.banner-content-btns a
-{
-    color: #ffffff;
-    font-size: 1.5rem;
-}
 
+
+.banner-content-btns button:hover
+{
+  background-color: rgb(31, 31, 211)!important;
+}
 
 
 /* .banner-content-btns button:active

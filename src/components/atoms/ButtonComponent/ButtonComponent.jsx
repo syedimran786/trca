@@ -76,6 +76,7 @@ const ButtonComponent = ({
       disableFocusRipple
       disableElevation
       type={type}
+      
     >
       {label}
       {children}

@@ -24,6 +24,15 @@ nav button:last-child a
 {
     color: #ffffff!important;
 }
+nav button:hover
+{
+  background-color: transparent!important;
+}
+
+nav button:last-child:hover
+{
+  background-color: rgb(31, 31, 211)!important;
+}
 
 nav h6
 {

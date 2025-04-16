@@ -33,38 +33,15 @@ import { useAuth } from '../../../App';
       </Box>
       <CardContent className="card-content">
         <List className="links">
-        <BatchItem title="Date" data={date} icon={<CalendarMonthIcon/>} />
-        <BatchItem title="Day" data={day} icon={<CalendarTodayIcon/>} />
-        <BatchItem title="Time" data={time}  icon={<AccessTimeIcon/>} />
-        <BatchItem title="Duration" data={duration} icon={<AlarmOnIcon/>} />
-        <BatchItem title="Mode" data={mode} icon={<LaptopIcon/>} />
-        <BatchItem title="Trainer" data={trainer} icon={<PersonIcon/>} />
-        <BatchItem title="Contact" data={contact} icon={<CallIcon/>} />
-
-
+          <BatchItem title="Date" data={date} icon={<CalendarMonthIcon/>} />
+          <BatchItem title="Day" data={day} icon={<CalendarTodayIcon/>} />
+          <BatchItem title="Time" data={time}  icon={<AccessTimeIcon/>} />
+          <BatchItem title="Duration" data={duration} icon={<AlarmOnIcon/>} />
+          <BatchItem title="Mode" data={mode} icon={<LaptopIcon/>} />
+          <BatchItem title="Trainer" data={trainer} icon={<PersonIcon/>} />
+          <BatchItem title="Contact" data={contact} icon={<CallIcon/>} />
         </List>
-        {/* <List className='links' sx={{listStyleType:"disc"}}>
-          <TypoGraphyComponent
-            variant="h6"
-            sx={{}}
-            component="h6"
-            text={"Front End"}
-        />
-              {frontend.map((link,id)=>
-              {
-               return <ListItem  key={id} sx={{ display: 'list-item',visibility:link?"visible":"hidden"}}>
-                    <ListItemText
-                      primary={link}
-                    />
-              </ListItem>
-          
-              })}
-               
-          </List> */}
-        {/* <Typography variant="body2" color="text.secondary">
-    Lizards are a widespread group of squamate reptiles, with over 6,000
-    species, ranging across all continents except Antarctica
-  </Typography> */}
+       
       </CardContent>
       <CardActions sx={{}} className="card-actions">
         <ButtonComponent
