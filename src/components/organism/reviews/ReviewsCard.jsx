@@ -88,7 +88,7 @@ function ReviewsCard() {
               <ReviewIcon value={ratings}/>
               <TypoGraphyComponent
                 variant="p"
-                text={description}
+                text={description.replaceAll(",", ", ")}
                 component="p"
                 sx={{fontWeight: "normal" }}
               />

@@ -27,7 +27,7 @@ function BannerContent() {
         sx={{my:"1rem",color:"#45545d",fontSize:"1.1rem"}}
         component="p"
       >
-        At <span className="color-blue">REST CODER ACADEMY</span>{quote}
+        At <span className="color-dark-blue">REST CODER ACADEMY</span>{quote}
         </TypoGraphyComponent>
       <Box className="banner-content-btns">
               <ButtonComponent  sx={{px:"2rem"}} variant='contained' size="large" color="" borderRadius="0" onBtnClick={openModal}>
