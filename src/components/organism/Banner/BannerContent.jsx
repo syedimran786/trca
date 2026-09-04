@@ -1,12 +1,39 @@
 import React from "react";
 import TypoGraphyComponent from "../../atoms/TypoGraphyComponent/TypoGraphyComponent";
-import { Box, colors, Link } from "@mui/material";
+import { Box } from "@mui/material";
 import ButtonComponent from "../../atoms/ButtonComponent/ButtonComponent";
 import { useAuth } from "../../../App";
+import { useBatches } from "../Batches/useBatches";
+import { parseBatchDate, formatBatchDateShort } from "../Batches/batchDateUtils";
+
+import wipro from "../../../assets/clients/wipro.png";
+import infosys from "../../../assets/clients/infosys.jpg";
+import accenture from "../../../assets/clients/accenture.png";
+import hcl from "../../../assets/clients/hcl.jpg";
+import capgemini from "../../../assets/clients/capgemini.png";
+
+const PROOF_LOGOS = [
+  { src: wipro, alt: "Wipro" },
+  { src: infosys, alt: "Infosys" },
+  { src: accenture, alt: "Accenture" },
+  { src: hcl, alt: "HCL" },
+  { src: capgemini, alt: "Capgemini" },
+];
 
 function BannerContent() {
-  let {openModal}=useAuth()
-  let quote = `, we are dedicated to shaping the future of coding. Our mission is to provide quality training that empowers individuals to master the skills needed for success in the tech industry. With expert instructors, practical courses, and a passion for innovation, we strive to create an environment where learners thrive and unlock their full potential. Join us as we build the next generation of coders, one line of code at a time.`;
+  const { openModal } = useAuth();
+  const batches = useBatches();
+
+  // Earliest upcoming batch across all courses
+  const nextBatch = Array.isArray(batches)
+    ? [...batches]
+        .filter((b) => {
+          const d = parseBatchDate(b.date);
+          return d && d >= new Date();
+        })
+        .sort((a, b) => parseBatchDate(a.date) - parseBatchDate(b.date))[0]
+    : null;
+
   return (
     <>
       {/* H1 carries the target keyword — "Live Full-Stack Coding Classes in
@@ -17,28 +44,32 @@ function BannerContent() {
           page unable to signal what it actually offered. */}
       <TypoGraphyComponent
         variant="h2"
-        sx={{mb:".6rem"}}
+        sx={{ mb: ".5rem", fontSize: "var(--rca-fs-h1)", lineHeight: "var(--rca-lh-tight)" }}
         component="h1"
         text={`Live Full-Stack Coding Classes in Jayanagar, Bengaluru`}
       />
-      {/* <TypoGraphyComponent
-        variant="h4"
-        sx={{fontSize:"2.6rem"}}
-        component="h4"
-        text={`Unlock Your Future with Code`}
-        className="color-blue"
-      /> */}
-      <TypoGraphyComponent
-        variant="body"
-        sx={{my:"1rem",color:"var(--rca-ink-soft)",fontSize:"1.1rem"}}
-        component="p"
-      >
-        At <span className="color-dark-blue">REST CODER ACADEMY</span>{quote}
-        </TypoGraphyComponent>
+
+      {/* TODO(copy): Uday to confirm exact placement count + companies before merge */}
+      <p className="banner-subhead">
+        200+ students placed at Wipro, Infosys, Accenture, HCL &amp; Capgemini
+        · 4 months · offline in Bengaluru
+      </p>
+
+      <div className="banner-logos" aria-label="Companies our students work at">
+        {PROOF_LOGOS.map((logo) => (
+          <img key={logo.alt} src={logo.src} alt={logo.alt} className="banner-logo" />
+        ))}
+      </div>
+
       <Box className="banner-content-btns">
-              <ButtonComponent sx={{ px: "2rem" }} variant='contained' size="large" onBtnClick={openModal}>
-                    Register Now
-                </ButtonComponent>
+        <ButtonComponent sx={{ px: "2rem" }} variant="contained" onBtnClick={openModal}>
+          Register Now
+        </ButtonComponent>
+        {nextBatch && (
+          <span className="banner-next-batch">
+            Next batch · {nextBatch.day} {formatBatchDateShort(nextBatch.date)}
+          </span>
+        )}
       </Box>
     </>
   );

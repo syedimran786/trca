@@ -49,6 +49,48 @@
 
 
 
+/* --- Hero proof elements (#9) -------------------------------------------- */
+
+.banner-subhead {
+  margin: 0 0 var(--rca-space-4);
+  font-size: var(--rca-fs-small);
+  font-weight: var(--rca-fw-semibold);
+  color: var(--rca-ink-soft);
+  line-height: var(--rca-lh-body);
+}
+
+.banner-logos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--rca-space-3);
+  margin-bottom: var(--rca-space-5);
+}
+
+.banner-logo {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+.banner-content-btns {
+  display: flex;
+  align-items: center;
+  gap: var(--rca-space-4);
+  flex-wrap: wrap;
+}
+
+.banner-next-batch {
+  font-size: var(--rca-fs-small);
+  font-weight: var(--rca-fw-semibold);
+  color: var(--rca-ink-muted);
+  white-space: nowrap;
+}
+
+/* --- end hero proof elements --------------------------------------------- */
+
 /* Hover, pressed and focus now come from ButtonComponent and design/tokens.css
    (#7). The rule that used to live here forced a hover color with !important,
    which beat every state the button declared regardless of which color it
