@@ -3,6 +3,7 @@
     /* border: 2px solid red; */
     /* height: 100vh; */
     margin-top: 4rem;
+    padding-block: var(--rca-space-6) !important; /* 32px — tighter than the 64px rca-section default */
 }
 .banner .MuiGrid-container
 {
@@ -24,7 +25,9 @@
 {
     /* border: 2px solid hotpink; */
     height: 100%!important;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .banner .banner-image
 {
@@ -61,18 +64,21 @@
 
 .banner-logos {
   display: flex;
+  flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--rca-space-3);
+  gap: var(--rca-space-4);
   margin-bottom: var(--rca-space-5);
 }
 
 .banner-logo {
-  height: 24px;
-  width: auto;
+  height: 48px;
+  /* override the broad .grid-content-box img { width: 80% } rule */
+  width: auto !important;
+  max-width: 140px;
   object-fit: contain;
   filter: grayscale(1);
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .banner-content-btns {
@@ -130,6 +136,15 @@
             .banner .banner-content-btns
             {
                 text-align: center;
+                justify-content: center;
+            }
+            .banner-logos
+            {
+                justify-content: center;
+            }
+            .banner-logo
+            {
+                height: 32px;
             }
 
             .banner .banner-image
