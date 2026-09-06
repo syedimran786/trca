@@ -206,3 +206,22 @@ hr
     min-width: var(--rca-control-h-mobile);
     min-height: var(--rca-control-h-mobile);
 }
+
+.footer .footer-socials a
+{
+    color: var(--rca-surface);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--rca-control-h-mobile);
+    min-height: var(--rca-control-h-mobile);
+    transition: opacity 120ms ease;
+}
+.footer .footer-socials a:hover
+{
+    opacity: 0.75;
+}
+.footer .footer-socials .MuiSvgIcon-root
+{
+    font-size: 1.6rem;
+}
