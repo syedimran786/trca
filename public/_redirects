@@ -1,1 +1,26 @@
-/*    /index.html   200
+# Cloudflare Pages routing.
+#
+# Before this file said `/*  /index.html  200` — a wildcard that swallowed
+# every unmatched URL and served the homepage HTML with a 200 status. A
+# mistyped path like /some-typo indexed as a canonical duplicate of the
+# homepage, and any junk URL a crawler tried came back "found." Same class
+# of bug that hid /about behind the homepage before it got its own
+# prerender.
+#
+# CF Pages' precedence resolves this cleanly. It matches in order:
+#   1. an exact static file (dist/about.html, dist/courses/mern-stack.html…)
+#   2. a Pages Function (functions/api/*, functions/admin/*, functions/auth/*)
+#   3. these _redirects rules
+# So every real route ships as its own prerendered HTML (see scripts/prerender.mjs)
+# and never hits this file. Only truly unmatched paths do — and they now get a
+# real 404 with a noindex page (public/404.html).
+#
+# The one exception is /portal — a client-side SPA route the future student
+# portal (#127) will register but which is not yet prerendered. Serving 404 for
+# it would break the preview; serving the SPA shell keeps it functional. Once
+# #127 lands and prerenders /portal/*, delete these two exceptions.
+
+/portal          /index.html    200
+/portal/*        /index.html    200
+
+/*               /404.html      404
