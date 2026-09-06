@@ -41,14 +41,21 @@
     <meta name="twitter:description" content="Live, project-based full-stack courses with placement support and EMI — and progress reports parents can actually see." />
     <meta name="twitter:image" content="https://restcoderacademy.in/favicon.png" />
 
-    <!-- Site-wide organisation node. Course entries were removed and moved to
-         the homepage component (Home.jsx) so Course + Offer schema only appears
-         on / and /courses/<slug> — Google flags Course schema on non-course
-         pages (FAQ, contact, blog, placements) as misplaced structured data. -->
+    <!-- Site-wide organisation node. Multi-typed as EducationalOrganization +
+         LocalBusiness because both are true and Google uses each differently:
+         EducationalOrganization surfaces Course + FAQPage rich results and
+         alumniOf relationships (used on /placements); LocalBusiness feeds the
+         local pack on Maps queries like "coding classes Jayanagar" and lets
+         Google associate this @id with our verified Google Business Profile.
+         geo + priceRange are the additions LocalBusiness expects but
+         EducationalOrganization does not carry. Course entries stay on the
+         homepage component (Home.jsx) — Course/Offer only appears on / and
+         /courses/<slug> because Google flags Course schema on unrelated pages
+         (FAQ, contact, blog, placements) as misplaced structured data. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
+      "@type": ["EducationalOrganization", "LocalBusiness"],
       "@id": "https://restcoderacademy.in/#org",
       "name": "Rest Coder Academy",
       "url": "https://restcoderacademy.in/",
@@ -57,6 +64,7 @@
       "description": "Live, project-based full-stack coding courses (Java, Python, MERN) and a Forward Deployed Engineering program in Bengaluru, with placement support, EMI, and weekly progress reports visible to guardians.",
       "email": "restcoderacademy@gmail.com",
       "telephone": "+91-80737-62257",
+      "priceRange": "₹35000–₹50000",
       "hasMap": "https://maps.app.goo.gl/XdZWt3oDzGUCL5KWA",
       "areaServed": "Bengaluru",
       "address": {
@@ -66,6 +74,11 @@
         "addressRegion": "Karnataka",
         "postalCode": "560041",
         "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 12.9246221,
+        "longitude": 77.5883017
       }
     }
     </script>
