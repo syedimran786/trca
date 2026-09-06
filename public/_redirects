@@ -23,4 +23,11 @@
 /portal          /index.html    200
 /portal/*        /index.html    200
 
+# Shortlink for the FDE course page. Prospects reach the site with the short
+# URL from business cards, DMs and social posts — before this rule /courses/fde
+# 404'd, so every one of those clicks landed on the not-found page. The full
+# slug (forward-deployed-engineering) stays canonical for SEO; this redirect
+# just lets the short link work.
+/courses/fde     /courses/forward-deployed-engineering    301
+
 /*               /404.html      404

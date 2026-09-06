@@ -187,7 +187,7 @@ function CoursesCard({ name, courseId, slug, paid, flagship, price, trainer, aud
             Book your seat
           </button>
           <button className="cc-counsellor" type="button" onClick={() => openModal(name)}>
-            Or talk to a counsellor first
+            {slug === 'forward-deployed-engineering' ? 'Or talk to the instructor first' : 'Or talk to a counsellor first'}
           </button>
           <Link className="cc-details" to={`/courses/${slug || courseId}`}>
             Full syllabus &amp; details →

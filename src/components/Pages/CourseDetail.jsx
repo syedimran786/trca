@@ -132,7 +132,13 @@ function CourseDetail() {
             <button className="cd-book" type="button" onClick={() => openEnroll({ courseId: course.courseId, name: course.name, paid: course.paid, price: course.price })}>
               Book your seat
             </button>
-            <button className="cd-talk" type="button" onClick={() => openModal(course.name)}>Talk to a counsellor</button>
+            {/* FDE is a ₹50k senior-track program taught by a working
+                engineer — the prospect wants to talk to the instructor, not
+                a counsellor. The other courses (parent-buyer shaped) keep
+                the counsellor framing. */}
+            <button className="cd-talk" type="button" onClick={() => openModal(course.name)}>
+              {course.slug === 'forward-deployed-engineering' ? 'Talk to the instructor' : 'Talk to a counsellor'}
+            </button>
           </div>
         </header>
 
