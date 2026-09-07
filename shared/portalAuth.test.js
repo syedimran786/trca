@@ -1,7 +1,7 @@
 // Tests for shared/portalAuth.js — session validation middleware.
 // Uses a fake D1 that mirrors the portal_sessions + portal_users schema.
 import { describe, it, expect } from "vitest";
-import { parseCookie, requirePortalAuth, requireRole, requireParentScope } from "./portalAuth.js";
+import { parseCookie, requirePortalAuth, requireRole, requireParentScope, clearSessionCookie } from "./portalAuth.js";
 
 // ---------------------------------------------------------------------------
 // Fake D1 for portal tables
@@ -76,6 +76,9 @@ describe("parseCookie", () => {
   });
   it("handles a single cookie", () => {
     expect(parseCookie("__session=abc123", "__session")).toBe("abc123");
+  });
+  it("returns null for malformed percent-encoded value", () => {
+    expect(parseCookie("__session=%ZZ", "__session")).toBeNull();
   });
 });
 
@@ -201,5 +204,18 @@ describe("requireParentScope", () => {
     const result = await requireParentScope(db, "parent-1", "student-other");
     expect(result).toBeInstanceOf(Response);
     expect(result.status).toBe(403);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// clearSessionCookie
+// ---------------------------------------------------------------------------
+describe("clearSessionCookie", () => {
+  it("returns a Set-Cookie header that expires the __session cookie", () => {
+    const header = clearSessionCookie();
+    expect(header).toContain("__session=;");
+    expect(header).toContain("HttpOnly");
+    expect(header).toContain("Max-Age=0");
+    expect(header).toContain("Path=/");
   });
 });

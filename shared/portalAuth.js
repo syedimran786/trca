@@ -17,7 +17,12 @@ const SESSION_COOKIE = "__session";
 export function parseCookie(header, name) {
   if (!header) return null;
   const match = header.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
-  return match ? decodeURIComponent(match[1]) : null;
+  if (!match) return null;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
