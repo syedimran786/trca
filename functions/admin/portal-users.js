@@ -91,10 +91,15 @@ export async function onRequestPost(context) {
 
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    await env.DB.prepare(
-      "INSERT INTO portal_users (id, provider, provider_subject, email, name, role, created_at, last_login_at) " +
-        "VALUES (?1, NULL, NULL, ?2, ?3, 'parent', ?4, ?4)"
-    ).bind(id, email, name, now).run();
+    try {
+      await env.DB.prepare(
+        "INSERT INTO portal_users (id, provider, provider_subject, email, name, role, created_at, last_login_at) " +
+          "VALUES (?1, NULL, NULL, ?2, ?3, 'parent', ?4, ?4)"
+      ).bind(id, email, name, now).run();
+    } catch {
+      // UNIQUE constraint on email — can happen on a race between two admin tabs
+      return redirect(request, "err", `Could not create account for ${email} — email may already exist.`);
+    }
     return redirect(request, "ok", `Parent account created for ${email}. They will receive role=parent on first SSO login.`);
   }
 
@@ -125,9 +130,13 @@ export async function onRequestPost(context) {
     if (dupe) return redirect(request, "err", "This parent↔student link already exists.");
 
     const id = crypto.randomUUID();
-    await env.DB.prepare(
-      "INSERT INTO parent_students (id, parent_user_id, student_user_id, relation, created_at) VALUES (?1, ?2, ?3, ?4, ?5)"
-    ).bind(id, parentId, studentId, relation || null, new Date().toISOString()).run();
+    try {
+      await env.DB.prepare(
+        "INSERT INTO parent_students (id, parent_user_id, student_user_id, relation, created_at) VALUES (?1, ?2, ?3, ?4, ?5)"
+      ).bind(id, parentId, studentId, relation || null, new Date().toISOString()).run();
+    } catch {
+      return redirect(request, "err", "Could not create link — it may already exist.");
+    }
     return redirect(request, "ok", "Parent↔student link created.");
   }
 
@@ -135,7 +144,8 @@ export async function onRequestPost(context) {
   if (action === "unlink") {
     const id = String(form.get("id") || "").trim();
     if (!id) return redirect(request, "err", "Missing link id.");
-    await env.DB.prepare("DELETE FROM parent_students WHERE id = ?1").bind(id).run();
+    const res = await env.DB.prepare("DELETE FROM parent_students WHERE id = ?1").bind(id).run();
+    if (!res.meta?.changes) return redirect(request, "err", "Link not found.");
     return redirect(request, "ok", "Link removed.");
   }
 
@@ -143,7 +153,8 @@ export async function onRequestPost(context) {
   if (action === "delete-user") {
     const id = String(form.get("id") || "").trim();
     if (!id) return redirect(request, "err", "Missing user id.");
-    await env.DB.prepare("DELETE FROM portal_users WHERE id = ?1").bind(id).run();
+    const res = await env.DB.prepare("DELETE FROM portal_users WHERE id = ?1").bind(id).run();
+    if (!res.meta?.changes) return redirect(request, "err", "User not found.");
     return redirect(request, "ok", "User removed.");
   }
 
