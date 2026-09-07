@@ -230,9 +230,19 @@ export async function verifyIdToken(idToken, providerKey, clientId, expectedNonc
 
   // Fetch JWKS and find the key matching the token's kid
   const keys = await fetchJwks(config.jwksUri);
-  const jwk = header.kid
-    ? keys.find((k) => k.kid === header.kid)
-    : keys.find((k) => k.use === "sig");
+  let jwk;
+  if (header.kid) {
+    jwk = keys.find((k) => k.kid === header.kid);
+  } else {
+    // No kid in token header — only safe if exactly one signing key exists
+    const sigKeys = keys.filter((k) => !k.use || k.use === "sig");
+    if (sigKeys.length !== 1) {
+      throw new Error(
+        `Token has no kid; JWKS has ${sigKeys.length} signing keys — cannot select unambiguously`
+      );
+    }
+    jwk = sigKeys[0];
+  }
   if (!jwk) throw new Error(`No JWKS key matching kid=${header.kid}`);
 
   // Import key and verify signature
@@ -255,8 +265,13 @@ export async function verifyIdToken(idToken, providerKey, clientId, expectedNonc
   if (config.issuer && payload.iss !== config.issuer) {
     throw new Error(`ID token iss mismatch: expected ${config.issuer}, got ${payload.iss}`);
   }
-  if (config.issuerPrefix && !String(payload.iss || "").startsWith(config.issuerPrefix)) {
-    throw new Error(`ID token iss prefix mismatch: ${payload.iss}`);
+  if (config.issuerPrefix) {
+    const iss = String(payload.iss || "");
+    // Must start with the prefix AND have additional content (the tenantId segment).
+    // Bare prefix alone ("https://login.microsoftonline.com") is not a valid issuer.
+    if (!iss.startsWith(config.issuerPrefix) || iss.length <= config.issuerPrefix.length) {
+      throw new Error(`ID token iss invalid: ${payload.iss}`);
+    }
   }
 
   // Nonce (replay protection) — only checked if we sent one
