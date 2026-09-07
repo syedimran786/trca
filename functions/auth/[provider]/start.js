@@ -3,7 +3,7 @@
 // The verifier and the CSRF state are held in short-lived HttpOnly cookies
 // rather than in a store: they only have to survive the round trip to the
 // provider and back to /callback on this same origin.
-import { codeChallenge, isConfigured, providerConfig, randomString, redirectUri } from "../../../shared/oidc.js";
+import { codeChallenge, isConfigured, providerConfig, randomString, redirectUri, safeNextPath } from "../../../shared/oidc.js";
 
 const TX_TTL = 600; // 10 minutes is longer than any real consent screen takes
 
@@ -28,10 +28,11 @@ export async function onRequestGet(context) {
   const verifier = randomString(32);
   const challenge = await codeChallenge(verifier);
 
-  // Where to land inside the app afterwards. Only a same-site path is kept —
-  // an absolute URL here would make this an open redirect.
-  const requested = new URL(request.url).searchParams.get("next") || "/portal";
-  const next = requested.startsWith("/") && !requested.startsWith("//") ? requested : "/portal";
+  // Where to land inside the app afterwards. Only a same-origin path is kept —
+  // anything else here would make this an open redirect. Validated in both
+  // places, here and again in /callback, so neither depends on the other: the
+  // cookie is attacker-influenced input by the time the callback reads it.
+  const next = safeNextPath(new URL(request.url).searchParams.get("next"));
 
   const url = new URL(cfg.authorize);
   url.searchParams.set("client_id", cfg.clientId);

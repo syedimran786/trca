@@ -3,7 +3,7 @@ import { onRequestGet as startGet } from "../functions/auth/[provider]/start.js"
 import { onRequestGet as meGet } from "../functions/auth/me.js";
 import { onRequestPost as logoutPost } from "../functions/auth/logout.js";
 import { signSession } from "../shared/auth.js";
-import { configuredProviders, isConfigured, redirectUri, codeChallenge, randomString } from "../shared/oidc.js";
+import { configuredProviders, isConfigured, redirectUri, codeChallenge, randomString, safeNextPath } from "../shared/oidc.js";
 
 const SECRET = "test-secret-value";
 const CONFIGURED = {
@@ -91,6 +91,16 @@ describe("GET /auth/:provider/start", () => {
   it("refuses a protocol-relative `next` too", async () => {
     const res = await startGet({
       request: req("https://x.test/auth/google/start?next=//evil.test"),
+      env: CONFIGURED,
+      params: { provider: "google" },
+    });
+    const next = setCookies(res).find((c) => c.startsWith("rca_oauth_next="));
+    expect(decodeURIComponent(next.split(";")[0].split("=")[1])).toBe("/portal");
+  });
+
+  it("refuses a backslash-authority `next` — the browser reads `/\\host` as `//host`", async () => {
+    const res = await startGet({
+      request: req("https://x.test/auth/google/start?next=%2F%5Cevil.test"),
       env: CONFIGURED,
       params: { provider: "google" },
     });
@@ -197,7 +207,43 @@ describe("PKCE helpers", () => {
     const seen = new Set(Array.from({ length: 50 }, () => randomString(16)));
     expect(seen.size).toBe(50);
   });
+});
 
+describe("safeNextPath — the validator both /start and /callback run", () => {
+  it("keeps a same-origin path, with its query and hash", () => {
+    expect(safeNextPath("/portal/courses")).toBe("/portal/courses");
+    expect(safeNextPath("/portal/courses?tab=live#week-2")).toBe("/portal/courses?tab=live#week-2");
+  });
+
+  it("rejects a backslash authority, which resolves off-origin in every browser", () => {
+    // The check this replaced (startsWith("/") && !startsWith("//")) passed
+    // this string, and `new URL("/\\evil.example", origin)` lands on
+    // https://evil.example/ — an open redirect at the end of a real login.
+    expect(safeNextPath("/\\evil.example")).toBe("/portal");
+    expect(safeNextPath("/\\\\evil.example")).toBe("/portal");
+    expect(safeNextPath("\\/evil.example")).toBe("/portal");
+  });
+
+  it("rejects absolute and protocol-relative URLs", () => {
+    expect(safeNextPath("https://evil.test/steal")).toBe("/portal");
+    expect(safeNextPath("//evil.test")).toBe("/portal");
+    expect(safeNextPath("javascript:alert(1)")).toBe("/portal");
+  });
+
+  it("rejects a path smuggled behind a control character", () => {
+    // The parser strips tab/newline before resolving; a prefix test does not.
+    expect(safeNextPath("/\t\\evil.test")).toBe("/portal");
+    expect(safeNextPath("\n//evil.test")).toBe("/portal");
+  });
+
+  it("falls back for anything that is not a usable string", () => {
+    expect(safeNextPath("")).toBe("/portal");
+    expect(safeNextPath(null)).toBe("/portal");
+    expect(safeNextPath(undefined)).toBe("/portal");
+  });
+});
+
+describe("redirect URI", () => {
   it("builds the redirect URI from the request origin", () => {
     expect(redirectUri(req("https://restcoderacademy.in/auth/google/start"), "google"))
       .toBe("https://restcoderacademy.in/auth/google/callback");

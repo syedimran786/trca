@@ -1,7 +1,7 @@
 // GET /auth/:provider/callback — exchange the code, verify the ID token against
 // the provider's JWKS, upsert the user in D1, and issue our own session (#42).
 import { signSession, sessionCookie, readCookie } from "../../../shared/auth.js";
-import { isConfigured, providerConfig, redirectUri, verifyIdToken } from "../../../shared/oidc.js";
+import { isConfigured, providerConfig, redirectUri, safeNextPath, verifyIdToken } from "../../../shared/oidc.js";
 
 const clearTx = (headers) => {
   for (const n of ["rca_oauth_state", "rca_oauth_verifier", "rca_oauth_next"]) {
@@ -89,8 +89,13 @@ export async function onRequestGet(context) {
   );
 
   const nextRaw = readCookie(request, "rca_oauth_next");
-  const next = nextRaw ? decodeURIComponent(nextRaw) : "/portal";
-  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/portal";
+  let next = "/portal";
+  try {
+    next = nextRaw ? decodeURIComponent(nextRaw) : "/portal";
+  } catch {
+    // A malformed percent-escape throws; the fallback is already right.
+  }
+  const safeNext = safeNextPath(next);
 
   const headers = new Headers({ location: safeNext });
   clearTx(headers);

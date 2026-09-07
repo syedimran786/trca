@@ -95,6 +95,35 @@ export function redirectUri(request, provider) {
   return `${new URL(request.url).origin}/auth/${provider}/callback`;
 }
 
+/**
+ * Reduce a caller-supplied `?next=` to a path on this origin, or `/portal`.
+ *
+ * The obvious check — starts with `/`, does not start with `//` — is not
+ * enough. For HTTP-scheme URLs the WHATWG parser (so: every browser) treats a
+ * backslash inside the authority as a slash, and `/\evil.example` resolves to
+ * `https://evil.example/`. That is an open redirect on a trusted domain, at
+ * the end of a login the user genuinely completed, which is exactly the shape
+ * a phishing flow wants.
+ *
+ * Rather than enumerate the separators, hand the string to the same parser the
+ * browser will use, against a sentinel origin. If it lands anywhere but the
+ * sentinel it was never a same-origin path, whatever it looked like. This also
+ * takes care of embedded tabs, newlines and control characters, which the
+ * parser strips before resolving and a prefix test does not see at all.
+ */
+export function safeNextPath(requested, fallback = "/portal") {
+  if (typeof requested !== "string" || !requested) return fallback;
+  const SENTINEL = "https://sentinel.invalid";
+  try {
+    const parsed = new URL(requested, SENTINEL);
+    if (parsed.origin !== SENTINEL) return fallback;
+    const path = parsed.pathname + parsed.search + parsed.hash;
+    return path.startsWith("/") ? path : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 // --- ID token verification -------------------------------------------------
 
 function parseJwt(token) {
