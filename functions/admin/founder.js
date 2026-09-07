@@ -97,7 +97,7 @@ function page(r, error, notice) {
   .hint{font-size:.8rem;color:var(--muted);margin:.3rem 0 1rem;line-height:1.5}
 </style></head>
 <body>
-  <header><h1>Founder page</h1><a href="/admin/enrollments">Enrolments</a><a href="/admin/trainers">Trainers</a><a href="/admin/batches">Batches</a><a href="/admin/founder">Founder</a><a href="/admin">Enquiries →</a></header>
+  <header><h1>Founder page</h1><a href="/admin/enrollments">Enrolments</a><a href="/admin/trainers">Trainers</a><a href="/admin/batches">Batches</a><a href="/admin/placements">Placements</a><a href="/admin/founder">Founder</a><a href="/admin">Enquiries →</a></header>
   <div class="wrap">
     ${error ? `<div class="banner err">${escapeHtml(error)}</div>` : ""}
     ${notice ? `<div class="banner ok">${escapeHtml(notice)}</div>` : ""}

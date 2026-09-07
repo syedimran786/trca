@@ -79,7 +79,7 @@ function page(notice, count, body) {
   .amt { font-weight:600; white-space:nowrap; }
 </style></head>
 <body>
-  <header><h1>Enrolments</h1><span class="count">${count} total</span><a href="/admin/trainers">Trainers</a><a href="/admin/batches">Batches</a><a href="/admin/founder">Founder</a><a href="/admin">Enquiries →</a></header>
+  <header><h1>Enrolments</h1><span class="count">${count} total</span><a href="/admin/trainers">Trainers</a><a href="/admin/batches">Batches</a><a href="/admin/placements">Placements</a><a href="/admin/founder">Founder</a><a href="/admin">Enquiries →</a></header>
   ${notice ? `<div class="notice">${escapeHtml(notice)}</div>` : ""}
   <div class="wrap">
     <table>
