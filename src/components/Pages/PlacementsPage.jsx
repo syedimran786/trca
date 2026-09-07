@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import { placements } from "../organism/placements/placement";
+import InstagramEmbed from "../organism/placements/InstagramEmbed";
 import "./PlacementsPage.css";
 
 const ORIGIN = "https://restcoderacademy.in";
@@ -32,12 +33,18 @@ function PlacementsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      ...placements.map((p) => ({
-        "@type": "Review",
-        itemReviewed: { "@id": ORG_ID },
-        author: { "@type": "Person", name: p.name },
-        reviewBody: p.description,
-      })),
+      // Review entries need an actual reviewBody — a Person who was placed
+      // but hasn't shared a written testimonial (yet) contributes to
+      // ItemList + Person nodes only. Google flags Review with an empty
+      // reviewBody as incomplete structured data.
+      ...placements
+        .filter((p) => p.description)
+        .map((p) => ({
+          "@type": "Review",
+          itemReviewed: { "@id": ORG_ID },
+          author: { "@type": "Person", name: p.name },
+          reviewBody: p.description,
+        })),
       ...placements.map((p) => ({
         "@type": "Person",
         name: p.name,
@@ -86,30 +93,49 @@ function PlacementsPage() {
         </header>
 
         <section className="pl-list">
-          {placements.map((p) => (
-            <article className="pl-card" key={p.name}>
-              <img className="pl-photo" src={p.image} alt={p.name} />
-              <div className="pl-body">
-                <h2>{p.name}</h2>
-                <p className="pl-role">{p.designation} · {p.company?.name}</p>
-                {p.company?.logo && (
-                  <img className="pl-logo" src={p.company.logo} alt={`${p.company.name} logo`} />
-                )}
-                {p.background && (
-                  <p className="pl-background"><b>Background:</b> {p.background}</p>
-                )}
-                {p.journey && (
-                  <p className="pl-journey"><b>Journey:</b> {p.journey}</p>
-                )}
-                <p className="pl-quote">&ldquo;{p.description}&rdquo;</p>
-                {p.linkedin && (
-                  <a className="pl-verify" href={p.linkedin} target="_blank" rel="noopener noreferrer">
-                    Verify on LinkedIn &rarr;
-                  </a>
-                )}
-              </div>
-            </article>
-          ))}
+          {placements.map((p) => {
+            // IG-embed-only variant: no photo / role / testimonial in
+            // `placement.js` — the embed IS the case study. Render the
+            // embed inside the same pl-card shell so it fits the section's
+            // layout without a bespoke wrapper.
+            if (p.instagram_url) {
+              return (
+                <article className="pl-card pl-card--instagram" key={p.name}>
+                  <div className="pl-body pl-body--instagram">
+                    <h2>{p.name}</h2>
+                    {p.background && (
+                      <p className="pl-background"><b>Background:</b> {p.background}</p>
+                    )}
+                    <InstagramEmbed url={p.instagram_url} alumnusName={p.name} />
+                  </div>
+                </article>
+              );
+            }
+            return (
+              <article className="pl-card" key={p.name}>
+                <img className="pl-photo" src={p.image} alt={p.name} />
+                <div className="pl-body">
+                  <h2>{p.name}</h2>
+                  <p className="pl-role">{p.designation} · {p.company?.name}</p>
+                  {p.company?.logo && (
+                    <img className="pl-logo" src={p.company.logo} alt={`${p.company.name} logo`} />
+                  )}
+                  {p.background && (
+                    <p className="pl-background"><b>Background:</b> {p.background}</p>
+                  )}
+                  {p.journey && (
+                    <p className="pl-journey"><b>Journey:</b> {p.journey}</p>
+                  )}
+                  <p className="pl-quote">&ldquo;{p.description}&rdquo;</p>
+                  {p.linkedin && (
+                    <a className="pl-verify" href={p.linkedin} target="_blank" rel="noopener noreferrer">
+                      Verify on LinkedIn &rarr;
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </section>
 
         <section className="pl-foot">
