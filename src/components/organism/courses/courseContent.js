@@ -6,7 +6,7 @@
 export const courseContent = {
   "forward-deployed-engineering": {
     intro:
-      "Forward Deployed Engineering (FDE) is the program a former Head of Engineering built to train the kind of hire he was tired of not being able to find: someone who can walk into a real codebase, ship a feature end-to-end, own its production behaviour, and talk to the customer about it. It is intentionally different from a bootcamp — you spend most of your time in a real repo, not a slide deck.",
+      "Forward Deployed Engineering (FDE) is the program a former Head of Engineering built to train the kind of hire he was tired of not being able to find: someone who can walk into a real codebase, ship a feature end-to-end, own its production behaviour, and talk to the customer about it. It is intentionally different from a bootcamp — you spend most of your time in a real repo, not a slide deck. A note on the name: we teach the original discipline the term comes from — production engineering under senior mentorship, in the sense Palantir used it. AI companies have recently reused “Forward Deployed Engineer” for LLM/RAG/agent-deployment roles; that is a different job and we do not teach it here.",
     whoFor: [
       "Recent CS/IT graduates who can write basic code but have never shipped anything a stranger uses.",
       "Working engineers 0–3 years in who feel they got hired but never actually got trained.",

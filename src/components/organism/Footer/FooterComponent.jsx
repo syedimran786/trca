@@ -4,6 +4,8 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import CallIcon from "@mui/icons-material/Call";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import {
   ADDRESS,
   EMAIL,
@@ -58,6 +60,14 @@ const LINK_GROUPS = [
   },
 ];
 
+/* Keyed by SOCIAL_PROFILES[].id. data/contact.js stays JSX-free, so the icon
+   lives here rather than in the data. An unrecognised id renders its label as
+   text instead of disappearing. */
+const SOCIAL_ICONS = {
+  instagram: InstagramIcon,
+  linkedin: LinkedInIcon,
+};
+
 const QUOTE =
   "In the world of technology, persistence is more valuable than talent. " +
   "Never give up on your dreams, no matter the obstacles.";
@@ -110,14 +120,21 @@ function FooterComponent() {
                 <MailOutlineIcon fontSize="small" />
               </a>
             </li>
-            {/* Renders nothing until the real URLs are in data/contact.js. */}
-            {SOCIAL_PROFILES.map((s) => (
-              <li key={s.href}>
-                <a href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}>
-                  {s.label}
-                </a>
-              </li>
-            ))}
+            {SOCIAL_PROFILES.map((profile) => {
+              const Icon = SOCIAL_ICONS[profile.id];
+              return (
+                <li key={profile.href}>
+                  <a
+                    href={profile.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={profile.label}
+                  >
+                    {Icon ? <Icon fontSize="small" /> : profile.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

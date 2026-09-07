@@ -1,0 +1,31 @@
+# HTTP headers Cloudflare Pages injects on every response.
+# Applied top-to-bottom; more-specific rules override less-specific ones.
+#
+# What's here: three security headers that are safe on any request shape and
+# add real protection.
+#   Strict-Transport-Security  — belt-and-suspenders on top of the HTTP→HTTPS
+#     301 CF already does. Tells any browser that has visited once to refuse
+#     plain HTTP for this host and every subdomain for two years, and marks the
+#     header eligible for the HSTS preload list (add the domain at
+#     hstspreload.org when we're confident www→apex is stable).
+#   X-Frame-Options DENY       — no other origin may frame our pages, killing
+#     clickjacking of the enrolment flow. Modern browsers prefer CSP
+#     frame-ancestors, but this header is respected by older ones and costs
+#     nothing to keep alongside.
+#   Permissions-Policy          — every powerful browser API defaults to off.
+#     None of the pages here ask for camera / mic / geolocation / usb /
+#     payment / xr, so denying by default has zero UX cost and shrinks the
+#     drive-by surface. Extend if a page later needs one.
+#
+# What's deliberately NOT here:
+#   Content-Security-Policy — inline JSON-LD (organisation + per-course +
+#     placements) plus GTM plus the Cloudflare email-decode script plus
+#     Razorpay checkout all sit inside one page, so a real CSP needs
+#     'unsafe-inline' or a per-request nonce and a curated allowlist for six
+#     hosts. Landing that as one big change on production without a report-only
+#     staging pass would silently break payments. It gets its own ticket.
+
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), usb=(), payment=(), xr-spatial-tracking=()

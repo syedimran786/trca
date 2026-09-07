@@ -33,15 +33,23 @@ export const WHATSAPP_URL =
   encodeURIComponent("Hello! Can I get more info on courses and placements.");
 
 /**
- * ⚠️ UNCONFIRMED — the academy's LinkedIn and Instagram URLs are not in this
- * repo, and #107 asks for a social row.
+ * The academy's institutional social profiles.
  *
- * Add them here and the footer renders them; leave them out and it renders
- * only the channels we can actually stand behind. They are omitted rather
- * than pointed at a guessed handle, for the same reason #9 leaves the
- * placement count empty: a dead social link in the footer of every page is
- * worse than no link.
- *
- *   { label: "LinkedIn", href: "https://www.linkedin.com/company/..." },
+ * These were unconfirmed when #107 was written and the row rendered empty
+ * rather than pointing at a guessed handle. #143 confirmed both against the
+ * live accounts, so the row renders now. `id` selects the icon in
+ * FooterComponent — this file stays JSX-free so it can be imported from
+ * anywhere, including tests and non-React code.
  */
-export const SOCIAL_PROFILES = [];
+export const SOCIAL_PROFILES = [
+  {
+    id: "instagram",
+    label: "Rest Coder Academy on Instagram",
+    href: "https://www.instagram.com/restcoderacademy/",
+  },
+  {
+    id: "linkedin",
+    label: "Rest Coder Academy on LinkedIn",
+    href: "https://www.linkedin.com/company/rest-coder-academy/",
+  },
+];
