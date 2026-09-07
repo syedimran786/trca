@@ -15,6 +15,12 @@ function BannerContent() {
 
   return (
     <>
+      {/* H1 carries the target keyword — "Live Full-Stack Coding Classes in
+          Jayanagar, Bengaluru" matches the title tag pattern and the query
+          intent ("coding classes Jayanagar" has no dedicated local competitor
+          per the SEO audit). The old aspirational headline "Code Your Dreams
+          Into Reality" shared zero keywords with the title tag and left the
+          page unable to signal what it actually offered. */}
       <TypoGraphyComponent
         variant="h2"
         component="h1"

@@ -23,19 +23,33 @@ import qsg from "../../../assets/clients/qsg.jpg"
 // visitor will call us on.
 //
 // Fields:
-//   name         (required) student name as shown publicly
-//   designation  (required) role at the company
-//   image        (required) bundled photo import
-//   company      (required) { name, logo }
-//   description  (required) student's own words / testimonial
-//   background   (optional) one-line context ("BCA from Karnataka College…")
-//   courseSlug   (optional) slug from courses.js — renders "Course" chip and
-//                links alumniOf to that specific course
-//   journey      (optional) 1–3 sentences: where they started → what they did
-//                at RCA → what they do now. Used as `worksFor.description` in
-//                schema and rendered as a case-study paragraph in the card.
-//   linkedin     (optional) full LinkedIn URL — surfaced as `sameAs` in schema
-//                and rendered as a "Verify on LinkedIn" link.
+//   name          (required) student name as shown publicly
+//   designation   (optional) role at the company — required for the traditional
+//                 photo+name+company card; omitted for IG-embed-only records
+//                 whose visual comes entirely from the embed
+//   image         (optional) bundled photo import — same optionality reasoning
+//                 as designation
+//   company       (optional) { name, logo } — same again
+//   description   (optional) student's own words / testimonial
+//   background    (optional) one-line context ("BCA from Karnataka College…")
+//   courseSlug    (optional) slug from courses.js — renders "Course" chip and
+//                 links alumniOf to that specific course
+//   journey       (optional) 1–3 sentences: where they started → what they did
+//                 at RCA → what they do now. Used as `worksFor.description` in
+//                 schema and rendered as a case-study paragraph in the card.
+//   linkedin      (optional) full LinkedIn URL — surfaced as `sameAs` in schema
+//                 and rendered as a "Verify on LinkedIn" link.
+//   instagram_url (optional) direct URL to the placement post or Reel on
+//                 @restcoderacademy. When set, `PlacementCard` renders IG's
+//                 official embed as the primary content of the card in place
+//                 of the photo+name+company layout — the embed carries the
+//                 real caption, real like count and real IG branding, which
+//                 is stronger social proof than a screenshot could ever be.
+//                 Photo, designation and company become optional when this
+//                 field is set (see Kota Akshay Rathna Kumar below). Fallback
+//                 rendering when the embed fails to load is documented in
+//                 `InstagramEmbed.jsx`. Wider scope (YouTube + LinkedIn URLs,
+//                 admin CRUD) is queued as portal work in #145.
 export let placements=[
     {
         name:"Ashish Jadhav",
@@ -67,6 +81,17 @@ export let placements=[
         company:{name:"Quality Service Group", logo:qsg},
          description:`Uday sir is a fantastic Java trainer who breaks down complex topics into simple, easy-to-grasp concepts. He creates a supportive learning environment that encourages students to ask questions and grow. What sets him apart is his ability to adapt to different learning styles and pace.I'm grateful for his mentorship, which helped me achieve my goals. Finally thanks to all the team members of rest coder academy.`
 
+    },
+    // First IG-embed-only placement — proof-of-concept for the pattern
+    // described in #145. Kota Akshay's placement was announced on
+    // @restcoderacademy on 2026-09-06 (post ID Dc5o-Uatcxz). Photo, company
+    // and testimonial aren't in `placement.js` yet — the embed carries all
+    // of that visually. When the D1 + admin CRUD lands, this record migrates
+    // as-is (the instagram_url field becomes an instagram_url column).
+    {
+        name: "Kota Akshay Rathna Kumar",
+        background: "B.Tech CSE, 2026 graduate",
+        instagram_url: "https://www.instagram.com/p/Dc5o-Uatcxz/",
     },
 
 ]

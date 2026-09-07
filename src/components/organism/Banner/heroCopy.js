@@ -20,12 +20,27 @@
  */
 
 export const heroCopy = {
-  /** Kept from the current hero — #9 does not touch the headline. */
-  title: "Code Your Dreams Into Reality",
+  /**
+   * #142's H1, adopted on merge rather than overwritten.
+   *
+   * This file originally kept "Code Your Dreams Into Reality" on the grounds
+   * that #9 does not touch the headline. #142 then landed the keyword H1 and
+   * verified it on prod, so keeping the old line would have quietly reverted a
+   * shipped SEO fix — the headline moves here instead, where the rest of the
+   * above-the-fold copy already lives.
+   */
+  title: "Live Full-Stack Coding Classes in Jayanagar, Bengaluru",
 
-  /** Replaces the mission paragraph. Specific, and every part is checkable. */
+  /**
+   * Replaces the mission paragraph. Specific, and every part is checkable.
+   *
+   * Trimmed when #142's H1 arrived: it used to open "Offline full-stack
+   * training in Jayanagar, Bengaluru", which now repeats the headline word for
+   * word. The subhead earns its line by carrying what the H1 does not — which
+   * languages, how long, and who teaches it.
+   */
   subhead:
-    "Offline full-stack training in Jayanagar, Bengaluru — Java, Python and MERN. Four months in a classroom, taught by Uday Pawar S.",
+    "Java, Python and MERN — four months in a classroom, taught by Uday Pawar S.",
 
   proofLabel: "Our students work at",
 
