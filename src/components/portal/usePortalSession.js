@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { readMeResponse } from "./session-contract";
 
 /**
  * The portal's session, read from GET /auth/me (#110).
@@ -8,32 +9,28 @@ import { useCallback, useEffect, useState } from "react";
  *   loading        — the first /auth/me is in flight
  *   authenticated  — signed in; `user` is set
  *   anonymous      — not signed in; `providers` says what can be offered
+ *   unconfigured   — the portal has no OAuth secrets or no database yet, so
+ *                    there is nothing to sign in to (#42's "coming soon")
  *   offline        — the request itself failed, which on a metered rural
  *                    connection is the common case rather than the edge one,
  *                    and is not the same thing as being signed out (#111)
+ *
+ * The backend is #112/#113/#114. This file owns none of it — it owns only the
+ * reading of it, which is why the response mapping sits in session-contract.js
+ * where it can be tested.
  */
 export function usePortalSession() {
-  const [status, setStatus] = useState("loading");
-  const [user, setUser] = useState(null);
-  const [providers, setProviders] = useState([]);
+  const [state, setState] = useState({ status: "loading", user: null, providers: [] });
 
   const load = useCallback(async () => {
     try {
       const res = await fetch("/auth/me", { credentials: "same-origin" });
-      const body = await res.json().catch(() => ({}));
-      setProviders(Array.isArray(body.providers) ? body.providers : []);
-      if (res.ok && body.authenticated) {
-        setUser(body.user || null);
-        setStatus("authenticated");
-      } else {
-        setUser(null);
-        setStatus("anonymous");
-      }
+      const body = await res.json().catch(() => null);
+      setState(readMeResponse(res.status, body));
     } catch {
       // A network failure is not a sign-out. Saying "please sign in" here
       // would send a student round a login loop they cannot complete.
-      setUser(null);
-      setStatus("offline");
+      setState({ status: "offline", user: null, providers: [] });
     }
   }, []);
 
@@ -48,9 +45,8 @@ export function usePortalSession() {
       // Ignore: the cookie may already be gone, and the screen below still
       // needs to return the student to the login page either way.
     }
-    setUser(null);
-    setStatus("anonymous");
+    setState({ status: "anonymous", user: null, providers: ["google", "microsoft"] });
   }, []);
 
-  return { status, user, providers, reload: load, logout };
+  return { ...state, reload: load, logout };
 }

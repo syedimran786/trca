@@ -9,10 +9,10 @@ import "./Portal.css";
  *
  * Reuses the site's brand and tokens — no new design language, per the ticket.
  *
- * Inert until configured: `providers` comes from /auth/me, which reports which
- * providers actually have a client id and secret. With none, the screen says
- * "coming soon" instead of rendering buttons that would send a student to a
- * provider error page.
+ * Inert until configured: when the backend has no OAuth secrets or no
+ * database it answers /auth/me with a 503, and this screen says "coming soon"
+ * rather than rendering buttons that would send a student to an error page.
+ * The auth backend itself is #112/#113/#114 — this screen only reads it.
  */
 
 const PROVIDER_LABEL = { google: "Google", microsoft: "Microsoft" };
@@ -62,6 +62,7 @@ function PortalLogin() {
 
   const next = (location.state && location.state.from) || "/portal";
   const offline = status === "offline";
+  const unconfigured = status === "unconfigured";
 
   return (
     <main className="portal portal-login">
@@ -84,7 +85,7 @@ function PortalLogin() {
           </p>
         )}
 
-        {!offline && providers.length === 0 && (
+        {!offline && (unconfigured || providers.length === 0) && (
           <div className="portal-soon" role="status">
             <p className="portal-soon-title">Coming soon</p>
             <p>
@@ -94,7 +95,7 @@ function PortalLogin() {
           </div>
         )}
 
-        {providers.map((p) => (
+        {!offline && !unconfigured && providers.map((p) => (
           <a
             key={p}
             className="portal-provider"

@@ -32,7 +32,9 @@ function PortalRoute({ children }) {
     );
   }
 
-  if (status === "anonymous") {
+  // Nothing to sign in to yet — send them to the login screen, which is where
+  // the "coming soon" copy lives, rather than looping them through a guard.
+  if (status === "anonymous" || status === "unconfigured") {
     // `state` carries where they were headed, so signing in returns them there
     // rather than dumping everyone on the home screen.
     return <Navigate to="/portal/login" replace state={{ from: location.pathname }} />;
