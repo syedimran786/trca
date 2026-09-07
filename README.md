@@ -191,16 +191,20 @@ running app rather than in a browser tab. `MainActivity` uses
 `launchMode="singleTask"`, so that redirect resumes the existing task instead of
 starting a second copy of the app.
 
-Nothing consumes that callback yet — the auth endpoints are #113 and the login
-screen is #110. This ticket (#109) only guarantees the scheme is registered and
-the shell builds.
+**Nothing sends or consumes that callback yet, on either side.** No server
+route redirects to `rca://`, and no JavaScript listens for it — #109 only
+guaranteed the scheme is registered and the shell builds.
 
-### Known gap
+Registering the scheme is also not sufficient on its own: a session cookie set
+during a system-browser sign-in does not reach the app's WebView, so resuming
+the app is not the same as being signed in inside it. See #163 for the gap and
+what closing it needs.
 
-`index.html` still pulls the slick-carousel stylesheets from cdnjs. On the web
-that is a render-blocking third-party request (#105); **inside the app it also
-means those styles simply do not exist offline.** Worth closing #105 before the
-app ships to students on rural connections.
+### Offline assets
+
+slick-carousel's stylesheets used to be pulled from cdnjs, which meant they
+simply did not exist offline inside the app. #105 bundled them; every style the
+app needs now ships in the APK.
 
 ## History / context
 
