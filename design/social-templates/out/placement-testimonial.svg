@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img">
+  <defs>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#146389"/>
+      <stop offset="55%" stop-color="#10506F"/>
+      <stop offset="100%" stop-color="#03084C"/>
+    </linearGradient>
+    <linearGradient id="portraitFade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#03084C" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#03084C" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="portraitClip"><rect x="620" y="0" width="460" height="948"/></clipPath></defs>
+
+  <rect width="1080" height="1080" fill="url(#field)"/>
+
+  <!-- Portrait, bled to the right edge and to the bottom bar. The fade is what
+       lets the name sit over the photo and stay readable whoever is in it. -->
+  
+    <g clip-path="url(#portraitClip)">
+      <rect x="620" y="0" width="460" height="948" rx="0" fill="#F8FAFB" fill-opacity="0.14"/>
+      <rect x="620" y="0" width="460" height="948" rx="0" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2" stroke-dasharray="10 8"/>
+      <text x="850" y="474" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="600" fill="#FFFFFF" fill-opacity="0.6" text-anchor="middle" letter-spacing="3">STUDENT PHOTO</text>
+    </g>
+  <rect x="620" y="0" width="260" height="948" fill="url(#portraitFade)"/>
+
+  
+    <g transform="translate(96 72)">
+      <circle cx="38" cy="38" r="38" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.5"/>
+      <text x="38" y="38" dy="0.36em" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="39.52" font-weight="700" fill="#FFFFFF" text-anchor="middle">R</text>
+    </g>
+  <text x="192" y="126" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="600" fill="#FFFFFF" fill-opacity="0.85" letter-spacing="4">PLACED</text>
+
+  <!-- Name + role. Two lines, because "Senior Software Engineer" at a long
+       company name is the normal case, not the exception. -->
+  <text x="96" y="268" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="62" font-weight="700" fill="#FFFFFF" text-anchor="start"><tspan x="96" dy="0">Ashish Kumar</tspan></text>
+  <text x="96" y="336" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="32" font-weight="500" fill="#22D3EE" text-anchor="start"><tspan x="96" dy="0">Software Engineer, Infosys</tspan></text>
+
+  <!-- Salary and year of passing. A pill, so a blank salary collapses the
+       badge instead of leaving a labelled empty box. -->
+  <g>
+    <rect x="96" y="386" width="196" height="58" rx="29" fill="#FF9800"/>
+    <text x="116" y="425" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="32" font-weight="700" fill="#03084C">₹6.5 LPA</text>
+  </g>
+  <text x="304" y="425" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="26" font-weight="500" fill="#FFFFFF" fill-opacity="0.75">Y.O.P 2024</text>
+
+  <!-- The quote. The oversized mark is decoration and is hidden from the
+       accessible name, which the caption carries anyway. -->
+  <text x="90" y="609.75" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="150" font-weight="700" fill="#FFFFFF" fill-opacity="0.16" aria-hidden="true">“</text>
+  <text x="96" y="585.75" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="34" font-weight="400" fill="#FFFFFF" text-anchor="start"><tspan x="96" dy="0">I joined with no coding</tspan><tspan x="96" dy="49.3">background. The live projects</tspan><tspan x="96" dy="49.3">and the mock interviews are</tspan><tspan x="96" dy="49.3">what got me through the Infosys</tspan><tspan x="96" dy="49.3">rounds.</tspan></text>
+
+  <!-- Bottom bar: college, phones, URL. -->
+  <rect x="0" y="948" width="1080" height="132" fill="#01062F"/>
+  <rect x="0" y="948" width="1080" height="4" fill="#FF9800"/>
+  <text x="96" y="1000" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="25" font-weight="500" fill="#FFFFFF" text-anchor="start"><tspan x="96" dy="0">BMS College of Engineering</tspan></text>
+  <text x="984" y="1000" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="25" font-weight="600" fill="#FFFFFF" fill-opacity="0.9" text-anchor="end">8073762257 · 9110424403</text>
+  <text x="984" y="1044" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="27" font-weight="600" fill="#FFFFFF" fill-opacity="0.92" text-anchor="end" letter-spacing="0.4">restcoderacademy.in</text>
+</svg>

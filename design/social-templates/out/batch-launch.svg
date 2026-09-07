@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img">
+  <defs>
+    <linearGradient id="navyField" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#03084C"/>
+      <stop offset="100%" stop-color="#01062F"/>
+    </linearGradient>
+    <clipPath id="uday"><circle cx="880" cy="300" r="150"/></clipPath></defs>
+
+  <rect width="1080" height="1080" fill="url(#navyField)"/>
+
+  <!-- Cyan accents: a corner wedge and a rule, the two marks the existing
+       graphics use. Kept off the safe margin so a story crop keeps them. -->
+  <path d="M 1080 0 L 1080 300 L 780 0 Z" fill="#22D3EE" fill-opacity="0.10"/>
+  <rect x="0" y="0" width="10" height="1080" fill="#22D3EE" fill-opacity="0.55"/>
+
+  
+    <g transform="translate(96 68)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.5"/>
+      <text x="36" y="36" dy="0.36em" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="37.44" font-weight="700" fill="#FFFFFF" text-anchor="middle">R</text>
+    </g>
+
+  <text x="96" y="266" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="27" font-weight="700" fill="#22D3EE" letter-spacing="6">NEW BATCH</text>
+
+  <text x="96" y="348" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="66" font-weight="700" fill="#FFFFFF" text-anchor="start"><tspan x="96" dy="0">Java Full Stack</tspan><tspan x="96" dy="73.9">Development</tspan></text>
+
+  <text x="96" y="487.92" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="34" font-weight="600" fill="#FF9800">Starts 22 September</text>
+
+  <!-- Instructor, circle-cropped top right. -->
+  
+    <g clip-path="url(#uday)">
+      <rect x="730" y="150" width="300" height="300" rx="0" fill="#F8FAFB" fill-opacity="0.14"/>
+      <rect x="730" y="150" width="300" height="300" rx="0" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="2" stroke-dasharray="10 8"/>
+      <text x="880" y="300" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="22" font-weight="600" fill="#FFFFFF" fill-opacity="0.6" text-anchor="middle" letter-spacing="3">INSTRUCTOR</text>
+    </g>
+  <circle cx="880" cy="300" r="150" fill="none" stroke="#22D3EE" stroke-opacity="0.65" stroke-width="4"/>
+  <text x="880" y="492" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="30" font-weight="700" fill="#FFFFFF" text-anchor="middle">Uday</text>
+  <text x="880" y="526" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="24" font-weight="400" fill="#FFFFFF" fill-opacity="0.7" text-anchor="middle">Lead Instructor</text>
+
+  <rect x="96" y="580" width="120" height="3" fill="#22D3EE" fill-opacity="0.7"/>
+  
+    <g>
+      <circle cx="109" cy="631" r="13" fill="#22D3EE" fill-opacity="0.18"/>
+      <path d="M 103 631 l 4 5 l 8 -10" fill="none" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="136" y="640" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="500" fill="#FFFFFF">Live classes</text>
+    </g>
+    <g>
+      <circle cx="533" cy="631" r="13" fill="#22D3EE" fill-opacity="0.18"/>
+      <path d="M 527 631 l 4 5 l 8 -10" fill="none" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="560" y="640" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="500" fill="#FFFFFF">Real projects</text>
+    </g>
+    <g>
+      <circle cx="109" cy="699" r="13" fill="#22D3EE" fill-opacity="0.18"/>
+      <path d="M 103 699 l 4 5 l 8 -10" fill="none" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="136" y="708" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="500" fill="#FFFFFF">Placement support</text>
+    </g>
+    <g>
+      <circle cx="533" cy="699" r="13" fill="#22D3EE" fill-opacity="0.18"/>
+      <path d="M 527 699 l 4 5 l 8 -10" fill="none" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="560" y="708" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="500" fill="#FFFFFF">EMI available</text>
+    </g>
+
+  <!-- CTA. Sits below whatever height the feature grid ended up. -->
+  <g transform="translate(96 860)">
+    <rect x="0" y="0" width="300" height="76" rx="38" fill="#FF9800"/>
+    <text x="150" y="49" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="32" font-weight="700" fill="#03084C" text-anchor="middle">Join Now</text>
+    <text x="330" y="49" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="600" fill="#FFFFFF" fill-opacity="0.9">8073762257</text>
+  </g>
+
+  <text x="984" y="1022" font-family="Montserrat, 'Segoe UI', system-ui, sans-serif" font-size="27" font-weight="600" fill="#FFFFFF" fill-opacity="0.92" text-anchor="end" letter-spacing="0.4">restcoderacademy.in</text>
+</svg>
