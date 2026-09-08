@@ -1,45 +1,33 @@
+// GET /auth/me — who the caller is, or 401. The portal's route guard calls
+// this on load; it is also what tells the login screen whether any provider is
+// configured, so the UI never has to guess.
+import { getSession } from "../../shared/auth.js";
+import { configuredProviders } from "../../shared/oidc.js";
 
-// GET /auth/me — returns the currently signed-in portal user.
-//
-// Response 200: { id, name, email, avatar_url, role }
-// Response 401: { error: "unauthorized", reason: "..." }
-// Response 503: { error: "service_unavailable" }   (DB not configured)
-//
-// The session is validated against the portal_sessions D1 table — expiry
-// and revocation are both checked server-side (see shared/portalAuth.js).
-// Part of #114.
-
-import { requirePortalAuth } from "../../shared/portalAuth.js";
+const json = (body, status) =>
+  new Response(JSON.stringify(body), {
+    status,
+    // A session-bearing response must never be cached by a proxy or the app shell.
+    headers: { "content-type": "application/json", "cache-control": "no-store" },
+  });
 
 export async function onRequestGet(context) {
   const { request, env } = context;
-
-  const auth = await requirePortalAuth(request, env);
-  if (auth instanceof Response) return auth;
-
-  // Fetch the full user profile for the validated session
-  const user = await env.DB.prepare(
-    "SELECT id, name, email, avatar_url, role FROM portal_users WHERE id = ?1"
-  )
-    .bind(auth.userId)
-    .first();
-
-  if (!user) {
-    // Session references a user that no longer exists — treat as logged out
-    return new Response(JSON.stringify({ error: "unauthorized", reason: "User not found" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-    });
-  }
-
-  return new Response(
-    JSON.stringify({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      avatar_url: user.avatar_url,
-      role: user.role,
-    }),
-    { status: 200, headers: { "Content-Type": "application/json; charset=utf-8" } }
+  const providers = configuredProviders(env);
+  const session = await getSession(request, env);
+  if (!session) return json({ authenticated: false, providers }, 401);
+  return json(
+    {
+      authenticated: true,
+      providers,
+      user: {
+        id: session.uid,
+        email: session.email,
+        name: session.name,
+        picture: session.picture,
+        role: session.role || "student",
+      },
+    },
+    200,
   );
 }

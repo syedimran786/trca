@@ -21,6 +21,10 @@
   --rca-ink-muted:     #4A4A4A;  /* secondary copy */
   --rca-ink-soft:      #45545D;  /* long-form paragraphs */
   --rca-ink-invert:    #FFFFFF;
+  /* Muted copy on a dark surface. There was an inverted ink but no
+     inverted muted, so anything secondary on the navy footer had to be
+     either full white or a one-off rgba (#107). */
+  --rca-ink-invert-soft: #C0C4DA;
 
   /* --- Surface & line --------------------------------------------------- */
   --rca-surface:       #FFFFFF;

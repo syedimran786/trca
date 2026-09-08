@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../App";
-import { placements } from "../organism/placements/placement";
+import usePlacements from "../organism/placements/usePlacements";
 import InstagramEmbed from "../organism/placements/InstagramEmbed";
 import "./PlacementsPage.css";
 
@@ -12,13 +12,18 @@ const ORG_ID = `${ORIGIN}/#org`;
 
 function PlacementsPage() {
   const { openModal } = useAuth();
+  // Reads D1 via /api/placements/list, falling back to the bundled array (#145).
+  // The JSON-LD below is rebuilt from whatever this returns, so a placement
+  // published in the admin form is structured-data-visible on the same render
+  // as it is visible on the page — they cannot drift apart.
+  const { placements } = usePlacements();
   const url = `${ORIGIN}/placements`;
   const description =
     "Real students, real companies, real roles. See where Rest Coder Academy graduates work — " +
     "SAP Hybris, HCL Technologies, SKAD IT Solutions and more.";
 
   // Structured data graph. Every entry here is derived from real, named
-  // placements in placement.js — nothing is invented. Emits:
+  // placements — from D1, or the bundled array — nothing is invented. Emits:
   //  - Review (existing) — reads as reviews of the org, not disconnected.
   //  - Person + alumniOf (new) — makes the alumni relationship explicit,
   //    which Google's SGE and AI answer engines pick up when asked

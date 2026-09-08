@@ -1,163 +1,111 @@
-// OIDC helpers — PKCE, state cookie signing/verification, JWKS-based ID token
-// verification. Used by functions/auth/[provider]/start.js + callback.js.
-//
-// No external dependencies — only Web Crypto API (available in CF Workers).
+// Provider configuration and the PKCE helpers for the student portal's
+// Authorization Code flow (#42). No third-party auth SDK — this is hand-rolled
+// against Google's and Microsoft's OIDC endpoints so the portal owns its
+// sessions on the Cloudflare stack.
 
-// ---------------------------------------------------------------------------
-// Provider configuration
-// ---------------------------------------------------------------------------
-export const PROVIDER_CONFIG = {
+export const PROVIDERS = {
   google: {
-    authEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-    tokenEndpoint: "https://oauth2.googleapis.com/token",
-    jwksUri: "https://www.googleapis.com/oauth2/v3/certs",
-    issuer: "https://accounts.google.com",
+    label: "Google",
+    authorize: "https://accounts.google.com/o/oauth2/v2/auth",
+    token: "https://oauth2.googleapis.com/token",
+    jwks: "https://www.googleapis.com/oauth2/v3/certs",
+    issuers: ["https://accounts.google.com", "accounts.google.com"],
     scope: "openid email profile",
-    clientIdEnv: "GOOGLE_CLIENT_ID",
-    clientSecretEnv: "GOOGLE_CLIENT_SECRET",
+    clientId: (env) => env.GOOGLE_CLIENT_ID,
+    clientSecret: (env) => env.GOOGLE_CLIENT_SECRET,
   },
   microsoft: {
-    authEndpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-    tokenEndpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-    jwksUri: "https://login.microsoftonline.com/common/discovery/v2.0/keys",
-    // Microsoft's issuer includes the tenantId — varies per organisation.
-    // Validate by prefix only (https://login.microsoftonline.com/{tenantId}/v2.0).
-    issuerPrefix: "https://login.microsoftonline.com/",
+    label: "Microsoft",
+    // `common` lets both work and personal accounts sign in; MS_TENANT can pin
+    // it to one directory later without touching this file.
+    authorize: (env) =>
+      `https://login.microsoftonline.com/${env.MS_TENANT || "common"}/oauth2/v2.0/authorize`,
+    token: (env) =>
+      `https://login.microsoftonline.com/${env.MS_TENANT || "common"}/oauth2/v2.0/token`,
+    jwks: (env) =>
+      `https://login.microsoftonline.com/${env.MS_TENANT || "common"}/discovery/v2.0/keys`,
+    // Microsoft's issuer carries the signing tenant's id, which is not known
+    // ahead of time under `common`, so it is checked by shape.
+    issuers: null,
     scope: "openid email profile",
-    clientIdEnv: "MS_CLIENT_ID",
-    clientSecretEnv: "MS_CLIENT_SECRET",
+    clientId: (env) => env.MS_CLIENT_ID,
+    clientSecret: (env) => env.MS_CLIENT_SECRET,
   },
 };
 
-// ---------------------------------------------------------------------------
-// Base64url helpers (no dependency on Node.js Buffer)
-// ---------------------------------------------------------------------------
-export function base64urlEncode(buffer) {
-  const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
-  let binary = "";
-  for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const val = (v, env) => (typeof v === "function" ? v(env) : v);
+
+export function providerConfig(name, env) {
+  const p = PROVIDERS[name];
+  if (!p) return null;
+  return {
+    name,
+    label: p.label,
+    authorize: val(p.authorize, env),
+    token: val(p.token, env),
+    jwks: val(p.jwks, env),
+    issuers: p.issuers,
+    scope: p.scope,
+    clientId: p.clientId(env),
+    clientSecret: p.clientSecret(env),
+  };
 }
 
-export function base64urlDecode(s) {
-  const padded = s.replace(/-/g, "+").replace(/_/g, "/");
-  const pad = padded.length % 4;
-  const full = pad ? padded + "=".repeat(4 - pad) : padded;
-  const binary = atob(full);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes;
+/**
+ * Whether a provider can actually be used right now.
+ *
+ * The portal is inert until configured (#42): with no client id and secret the
+ * login screen says "coming soon" rather than showing a button that leads to a
+ * provider error page. This is the single check behind that.
+ */
+export function isConfigured(name, env) {
+  const c = providerConfig(name, env);
+  return Boolean(c && c.clientId && c.clientSecret && env && env.SESSION_SECRET);
 }
 
-// ---------------------------------------------------------------------------
-// PKCE — Authorization Code + PKCE (S256)
-// ---------------------------------------------------------------------------
-// code_verifier: 32 random bytes → base64url (43 chars, within 43-128 spec)
-export function generateCodeVerifier() {
-  const bytes = new Uint8Array(32);
-  crypto.getRandomValues(bytes);
-  return base64urlEncode(bytes);
+export function configuredProviders(env) {
+  return Object.keys(PROVIDERS).filter((n) => isConfigured(n, env));
 }
 
-// code_challenge = base64url(SHA-256(ASCII(code_verifier)))
-export async function generateCodeChallenge(verifier) {
-  const encoded = new TextEncoder().encode(verifier);
-  const digest = await crypto.subtle.digest("SHA-256", encoded);
-  return base64urlEncode(new Uint8Array(digest));
+// --- PKCE ------------------------------------------------------------------
+
+function b64url(bytes) {
+  const s = btoa(String.fromCharCode(...new Uint8Array(bytes)));
+  return s.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-// Random state value (16 bytes → 22-char base64url)
-export function generateState() {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return base64urlEncode(bytes);
+export function randomString(bytes = 32) {
+  return b64url(crypto.getRandomValues(new Uint8Array(bytes)));
 }
 
-// Random nonce value (16 bytes)
-export function generateNonce() {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return base64urlEncode(bytes);
+export async function codeChallenge(verifier) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+  return b64url(digest);
 }
 
-// ---------------------------------------------------------------------------
-// State cookie — HMAC-SHA256 signed, carries state + codeVerifier + nonce
-// ---------------------------------------------------------------------------
-// Cookie value: base64url(json).base64url(hmac)
-// `exp` is a Unix ms timestamp; the cookie itself is Max-Age=600 but we also
-// check exp in software so a replayed cookie after expiry is rejected.
-
-async function hmacKey(secret) {
-  return crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign", "verify"]
-  );
+/**
+ * Where the provider sends the browser back to.
+ *
+ * Always this site's own origin, never the `rca://` deep link: a custom scheme
+ * cannot be a registered OAuth redirect for a confidential client, and the
+ * token exchange has to happen server-side anyway. The native shell is handed
+ * back at the end of the callback instead — see functions/auth/[provider]/callback.
+ */
+export function redirectUri(request, provider) {
+  return `${new URL(request.url).origin}/auth/${provider}/callback`;
 }
 
-export async function signStateCookie(payload, secret) {
-  const data = base64urlEncode(new TextEncoder().encode(JSON.stringify(payload)));
-  const key = await hmacKey(secret);
-  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(data));
-  return `${data}.${base64urlEncode(new Uint8Array(sig))}`;
-}
+// --- ID token verification -------------------------------------------------
 
-export async function verifyStateCookie(cookie, secret) {
-  if (!cookie) return null;
-  const dot = cookie.lastIndexOf(".");
-  if (dot < 0) return null;
-  const data = cookie.slice(0, dot);
-  const sig = cookie.slice(dot + 1);
-
-  // Constant-time HMAC check
-  const key = await hmacKey(secret);
-  let sigBytes;
-  try {
-    sigBytes = base64urlDecode(sig);
-  } catch {
-    return null;
-  }
-  const valid = await crypto.subtle.verify(
-    "HMAC",
-    key,
-    sigBytes,
-    new TextEncoder().encode(data)
-  );
-  if (!valid) return null;
-
-  // Decode payload
-  let payload;
-  try {
-    const json = new TextDecoder().decode(base64urlDecode(data));
-    payload = JSON.parse(json);
-  } catch {
-    return null;
-  }
-
-  // Software expiry check (belt-and-suspenders — cookie Max-Age also expires it)
-  if (!payload.exp || Date.now() > payload.exp) return null;
-
-  return payload;
-}
-
-// ---------------------------------------------------------------------------
-// JWKS-based ID token verification
-// ---------------------------------------------------------------------------
-// Supports RS256 (RSA + SHA-256) and ES256 (ECDSA P-256 + SHA-256).
-// Both Google and Microsoft use RS256 in practice.
-
-function parseJwtParts(token) {
-  const parts = token.split(".");
+function parseJwt(token) {
+  const parts = String(token || "").split(".");
   if (parts.length !== 3) return null;
+  const pad = (s) => s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4);
   try {
-    const header = JSON.parse(new TextDecoder().decode(base64urlDecode(parts[0])));
-    const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(parts[1])));
     return {
-      header,
-      payload,
-      signingInput: `${parts[0]}.${parts[1]}`,
+      header: JSON.parse(atob(pad(parts[0]))),
+      payload: JSON.parse(atob(pad(parts[1]))),
+      signed: `${parts[0]}.${parts[1]}`,
       signature: parts[2],
     };
   } catch {
@@ -165,119 +113,68 @@ function parseJwtParts(token) {
   }
 }
 
-async function fetchJwks(uri) {
-  // CF's fetch respects Cache-Control from the upstream JWKS endpoint
-  // (Google: 1h, Microsoft: 24h). cacheTtl is a floor in case the upstream
-  // header is shorter.
-  const res = await fetch(uri, { cf: { cacheTtl: 3600, cacheEverything: false } });
-  if (!res.ok) throw new Error(`JWKS fetch failed: ${res.status}`);
-  const { keys } = await res.json();
-  if (!Array.isArray(keys)) throw new Error("JWKS response missing keys array");
-  return keys;
+function bytesFromB64url(s) {
+  const p = s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4);
+  const bin = atob(p);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
 }
 
-async function importRsaKey(jwk) {
-  return crypto.subtle.importKey(
-    "jwk",
-    jwk,
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["verify"]
-  );
-}
+/**
+ * Verify an ID token against the provider's JWKS.
+ *
+ * The signature check is the point: without it, anyone who can reach the
+ * callback could post a self-made token and be issued a session. Fails closed —
+ * every error path returns null rather than a partially trusted payload.
+ */
+export async function verifyIdToken(idToken, cfg, fetchImpl = fetch) {
+  const jwt = parseJwt(idToken);
+  if (!jwt || jwt.header.alg !== "RS256" || !jwt.header.kid) return null;
 
-async function importEcKey(jwk) {
-  return crypto.subtle.importKey(
-    "jwk",
-    jwk,
-    { name: "ECDSA", namedCurve: "P-256" },
-    false,
-    ["verify"]
-  );
-}
-
-async function verifyJwtSignature(alg, cryptoKey, signingInput, signature) {
-  const sigBytes = base64urlDecode(signature);
-  const inputBytes = new TextEncoder().encode(signingInput);
-  if (alg === "RS256") {
-    return crypto.subtle.verify("RSASSA-PKCS1-v1_5", cryptoKey, sigBytes, inputBytes);
+  let keys;
+  try {
+    const res = await fetchImpl(cfg.jwks);
+    if (!res.ok) return null;
+    keys = (await res.json()).keys;
+  } catch {
+    return null;
   }
-  if (alg === "ES256") {
-    return crypto.subtle.verify(
-      { name: "ECDSA", hash: "SHA-256" },
-      cryptoKey,
-      sigBytes,
-      inputBytes
+  const jwk = (keys || []).find((k) => k.kid === jwt.header.kid);
+  if (!jwk) return null;
+
+  let ok = false;
+  try {
+    const key = await crypto.subtle.importKey(
+      "jwk",
+      { ...jwk, alg: "RS256", ext: true },
+      { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+      false,
+      ["verify"],
     );
+    ok = await crypto.subtle.verify(
+      "RSASSA-PKCS1-v1_5",
+      key,
+      bytesFromB64url(jwt.signature),
+      new TextEncoder().encode(jwt.signed),
+    );
+  } catch {
+    return null;
   }
-  return false;
-}
+  if (!ok) return null;
 
-// Verifies signature + standard claims (iss, aud, exp, iat, nonce).
-// Returns the payload object on success. Throws a descriptive Error on failure.
-// providerKey: 'google' | 'microsoft'
-// expectedNonce: the nonce generated at start, stored in the state cookie
-export async function verifyIdToken(idToken, providerKey, clientId, expectedNonce) {
-  const parsed = parseJwtParts(idToken);
-  if (!parsed) throw new Error("Malformed ID token");
-
-  const { header, payload, signingInput, signature } = parsed;
-  const alg = header.alg;
-  if (!["RS256", "ES256"].includes(alg)) throw new Error(`Unsupported alg: ${alg}`);
-
-  const config = PROVIDER_CONFIG[providerKey];
-  if (!config) throw new Error(`Unknown provider: ${providerKey}`);
-
-  // Fetch JWKS and find the key matching the token's kid
-  const keys = await fetchJwks(config.jwksUri);
-  let jwk;
-  if (header.kid) {
-    jwk = keys.find((k) => k.kid === header.kid);
-  } else {
-    // No kid in token header — only safe if exactly one signing key exists
-    const sigKeys = keys.filter((k) => !k.use || k.use === "sig");
-    if (sigKeys.length !== 1) {
-      throw new Error(
-        `Token has no kid; JWKS has ${sigKeys.length} signing keys — cannot select unambiguously`
-      );
-    }
-    jwk = sigKeys[0];
-  }
-  if (!jwk) throw new Error(`No JWKS key matching kid=${header.kid}`);
-
-  // Import key and verify signature
-  const cryptoKey = alg === "RS256" ? await importRsaKey(jwk) : await importEcKey(jwk);
-  const sigValid = await verifyJwtSignature(alg, cryptoKey, signingInput, signature);
-  if (!sigValid) throw new Error("ID token signature invalid");
-
-  // Standard claim checks
+  const p = jwt.payload;
   const now = Math.floor(Date.now() / 1000);
-  if (!payload.exp || payload.exp < now) throw new Error("ID token expired");
-  if (payload.iat && payload.iat > now + 300) throw new Error("ID token iat too far in future");
+  if (!p.sub) return null;
+  if (p.exp && now > p.exp) return null;
+  // 60s of slack for clock drift between us and the provider.
+  if (p.nbf && now + 60 < p.nbf) return null;
 
-  // aud can be a string or an array (Google sometimes sends an array)
-  const audList = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
-  if (!audList.includes(clientId)) {
-    throw new Error(`ID token aud mismatch (got: ${audList.join(",")})`);
-  }
+  const aud = Array.isArray(p.aud) ? p.aud : [p.aud];
+  if (!aud.includes(cfg.clientId)) return null;
 
-  // Issuer check — Google: exact match; Microsoft: prefix (includes tenantId)
-  if (config.issuer && payload.iss !== config.issuer) {
-    throw new Error(`ID token iss mismatch: expected ${config.issuer}, got ${payload.iss}`);
-  }
-  if (config.issuerPrefix) {
-    const iss = String(payload.iss || "");
-    // Must start with the prefix AND have additional content (the tenantId segment).
-    // Bare prefix alone ("https://login.microsoftonline.com") is not a valid issuer.
-    if (!iss.startsWith(config.issuerPrefix) || iss.length <= config.issuerPrefix.length) {
-      throw new Error(`ID token iss invalid: ${payload.iss}`);
-    }
-  }
+  if (cfg.issuers && !cfg.issuers.includes(p.iss)) return null;
+  if (!cfg.issuers && !/^https:\/\/login\.microsoftonline\.com\//.test(String(p.iss))) return null;
 
-  // Nonce (replay protection) — only checked if we sent one
-  if (expectedNonce && payload.nonce !== expectedNonce) {
-    throw new Error("ID token nonce mismatch");
-  }
-
-  return payload;
+  return p;
 }
