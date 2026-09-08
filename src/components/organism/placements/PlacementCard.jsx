@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import TypoGraphyComponent from "../../atoms/TypoGraphyComponent/TypoGraphyComponent";
 import ButtonComponent from "../../atoms/ButtonComponent/ButtonComponent";
 import { CardMedia, colors, List, ListItem, ListItemText } from "@mui/material";
-import { placements } from "./placement";
+import usePlacements from "./usePlacements";
 import CardGridItem from "../../molecules/Grid/CardGridItem";
 
 import { useRef } from "react";
@@ -22,6 +22,8 @@ import InstagramEmbed from "./InstagramEmbed";
 
 function PlacementCard() {
   const sliderRef = useRef(null);
+  // Reads D1 via /api/placements/list, falling back to the bundled array (#145).
+  const { placements } = usePlacements();
 
    const settings = {
   

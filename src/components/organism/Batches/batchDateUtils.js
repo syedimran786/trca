@@ -54,3 +54,13 @@ export function getNextBatchForCourse(courseName,batches)
         .sort((a,b)=>parseBatchDate(a.date)-parseBatchDate(b.date))
     return upcoming[0] || null
 }
+
+export function getNextBatch(batches)
+{
+    // The soonest upcoming batch across every course — what the hero shows, so
+    // a visitor sees a date without having to scroll to the Batches section.
+    let upcoming=(batches||[])
+        .filter((batch)=>isBatchUpcoming(batch.date))
+        .sort((a,b)=>parseBatchDate(a.date)-parseBatchDate(b.date))
+    return upcoming[0] || null
+}

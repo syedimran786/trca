@@ -86,7 +86,7 @@ function Navbar(props) {
   return (
     <Box sx={{ display: 'flex'}}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar component="nav" className="site-nav">
         <Toolbar>
 
         <RouterLink to="/"><img src={logo} alt="Rest Coder Academy" /></RouterLink>

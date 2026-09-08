@@ -72,7 +72,7 @@ function page(notice, count, body) {
   .notice { padding:1rem 1.25rem; color:#b3261e; }
 </style></head>
 <body>
-  <header><h1>Enquiries</h1><span class="count">${count} total</span><a href="/admin/enrollments">Enrolments</a><a href="/admin/batches">Batches</a><a href="/admin/trainers">Trainers</a><a href="/admin/founder">Founder →</a></header>
+  <header><h1>Enquiries</h1><span class="count">${count} total</span><a href="/admin/enrollments">Enrolments</a><a href="/admin/batches">Batches</a><a href="/admin/trainers">Trainers</a><a href="/admin/placements">Placements</a><a href="/admin/founder">Founder →</a></header>
   ${notice ? `<div class="notice">${escapeHtml(notice)}</div>` : ""}
   <div class="wrap">
     <table>
