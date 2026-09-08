@@ -1,208 +1,248 @@
+/* Site footer (#107).
+
+   Three columns, not four. The old layout gave a full quarter of the footer
+   to a single orange map pin under a "Location" heading, which left the other
+   three columns short and the whole band mostly empty. The pin now sits with
+   the address it refers to.
+
+   Everything below is on the token scale — there are no one-off pixel values
+   left in this file. */
+
 .footer
 {
-    padding: 50px;
+    background-color: var(--rca-navy);
     color: var(--rca-surface);
-    /* position: fixed;
-    bottom: 0; */
-    position: relative;
-
+    padding: var(--rca-space-8) var(--rca-gutter) var(--rca-space-5);
+    font-family: var(--rca-font);
 }
 
-.footer .grid-content-box  
+.footer-grid
 {
-  /* border: 1px solid white; */
+    max-width: var(--rca-container);
+    margin: 0 auto;
+    display: grid;
+    /* Brand gets the most room, the nav the least — the links are short and
+       set in two sub-columns of their own. */
+    grid-template-columns: 1.3fr 1.4fr 1fr;
+    gap: var(--rca-space-8);
+    align-items: start;
+}
+
+/* --- shared type ---------------------------------------------------------
+   One heading size for all three columns. They are peers; the old footer set
+   them at h5 through a component that also carried its own margins, so they
+   sat at different heights from each other. */
+
+.footer-heading
+{
+    margin: 0 0 var(--rca-space-4);
+    font-size: var(--rca-fs-lead);
+    font-weight: var(--rca-fw-semibold);
+    line-height: 1.3;
+    color: var(--rca-surface);
+}
+
+/* --- brand --------------------------------------------------------------- */
+
+.footer-quote
+{
+    margin: 0;
+    max-width: 46ch;
+    font-size: var(--rca-fs-small);
+    line-height: 1.7;
+    color: var(--rca-ink-invert-soft);
+    /* Was justified. In a 280px column that opens rivers of white space down
+       the middle of five lines of text. */
     text-align: left;
 }
-.footer .grid-content-box h2
+
+.footer-social
 {
-    margin-bottom: 10px;
-}
-.footer .grid-content-box h2,.footer .grid-content-box p
-{
-    font-family: var(--rca-font);
+    display: flex;
+    gap: var(--rca-space-3);
+    margin: var(--rca-space-5) 0 0;
+    padding: 0;
+    list-style: none;
 }
 
-.footer .grid-content-box p
+.footer-social a
 {
-    /* MUI's body2 is 14px. The address, phone number and email are the whole
-       point of a footer — they are body copy, not fine print (#11). */
-    font-size: var(--rca-fs-body);
-    line-height: var(--rca-lh-body);
-}
-
-.footer .grid-content-box ul
-{
-    /* padding: 0!important; */
-}
-.footer .links li
-{
-    padding-left: 0px;
-     padding-top: 0px;
-    cursor: pointer;
-}
-
-.footer .links li span
-{
-    font-family: var(--rca-font);
-}
-.footer .links li a
-{
-    color: white;
-    /* The link was the tap target and it was 19-32px tall. Padding it to the
-       minimum costs nothing here — the list already had negative margin
-       pulling the rows together (#11). */
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    width: var(--rca-control-h-mobile);
+    height: var(--rca-control-h-mobile);
+    border: 1px solid var(--rca-tint-on-dark);
+    border-radius: 50%;
+    color: var(--rca-surface);
+    text-decoration: none;
+    transition: background-color var(--rca-transition),
+                border-color var(--rca-transition);
+}
+
+.footer-social a:hover
+{
+    background-color: var(--rca-tint-on-dark-strong);
+    border-color: transparent;
+}
+
+/* --- links --------------------------------------------------------------- */
+
+.footer-nav
+{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--rca-space-6);
+}
+
+.footer-links
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* A link and a scroll-to-section button sit in the same list, so they are
+   given the same box rather than left to inherit a browser default each. */
+.footer-links a,
+.footer-links button
+{
+    display: inline-flex;
+    align-items: center;
+    /* The link is the tap target, not the word inside it (#11). */
     min-height: var(--rca-control-h-mobile);
-}
-hr
-{
-    height: 1px;
-    background-color: var(--rca-border-strong);
-    border: none;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.footer hr + p
-{
-    text-align: center;
-    
-
-}
-
-/* .footer .MuiGrid-item:nth-child(1) .grid-content-box
-{
-    width: 80%;
-} */
-
-.map-icon
-{
-    font-size: 5rem!important;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: var(--rca-fs-small);
+    line-height: 1.5;
+    color: var(--rca-ink-invert-soft);
+    text-align: left;
+    text-decoration: none;
     cursor: pointer;
-    animation:map 1s linear 2s infinite alternate;
+    transition: color var(--rca-transition);
 }
-.footer .arrow1
-{ 
-    display: none;
-    
-}
-@keyframes arrow1
+
+.footer-links a:hover,
+.footer-links button:hover
 {
-    0% {transform:scale(1.1)}
-    25% {transform:scale(1.2)}
-    75% {transform:scale(1.1)}
-    100% {transform:scale(1.2)}
+    color: var(--rca-surface);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
-@keyframes map
+
+/* --- contact ------------------------------------------------------------- */
+
+.footer-contact address
 {
-    0% {transform:scale(1.1);color: var(--rca-danger);}
-    25% {transform:scale(1.2); color: var(--rca-orange);}
-    75% {transform:scale(1.1);color: var(--rca-success);}
-    100% {transform:scale(1.2); color: var(--rca-blue);}
+    margin: 0;
+    font-style: normal;
+    font-size: var(--rca-fs-small);
+    line-height: 1.7;
+    color: var(--rca-ink-invert-soft);
 }
-/* ? media quries */
-        /* Custom, iPhone Retina */ 
-        @media (min-width:320px) and  (max-width:479.98px) {
-            .footer
-            {
-               padding-bottom: 20px;
-            }
-            .footer .grid-item:not(:last-child)
-            {
-                /* border-bottom: 1px solid var(--rca-border); */
-                padding-bottom: 10px;
-                justify-content: space-around;
-            }
-            .footer .grid-content-box
-            {
-                text-align: center;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-            }
-            .footer .links li
-            {
-                display: inline-block;
-                text-align: center;
-            }
-            .map-icon
-            {
-                font-size: 3rem!important;
-            }
-            .footer .arrow1
-            {
-                color: var(--rca-navy);
-                margin-top: 1rem;
-                border-radius: 100%;
-                background-color: white;
-                position: absolute;
-                bottom: 1rem;
-                padding: 0.1rem;
-                right: .4rem;
-                display: inline;
-                animation: arrow1 1s linear 2s infinite alternate;
 
-
-            }
-           
-
-        }
-/* Extra Small Devices, Phones */ 
-        @media (min-width: 480px) and (max-width: 575.98px) {
-
-            
-        }
-/* Small Devices, Tablets */
-        @media (min-width: 576px) and (max-width:767.98px) {
-
-            
-        }
-/* Medium Devices, Desktops */
-        
-        @media (min-width: 768px) and (max-width:991.98px ) {
-
-            .footer
-            {
-               padding-bottom: 20px;
-            }
-            .footer .grid-item:not(:last-child)
-            {
-                border-bottom: 1px solid var(--rca-border);
-                padding-bottom: 10px;
-                justify-content: space-around;
-            }
-            .footer .grid-content-box
-            {
-                text-align: center;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-            }
-            .footer .links li
-            {
-                display: inline-block;
-                text-align: center;
-            }
-
-        }
-
-        /* Large Devices, Wide Screens */
-
-        @media (min-width: 992px) and (max-width:1200px ) {
-
-           
-        }
-
-/* The Google Maps link was an 80 x 19 anchor wrapped around an icon — the icon
-   was the only thing giving it height. Same treatment as the nav links (#11). */
-.footer .grid-content-box > a
+.footer-contact-list
 {
+    margin: var(--rca-space-4) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-contact-list a
+{
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rca-space-2);
+    min-height: var(--rca-control-h-mobile);
+    font-size: var(--rca-fs-small);
+    color: var(--rca-surface);
+    text-decoration: none;
+    /* An email address is one long unbreakable token on a 375px screen. */
+    overflow-wrap: anywhere;
+}
+
+.footer-contact-list a:hover
+{
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* --- bottom bar ---------------------------------------------------------- */
+
+.footer-bottom
+{
+    max-width: var(--rca-container);
+    margin: var(--rca-space-7) auto 0;
+    padding-top: var(--rca-space-5);
+    /* A hairline tint, not a full-strength <hr>: it separates without drawing
+       a line across the page that competes with the content above it. */
+    border-top: 1px solid var(--rca-tint-on-dark);
+    text-align: center;
+}
+
+.footer-bottom p
+{
+    margin: 0;
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-invert-soft);
+}
+
+/* --- responsive ----------------------------------------------------------
+   Three columns collapse to one, not to a squeezed three. At 768 the nav
+   keeps its two sub-columns because short link labels waste a full-width row. */
+
+@media (max-width: 1023.98px)
+{
+    .footer-grid
+    {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--rca-space-6) var(--rca-space-5);
+    }
+
+    .footer-brand
+    {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 599.98px)
+{
+    .footer
+    {
+        padding: var(--rca-space-7) var(--rca-gutter-mobile) var(--rca-space-5);
+    }
+
+    .footer-grid
+    {
+        grid-template-columns: 1fr;
+        gap: var(--rca-space-6);
+    }
+
+    .footer-nav
+    {
+        /* Two columns of six links is 24 lines of dead space on a phone. */
+        grid-template-columns: 1fr;
+        gap: var(--rca-space-6);
+    }
+}
+
+.footer .footer-socials a
+{
+    color: var(--rca-surface);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: var(--rca-control-h-mobile);
     min-height: var(--rca-control-h-mobile);
+    transition: opacity 120ms ease;
+}
+.footer .footer-socials a:hover
+{
+    opacity: 0.75;
+}
+.footer .footer-socials .MuiSvgIcon-root
+{
+    font-size: 1.6rem;
 }

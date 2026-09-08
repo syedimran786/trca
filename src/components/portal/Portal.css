@@ -363,3 +363,154 @@
     .portal-tabs { display: none; }
     .portal-home { padding-bottom: var(--rca-space-8); }
 }
+
+/* Courses + lessons (#137).
+
+   Same tokens as the rest of the portal. Every tappable row is at least 48px
+   tall, because these are read on a phone, often one-handed, often outdoors. */
+
+.portal-cached
+{
+    margin: 0 0 var(--rca-space-3);
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+}
+
+.portal-list
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--rca-space-3);
+}
+
+.portal-course
+{
+    display: grid;
+    gap: var(--rca-space-2);
+    padding: var(--rca-space-5);
+    min-height: 48px;
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-lg, 12px);
+    background-color: var(--rca-surface);
+    text-decoration: none;
+    color: inherit;
+}
+
+.portal-course:hover { border-color: var(--rca-border-strong); }
+.portal-course:focus-visible { outline: var(--rca-focus-ring); outline-offset: 2px; }
+
+.portal-course-title
+{
+    font-size: var(--rca-fs-body);
+    font-weight: var(--rca-fw-semibold);
+    color: var(--rca-navy);
+}
+
+.portal-course-sub,
+.portal-course-summary
+{
+    font-size: var(--rca-fs-small);
+    color: var(--rca-ink-soft);
+}
+
+.portal-course-summary { margin: 0 0 var(--rca-space-5); }
+
+.portal-course-meta
+{
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+}
+
+.portal-back
+{
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rca-space-2);
+    margin-bottom: var(--rca-space-4);
+    min-height: 44px;
+    font-size: var(--rca-fs-small);
+    color: var(--rca-ink-soft);
+    text-decoration: none;
+}
+
+.portal-back:hover { color: var(--rca-navy); }
+.portal-back:focus-visible { outline: var(--rca-focus-ring); outline-offset: 2px; }
+
+.portal-lessons
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--rca-space-2);
+    counter-reset: none;
+}
+
+.portal-lesson
+{
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-surface);
+    overflow: hidden;
+}
+
+.portal-lesson-head
+{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--rca-space-3);
+    width: 100%;
+    min-height: 48px;
+    padding: var(--rca-space-4) var(--rca-space-5);
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+}
+
+.portal-lesson-head:focus-visible { outline: var(--rca-focus-ring); outline-offset: -2px; }
+
+.portal-lesson-no
+{
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--rca-surface-subtle);
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    /* Tabular figures so lesson 9 and lesson 10 do not shift the title. */
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-lesson-title { font-size: var(--rca-fs-small); font-weight: var(--rca-fw-semibold); }
+
+.portal-lesson-meta
+{
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-lesson-body
+{
+    padding: 0 var(--rca-space-5) var(--rca-space-5);
+    border-top: 1px solid var(--rca-border);
+    padding-top: var(--rca-space-4);
+}
+
+.portal-lesson-notes
+{
+    margin: 0 0 var(--rca-space-3);
+    font-size: var(--rca-fs-small);
+    line-height: 1.6;
+    /* Notes are authored as markdown but rendered as text for now: no parser
+       shipped to the client, and no untrusted HTML either. */
+    white-space: pre-wrap;
+}

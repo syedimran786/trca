@@ -39,12 +39,11 @@ html,body {
   /* min-height: 100vh; */
 }
 
-/* `body` is a flex container and `*` sets `min-width: 0`, so #root sizes to
-   its content rather than to the viewport. Every marketing page is full-bleed,
-   so it already measured 100% and this changes nothing there. The portal
-   (#110) is a 420px card on a phone, and #root was collapsing to its width —
-   leaving the page background covering two thirds of the screen and a dead
-   white band down the side. */
+/* `body` is a flex container (above, from the Vite starter), which makes #root
+   a flex item — and a flex item sizes to its content, not to the line. So any
+   full-bleed band was only ever as wide as the widest thing inside it: at 1440
+   the footer's navy background stopped at 1248px and left 192px of white down
+   the right-hand side (#107). */
 #root {
   width: 100%;
 }

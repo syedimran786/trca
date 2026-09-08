@@ -16,7 +16,12 @@ CREATE TABLE IF NOT EXISTS enrollments (
   currency          TEXT NOT NULL DEFAULT 'INR',
   razorpay_order_id TEXT,
   razorpay_payment_id TEXT,
-  status            TEXT NOT NULL DEFAULT 'registered',  -- 'registered' | 'paid'
+  -- 'registered'   free interest, no payment
+  -- 'paid'         payment confirmed against Razorpay's payment object
+  -- 'needs_review' payment verified by signature, but Razorpay was unreachable
+  --                so the course and amount could not be confirmed (#165) —
+  --                the money is real; a human reconciles it from the payment id
+  status            TEXT NOT NULL DEFAULT 'registered',
   created_at        TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

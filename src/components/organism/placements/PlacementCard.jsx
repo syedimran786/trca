@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import TypoGraphyComponent from "../../atoms/TypoGraphyComponent/TypoGraphyComponent";
 import ButtonComponent from "../../atoms/ButtonComponent/ButtonComponent";
 import { CardMedia, colors, List, ListItem, ListItemText } from "@mui/material";
-import { placements } from "./placement";
+import usePlacements from "./usePlacements";
 import CardGridItem from "../../molecules/Grid/CardGridItem";
 
 import { useRef } from "react";
@@ -18,9 +18,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ClientIcon from "../reviews/ReviewIcon";
 import PlacementIcon from "./PlacementIcon";
+import InstagramEmbed from "./InstagramEmbed";
 
 function PlacementCard() {
   const sliderRef = useRef(null);
+  // Reads D1 via /api/placements/list, falling back to the bundled array (#145).
+  const { placements } = usePlacements();
 
    const settings = {
   
@@ -73,8 +76,22 @@ function PlacementCard() {
     <>
       <section className="slider-container">
       <Slider ref={sliderRef} {...settings} className="ss">
-      {placements.map(({ name, designation, image, company }, id) => {
-        return ( 
+      {placements.map(({ name, designation, image, company, instagram_url }, id) => {
+        // If this placement has an IG post URL, the embed is the whole card —
+        // it carries the photo, the salary, the caption and the IG branding
+        // that a screenshot could never match. Photo, designation and company
+        // become optional; the wrapper card still holds the layout so heights
+        // stay consistent across the carousel row.
+        if (instagram_url) {
+          return (
+            <Card sx={{}} className="card card--instagram" key={id}>
+              <CardContent className="card-content">
+                <InstagramEmbed url={instagram_url} alumnusName={name} />
+              </CardContent>
+            </Card>
+          );
+        }
+        return (
           // <CardGridItem xs={12} sm={12} md={6} lg={4}>
           <Card sx={{}} className="card" key={id}>
             <CardContent className="card-content">
@@ -95,9 +112,9 @@ function PlacementCard() {
                 sx={{fontWeight: "bold",color:"var(--rca-navy)"}}
               />
           </Box>
-             
+
              {/* <Box className="card-text">
-            
+
               <PlacementIcon value={ratings}/>
               <TypoGraphyComponent
                 variant="p"
@@ -124,8 +141,8 @@ function PlacementCard() {
               </CardContent>
           </Card>
           // </CardGridItem>
-  
-        
+
+
         );
       })}
        </Slider>

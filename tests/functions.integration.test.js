@@ -53,11 +53,14 @@ function makeDB(seed = {}) {
           } else if (/DELETE FROM trainers/i.test(sql)) {
             t.trainers = t.trainers.filter((b) => String(b.id) !== String(args[0]));
           } else if (/INSERT INTO enrollments/i.test(sql)) {
-            if (/'paid'/.test(sql)) {
+            // verify.js binds status as a parameter now (#165) — a payment we
+            // could not confirm records as needs_review rather than paid — so
+            // take it from the args rather than sniffing the SQL for 'paid'.
+            if (/razorpay_order_id/.test(sql)) {
               t.enrollments.push({
                 id: ++ids.enrollments, fullname: args[0], mobile: args[1], email: args[2], experience: args[3],
                 course: args[4], course_name: args[5], batch: args[6], referral: args[7], amount: args[8],
-                razorpay_order_id: args[9], razorpay_payment_id: args[10], status: "paid",
+                razorpay_order_id: args[9], razorpay_payment_id: args[10], status: args[11] ?? "paid",
               });
             } else {
               t.enrollments.push({
@@ -318,17 +321,26 @@ describe("POST /api/enroll/verify", () => {
   it("records a verified paid enrolment, idempotently (no duplicate on retry)", async () => {
     const db = makeDB();
     const sig = await rzpSign("o1", "p1", "sekret");
+    // The captured payment is the authority on what was bought (#165): the
+    // course in the body is only accepted when its price matches this.
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({ order_id: "o1", amount: 5000000, status: "captured" }),
+    });
     const body = {
       razorpay_order_id: "o1", razorpay_payment_id: "p1", razorpay_signature: sig,
       course: "fde", course_name: "Forward Deployed Engineering", fullname: "Asha", mobile: "9", email: "a@b.c",
     };
-    const r1 = await enrollVerify(ctx(jsonReqTo("https://x/api/enroll/verify", body), env(db)));
+    // Needs the key id too: without it verify.js cannot reach Razorpay to
+    // confirm what was paid for, and correctly records needs_review (#165).
+    const fullEnv = { ...env(db), RAZORPAY_KEY_ID: "rzp_test_x" };
+    const r1 = await enrollVerify(ctx(jsonReqTo("https://x/api/enroll/verify", body), fullEnv));
     expect(r1.status).toBe(200);
     expect(db.tables.enrollments).toHaveLength(1);
     expect(db.tables.enrollments[0].status).toBe("paid");
-    expect(db.tables.enrollments[0].amount).toBe(5000000); // server-decided, not from the body
+    expect(db.tables.enrollments[0].amount).toBe(5000000); // what Razorpay captured
 
-    const r2 = await enrollVerify(ctx(jsonReqTo("https://x/api/enroll/verify", body), env(db)));
+    const r2 = await enrollVerify(ctx(jsonReqTo("https://x/api/enroll/verify", body), fullEnv));
     expect(r2.status).toBe(200);
     expect(db.tables.enrollments).toHaveLength(1); // still one — idempotent
   });
@@ -339,7 +351,11 @@ describe("POST /api/enroll/verify", () => {
     // Razorpay is where the student entered their details (no form on our side).
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
       ok: true,
-      json: async () => ({ email: "student@rzp.test", contact: "+919876500000" }),
+      json: async () => ({
+        email: "student@rzp.test", contact: "+919876500000",
+        // A real payment carries these, and #165 now checks them.
+        order_id: "o9", amount: 3500000, status: "captured",
+      }),
     });
     const res = await enrollVerify(
       ctx(

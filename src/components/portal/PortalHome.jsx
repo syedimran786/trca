@@ -3,14 +3,16 @@ import { useEffect, useState } from "react";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import CourseList from "./CourseList";
+import { useCourses } from "./useCourses";
 import "./Portal.css";
 
 /**
  * /portal — the first screen a signed-in student sees (#111).
  *
- * Shell only; real course data is Phase 2 (#43). Everything here is data-light
- * on purpose: no photographs, no icon font, three inline SVGs for the chrome,
- * and nothing that needs a second request to render.
+ * The chrome is data-light on purpose: no photographs, no icon font, and
+ * nothing that needs a second request to render. "My courses" is the one
+ * section that fetches, and it paints its saved copy first (#137).
  */
 
 function greeting(now = new Date()) {
@@ -47,6 +49,7 @@ function useOnline() {
 
 function PortalHome({ user, logout }) {
   const online = useOnline();
+  const { status, courses, cached, reload } = useCourses(user?.id);
   const firstName = String(user?.name || "").split(/\s+/)[0] || "there";
 
   return (
@@ -81,12 +84,7 @@ function PortalHome({ user, logout }) {
 
       <section className="portal-section" aria-labelledby="my-courses">
         <h2 id="my-courses">My courses</h2>
-        <div className="portal-card portal-card--quiet">
-          <p className="portal-card-title">Nothing here yet</p>
-          <p className="portal-card-sub">
-            Lessons you can stream or download arrive in the next release.
-          </p>
-        </div>
+        <CourseList status={status} courses={courses} cached={cached} reload={reload} />
       </section>
 
       <section className="portal-section" aria-labelledby="account">
@@ -123,6 +121,7 @@ function PortalHome({ user, logout }) {
 
 PortalHome.propTypes = {
   user: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     name: PropTypes.string,
     email: PropTypes.string,
   }),

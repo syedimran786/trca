@@ -16,6 +16,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import PortalRoute from "./components/portal/PortalRoute";
 import PortalLogin from "./components/portal/PortalLogin";
 import PortalHome from "./components/portal/PortalHome";
+import PortalCourse from "./components/portal/PortalCourse";
 import Modal from 'react-modal';
 import EnquiryForm from './components/forms/Enquiry Form/EnquiryForm';
 import EnrollForm from './components/forms/EnrollForm/EnrollForm';
@@ -119,6 +120,16 @@ function App() {
           element={
             <PortalRoute>
               {({ user, logout }) => <PortalHome user={user} logout={logout} />}
+            </PortalRoute>
+          }
+        />
+        {/* One course and its lessons (#137). Behind the same guard, so a
+            direct link from outside lands on login and returns here after. */}
+        <Route
+          path="/portal/courses/:slug"
+          element={
+            <PortalRoute>
+              <PortalCourse />
             </PortalRoute>
           }
         />

@@ -191,20 +191,16 @@ running app rather than in a browser tab. `MainActivity` uses
 `launchMode="singleTask"`, so that redirect resumes the existing task instead of
 starting a second copy of the app.
 
-**Nothing sends or consumes that callback yet, on either side.** No server
-route redirects to `rca://`, and no JavaScript listens for it — #109 only
-guaranteed the scheme is registered and the shell builds.
+Nothing consumes that callback yet — the auth endpoints are #113 and the login
+screen is #110. This ticket (#109) only guarantees the scheme is registered and
+the shell builds.
 
-Registering the scheme is also not sufficient on its own: a session cookie set
-during a system-browser sign-in does not reach the app's WebView, so resuming
-the app is not the same as being signed in inside it. See #163 for the gap and
-what closing it needs.
+### Known gap
 
-### Offline assets
-
-slick-carousel's stylesheets used to be pulled from cdnjs, which meant they
-simply did not exist offline inside the app. #105 bundled them; every style the
-app needs now ships in the APK.
+`index.html` still pulls the slick-carousel stylesheets from cdnjs. On the web
+that is a render-blocking third-party request (#105); **inside the app it also
+means those styles simply do not exist offline.** Worth closing #105 before the
+app ships to students on rural connections.
 
 ## History / context
 
@@ -216,36 +212,53 @@ app needs now ships in the APK.
 
 ## Student portal (Phase 1)
 
-`/portal/login` and `/portal` are the student portal UI (#110, #111). The auth
-backend behind them — the OIDC endpoints, the session cookie, and the D1 schema
-— is #112 / #113 / #114 and lands separately. This half owns only the screens
-and the reading of `GET /auth/me`.
+`/portal/login`, `/portal` and `/portal/courses/:slug` are the student portal
+(#110, #111, #137). They are
+**inert until configured**: with no OAuth secrets set, `/auth/me` reports no
+providers and the login screen says "coming soon" rather than rendering buttons
+that lead to a provider error page. The marketing site is unaffected either way.
 
-They are **inert until configured**: with no OAuth secrets or no database the
-backend answers `/auth/me` with a 503, and the login screen says "coming soon"
-rather than rendering buttons that lead to a provider error page. The marketing
-site is unaffected either way.
-
-The exact shape of `/auth/me` is the seam between the two halves, so it is
-pinned by `tests/portal.session-contract.test.js` — a change to the backend's
-response fails a test here rather than showing up as a blank portal on a
-student's phone.
+Sessions are **stateless** — a signed HS256 JWT in an HttpOnly cookie, no
+`sessions` table, so a request verifies a signature instead of paying a D1 read.
+Logout clears the cookie; it cannot revoke a token server-side before its 30-day
+expiry. See the note at the foot of `schema-users.sql`.
 
 ### Owner-provisioned secrets
 
-These cannot be created from the repo. See `docs/OAUTH-SETUP.md` for the
-step-by-step; the short version is that someone with a Google Cloud and an
-Entra account has to create two OAuth clients and set the results as Cloudflare
-Pages secrets. **This is the long-lead item for Phase 1** — it can be started
-before any of the auth PRs merge.
+These cannot be created from the repo. Set them as Cloudflare Pages secrets:
 
-### The endpoints (#113, #114)
+| Secret | Where it comes from |
+|---|---|
+| `SESSION_SECRET` | any long random string — signs the session cookie |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google Cloud Console → OAuth 2.0 Client ID (Web application) |
+| `MS_CLIENT_ID` / `MS_CLIENT_SECRET` | Entra → App registrations → Certificates & secrets |
+| `MS_TENANT` | optional; defaults to `common` (work **and** personal accounts) |
+
+Register these redirect URIs with **both** providers:
+
+```
+https://restcoderacademy.in/auth/google/callback
+https://restcoderacademy.in/auth/microsoft/callback
+```
+
+The redirect is always this site's own origin, never the `rca://` deep link —
+a custom scheme cannot be a registered redirect for a confidential client, and
+the token exchange has to happen server-side. The native shell is handed back
+at the end of the callback.
+
+### Database
+
+```
+npx wrangler d1 execute restcoder-enquiries --file=./schema-users.sql
+```
+
+### The endpoints
 
 | Route | What it does |
 |---|---|
-| `GET /auth/:provider/start` | redirect to consent, with PKCE + state. **503 when unconfigured.** |
-| `GET /auth/:provider/callback` | exchange the code, verify the ID token against the provider's JWKS, upsert the user, issue the session |
-| `GET /auth/me` | the current user, 401 when signed out, 503 when unconfigured |
+| `GET /auth/:provider/start` | redirect to consent, with PKCE + state in HttpOnly cookies. **503 when unconfigured.** |
+| `GET /auth/:provider/callback` | exchange the code, **verify the ID token against the provider's JWKS**, upsert into `users`, issue the session cookie |
+| `GET /auth/me` | the current user, or 401. Also reports which providers are configured. |
 | `POST /auth/logout` | clear the session cookie |
 | `GET /api/portal/courses` | the signed-in student's enrolled courses, or 401 |
 | `GET /api/portal/courses/:slug` | one enrolled course with its published lessons. **404 when the student is not enrolled**, so slugs cannot be probed. |

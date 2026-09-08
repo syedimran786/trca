@@ -97,12 +97,30 @@ not on save.
 ## Checking it worked
 
 ```bash
-curl -i https://restcoderacademy.in/auth/me
+curl -s https://restcoderacademy.in/auth/me
 ```
 
-- **503** — secrets are not set, or not deployed yet. The portal shows
-  "coming soon". This is the correct state before step 3.
-- **401** — configured and working; you are simply not signed in.
+Signed out, this answers **401** either way — the status alone does not tell
+you whether the secrets landed. The `providers` array in the body does:
+
+- `{"authenticated":false,"providers":[]}` — not configured yet, or not
+  redeployed since you added the secrets. The portal shows "coming soon". This
+  is the correct state before step 3.
+- `{"authenticated":false,"providers":["google","microsoft"]}` — configured and
+  working; you are simply not signed in.
+
+A provider only appears in that list once **all three** of its client id, its
+client secret **and** `SESSION_SECRET` are set, so a missing `SESSION_SECRET`
+shows up as an empty list even with both providers filled in.
+
+The 503 lives one level down, on the start endpoint:
+
+```bash
+curl -i https://restcoderacademy.in/auth/google/start
+```
+
+**503 `not_configured`** before step 3, a **302** to Google's consent screen
+after it.
 
 Then open `https://restcoderacademy.in/portal/login` and sign in with each
 provider once.

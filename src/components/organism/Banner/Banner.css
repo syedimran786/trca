@@ -4,6 +4,80 @@
     /* height: 100vh; */
     margin-top: 4rem;
 }
+
+/* --- Hero type (#9). --rca-fs-h1 is 48px desktop, 32px mobile; tokens.css
+       flips it at 767px, so there is no breakpoint to repeat here. --------- */
+.banner .banner-title
+{
+    font-size: var(--rca-fs-h1);
+    line-height: var(--rca-lh-tight);
+    font-weight: var(--rca-fw-bold);
+    margin-bottom: var(--rca-space-4);
+}
+.banner .banner-subhead
+{
+    font-size: var(--rca-fs-lead);
+    line-height: var(--rca-lh-body);
+    color: var(--rca-ink-soft);
+    max-width: 46ch;
+    margin: 0 0 var(--rca-space-5);
+}
+
+/* --- Proof strip ------------------------------------------------------- */
+.banner .banner-proof
+{
+    margin-bottom: var(--rca-space-5);
+}
+.banner .banner-proof-count
+{
+    font-size: var(--rca-fs-h4);
+    font-weight: var(--rca-fw-bold);
+    color: var(--rca-navy);
+    margin: 0 0 var(--rca-space-1);
+}
+.banner .banner-proof-label
+{
+    font-size: var(--rca-fs-caption);
+    font-weight: var(--rca-fw-semibold);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--rca-ink-muted);
+    margin: 0 0 var(--rca-space-3);
+}
+.banner .banner-proof-logos
+{
+    display: flex;
+    align-items: center;
+    gap: var(--rca-space-5);
+    flex-wrap: wrap;
+}
+.banner .banner-proof-logos img
+{
+    /* Logos are different shapes; a fixed height and auto width keeps them on
+       one optical baseline without stretching any of them. */
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+    /* Six brand palettes next to each other read as noise beside a single navy
+       CTA. Greyed back, they read as evidence instead. */
+    filter: grayscale(1);
+    opacity: .9;
+}
+
+/* --- CTA row ------------------------------------------------------------ */
+.banner .banner-content-btns
+{
+    display: flex;
+    align-items: center;
+    gap: var(--rca-space-4);
+    flex-wrap: wrap;
+}
+.banner .banner-next-batch
+{
+    font-size: var(--rca-fs-small);
+    font-weight: var(--rca-fw-semibold);
+    color: var(--rca-ink-muted);
+}
 .banner .MuiGrid-container
 {
     /* height: 100%; */
@@ -38,9 +112,11 @@
 {
     transform: rotate(360deg);
 }
-.banner .MuiGrid-item .grid-content-box img
+/* Scoped to the illustration. As `.grid-content-box img` it also caught the
+   proof-strip logos and blew each one up to 80% of the column, so they stacked
+   one per row on a phone. */
+.banner .banner-image img
 {
-    
     width: 80%;
     /* height: 100%; */
     /* transform: rotatex(360deg); */
@@ -69,9 +145,10 @@
                 margin: 2rem!important;
                 margin-top: 4rem!important;
             }
+            /* h1/h2 size comes from --rca-fs-h1 (32px on mobile). The 2.3rem
+               !important that used to be here was 36.8px and beat the token. */
             .banner .MuiGrid-item .grid-content-box h1
             {
-                font-size: 2.3rem!important;
                 text-align: center;
             }
             .banner .MuiGrid-item .grid-content-box h4
@@ -81,13 +158,27 @@
             }
             .banner .MuiGrid-item .grid-content-box p
             {
-                font-size: 1rem;
                 text-align: center;
-                line-height: 1.2rem;
+            }
+            .banner .banner-subhead
+            {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .banner .banner-proof-logos
+            {
+                justify-content: center;
+                gap: var(--rca-space-4);
+            }
+            /* Four fit one clean row at 375. Six wrapped to five plus a single
+               orphan, which reads as a mistake rather than a set. */
+            .banner .banner-proof-logos img:nth-child(n + 5)
+            {
+                display: none;
             }
             .banner .banner-content-btns
             {
-                text-align: center;
+                justify-content: center;
             }
 
             .banner .banner-image
