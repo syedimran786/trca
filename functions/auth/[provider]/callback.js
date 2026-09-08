@@ -4,7 +4,7 @@ import { signSession, sessionCookie, readCookie } from "../../../shared/auth.js"
 import { isConfigured, providerConfig, redirectUri, verifyIdToken } from "../../../shared/oidc.js";
 
 const clearTx = (headers) => {
-  for (const n of ["rca_oauth_state", "rca_oauth_verifier", "rca_oauth_next"]) {
+  for (const n of ["rca_oauth_state", "rca_oauth_verifier", "rca_oauth_nonce", "rca_oauth_next"]) {
     headers.append("set-cookie", `${n}=; HttpOnly; Secure; SameSite=Lax; Path=/auth; Max-Age=0`);
   }
 };
@@ -57,7 +57,12 @@ export async function onRequestGet(context) {
   }
   if (!tokens.id_token) return fail("token_exchange");
 
-  const claims = await verifyIdToken(tokens.id_token, cfg);
+  // The nonce cookie is set by our own start endpoint, so a request that
+  // arrives without one did not begin here (#159).
+  const expectedNonce = readCookie(request, "rca_oauth_nonce");
+  if (!expectedNonce) return fail("bad_state");
+
+  const claims = await verifyIdToken(tokens.id_token, cfg, fetch, expectedNonce);
   if (!claims) return fail("bad_token");
 
   if (!env.DB) return fail("storage");

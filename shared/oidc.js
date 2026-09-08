@@ -48,6 +48,8 @@ export function providerConfig(name, env) {
     scope: p.scope,
     clientId: p.clientId(env),
     clientSecret: p.clientSecret(env),
+    // Needed to enforce the issuer when a tenant is pinned (#160).
+    tenant: (env && env.MS_TENANT) || null,
   };
 }
 
@@ -128,19 +130,74 @@ function bytesFromB64url(s) {
  * callback could post a self-made token and be issued a session. Fails closed —
  * every error path returns null rather than a partially trusted payload.
  */
-export async function verifyIdToken(idToken, cfg, fetchImpl = fetch) {
+// --- JWKS cache -------------------------------------------------------------
+// Both providers serve their signing keys with a long Cache-Control (~24h) and
+// rotate slowly. Fetching them on every login put a round trip to Google on the
+// hot path of the callback, and with no abort signal a stall there hung the
+// login until Cloudflare's wall-clock cap rather than failing it (#162).
+//
+// Module scope, so the cache lives as long as the isolate — shared across
+// requests it happens to serve, gone on eviction. That is the right lifetime
+// here: it is a public document, and the worst case of a cold isolate is the
+// fetch we were doing anyway.
+const JWKS_TIMEOUT_MS = 5000;
+const JWKS_FALLBACK_TTL_MS = 60 * 60 * 1000; // 1h if the response says nothing
+const jwksCache = new Map(); // url -> { keys, expires }
+
+function maxAgeFrom(res) {
+  const cc = res.headers.get("cache-control") || "";
+  const m = cc.match(/max-age=(\d+)/i);
+  if (!m) return JWKS_FALLBACK_TTL_MS;
+  // Clamp: a provider sending max-age=0 should not mean "never cache and hit
+  // the network every login", and one sending a year should not outlive a key
+  // rotation we would otherwise pick up.
+  const secs = Math.min(Math.max(Number(m[1]), 300), 24 * 60 * 60);
+  return secs * 1000;
+}
+
+async function fetchJwks(url, fetchImpl) {
+  const res = await fetchImpl(url, { signal: AbortSignal.timeout(JWKS_TIMEOUT_MS) });
+  if (!res.ok) return null;
+  const body = await res.json();
+  const keys = body && Array.isArray(body.keys) ? body.keys : null;
+  if (!keys) return null;
+  jwksCache.set(url, { keys, expires: Date.now() + maxAgeFrom(res) });
+  return keys;
+}
+
+/**
+ * The signing keys for `url`, cached.
+ *
+ * `wantKid` is what makes this safe across a key rotation: if the cached set
+ * does not contain the kid the token was signed with, the cache is stale by
+ * definition, so it refetches once rather than rejecting a token that is
+ * actually valid. Without that, a rotation would fail every login until the
+ * isolate happened to be evicted.
+ */
+async function getJwks(url, wantKid, fetchImpl) {
+  const hit = jwksCache.get(url);
+  const fresh = hit && hit.expires > Date.now();
+  if (fresh && hit.keys.some((k) => k.kid === wantKid)) return hit.keys;
+
+  try {
+    const keys = await fetchJwks(url, fetchImpl);
+    if (keys) return keys;
+  } catch {
+    // Timed out or the network failed. Fall through.
+  }
+  // A cached set that is merely expired still beats nothing — the alternative
+  // is refusing every login while the provider is unreachable.
+  return hit ? hit.keys : null;
+}
+
+export async function verifyIdToken(idToken, cfg, fetchImpl = fetch, expectedNonce = null) {
   const jwt = parseJwt(idToken);
   if (!jwt || jwt.header.alg !== "RS256" || !jwt.header.kid) return null;
 
-  let keys;
-  try {
-    const res = await fetchImpl(cfg.jwks);
-    if (!res.ok) return null;
-    keys = (await res.json()).keys;
-  } catch {
-    return null;
-  }
-  const jwk = (keys || []).find((k) => k.kid === jwt.header.kid);
+  const keys = await getJwks(cfg.jwks, jwt.header.kid, fetchImpl);
+  if (!keys) return null;
+
+  const jwk = keys.find((k) => k.kid === jwt.header.kid);
   if (!jwk) return null;
 
   let ok = false;
@@ -174,7 +231,37 @@ export async function verifyIdToken(idToken, cfg, fetchImpl = fetch) {
   if (!aud.includes(cfg.clientId)) return null;
 
   if (cfg.issuers && !cfg.issuers.includes(p.iss)) return null;
-  if (!cfg.issuers && !/^https:\/\/login\.microsoftonline\.com\//.test(String(p.iss))) return null;
+  if (!cfg.issuers && !isTrustedMicrosoftIssuer(String(p.iss), cfg.tenant)) return null;
+
+  // The nonce ties this ID token to the browser that started the flow (#159).
+  // code+PKCE over a server-side exchange already blocks replay; this closes
+  // token substitution — an ID token that leaked into a log or through a
+  // TLS-terminating proxy being injected here. Absent when expected is a
+  // failure, not a pass: a provider that drops the nonce is one we cannot bind.
+  if (expectedNonce && p.nonce !== expectedNonce) return null;
 
   return p;
+}
+
+const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Microsoft's issuer under `common` carries the *signing tenant's* id, which is
+ * not known ahead of time — hence the shape check rather than a fixed string.
+ *
+ * Once a tenant is pinned, that shape check is too loose: a token minted by a
+ * different Entra tenant, with a matching `client_id`, passes it (#160).
+ *
+ * The catch is that `MS_TENANT` may legitimately be a GUID, a verified domain
+ * (`contoso.onmicrosoft.com`), or one of `common` / `organizations` /
+ * `consumers` — while `iss` always carries the tenant **GUID**. So a domain
+ * value cannot be matched against the issuer without a discovery round trip,
+ * and pattern-matching it would reject every valid login. We therefore tighten
+ * only when the pin is a GUID, which is the case where we can be certain, and
+ * leave the rest on the host check.
+ */
+export function isTrustedMicrosoftIssuer(iss, tenant) {
+  if (!/^https:\/\/login\.microsoftonline\.com\//.test(iss)) return false;
+  if (!tenant || !GUID.test(tenant)) return true;
+  return new RegExp(`^https://login\\.microsoftonline\\.com/${tenant}/`, "i").test(iss);
 }
