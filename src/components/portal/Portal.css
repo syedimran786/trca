@@ -1,0 +1,516 @@
+/* Student portal — login, home shell and states (#110, #111).
+
+   Reuses the site's tokens; no new design language. Mobile-first, because the
+   portal is for students on a phone on a metered rural connection (#41), and
+   the same markup runs inside the Capacitor shell (#109). */
+
+.portal
+{
+    --portal-max: 560px;
+    min-height: 100vh;
+    /* App.jsx hides the marketing navbar on /portal, so there is nothing to
+       clear — and a phone's status bar is handled by the safe-area inset
+       rather than a hard-coded offset, so this is right inside the Capacitor
+       shell too (#109). */
+    padding: calc(var(--rca-space-6) + env(safe-area-inset-top, 0px))
+             var(--rca-gutter-mobile)
+             var(--rca-space-8);
+    background-color: var(--rca-surface-subtle);
+    font-family: var(--rca-font);
+    color: var(--rca-ink);
+    box-sizing: border-box;
+}
+
+.portal > *
+{
+    max-width: var(--portal-max);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.portal h1
+{
+    margin: 0;
+    font-size: var(--rca-fs-h3);
+    line-height: 1.2;
+    color: var(--rca-navy);
+}
+
+.portal h2
+{
+    margin: 0 0 var(--rca-space-3);
+    font-size: var(--rca-fs-lead);
+    color: var(--rca-navy);
+}
+
+.portal-eyebrow
+{
+    margin: 0 0 var(--rca-space-2);
+    font-size: var(--rca-fs-caption);
+    font-weight: var(--rca-fw-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rca-blue);
+}
+
+/* Visible to a screen reader, not on screen. */
+.portal-sr
+{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* --- buttons -------------------------------------------------------------- */
+
+.portal-btn
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--rca-control-h-mobile);
+    padding: 0 var(--rca-space-5);
+    border: 1px solid transparent;
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-navy);
+    color: var(--rca-ink-invert);
+    font-family: inherit;
+    font-size: var(--rca-fs-body);
+    font-weight: var(--rca-fw-semibold);
+    cursor: pointer;
+    transition: background-color var(--rca-transition);
+}
+
+.portal-btn:hover { background-color: var(--rca-navy-hover); }
+.portal-btn:active { background-color: var(--rca-navy-pressed); }
+.portal-btn:focus-visible { outline: none; box-shadow: var(--rca-focus-ring); }
+
+.portal-btn--ghost
+{
+    margin-top: var(--rca-space-4);
+    background-color: transparent;
+    border-color: var(--rca-border);
+    color: var(--rca-navy);
+}
+
+.portal-btn--ghost:hover { background-color: var(--rca-surface-subtle); }
+.portal-btn--ghost:active { background-color: var(--rca-border); }
+
+/* --- login ---------------------------------------------------------------- */
+
+.portal-login { display: flex; align-items: flex-start; justify-content: center; }
+
+.portal-login-card
+{
+    width: 100%;
+    max-width: 420px;
+    padding: var(--rca-space-6);
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-lg, 12px);
+    background-color: var(--rca-surface);
+}
+
+.portal-login-sub
+{
+    margin: var(--rca-space-3) 0 var(--rca-space-6);
+    font-size: var(--rca-fs-body);
+    line-height: 1.6;
+    color: var(--rca-ink-soft);
+}
+
+.portal-provider
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--rca-space-3);
+    /* 48px, not 44 — this is the one control on the screen. */
+    min-height: var(--rca-control-h);
+    margin-bottom: var(--rca-space-3);
+    padding: 0 var(--rca-space-4);
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-surface);
+    color: var(--rca-ink);
+    font-size: var(--rca-fs-body);
+    font-weight: var(--rca-fw-semibold);
+    text-decoration: none;
+    transition: background-color var(--rca-transition), border-color var(--rca-transition);
+}
+
+.portal-provider:hover
+{
+    background-color: var(--rca-surface-subtle);
+    border-color: var(--rca-border-strong);
+}
+
+.portal-provider:focus-visible { outline: none; box-shadow: var(--rca-focus-ring); }
+
+.portal-provider-mark { width: 20px; height: 20px; flex-shrink: 0; }
+
+.portal-login-foot
+{
+    margin: var(--rca-space-5) 0 0;
+    font-size: var(--rca-fs-small);
+    color: var(--rca-ink-soft);
+}
+
+.portal-login-foot a { color: var(--rca-blue); font-weight: var(--rca-fw-semibold); }
+
+/* --- messages ------------------------------------------------------------- */
+
+.portal-alert
+{
+    margin: 0 0 var(--rca-space-5);
+    padding: var(--rca-space-3) var(--rca-space-4);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-danger-bg);
+    color: var(--rca-danger);
+    font-size: var(--rca-fs-small);
+    line-height: 1.5;
+}
+
+.portal-soon
+{
+    margin-bottom: var(--rca-space-5);
+    padding: var(--rca-space-4);
+    border: 1px dashed var(--rca-border-strong);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-surface-subtle);
+    font-size: var(--rca-fs-small);
+    line-height: 1.6;
+    color: var(--rca-ink-soft);
+}
+
+.portal-soon p { margin: 0; }
+.portal-soon-title
+{
+    margin-bottom: var(--rca-space-2) !important;
+    font-weight: var(--rca-fw-semibold);
+    color: var(--rca-navy);
+}
+
+.portal-offline
+{
+    margin: 0 auto var(--rca-space-5);
+    padding: var(--rca-space-3) var(--rca-space-4);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-navy);
+    color: var(--rca-ink-invert);
+    font-size: var(--rca-fs-small);
+    text-align: center;
+}
+
+/* --- generic state screen ------------------------------------------------- */
+
+.portal-state { display: flex; align-items: center; justify-content: center; }
+
+.portal-state-card
+{
+    width: 100%;
+    max-width: 420px;
+    padding: var(--rca-space-6);
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-lg, 12px);
+    background-color: var(--rca-surface);
+    text-align: center;
+}
+
+.portal-state-card p
+{
+    margin: var(--rca-space-3) 0 var(--rca-space-5);
+    color: var(--rca-ink-soft);
+    line-height: 1.6;
+}
+
+/* --- home ----------------------------------------------------------------- */
+
+/* Room for the tab bar, plus the phone's home indicator. */
+.portal-home { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+
+.portal-top
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--rca-space-4);
+    margin-bottom: var(--rca-space-6);
+}
+
+.portal-avatar
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--rca-control-h);
+    height: var(--rca-control-h);
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--rca-navy);
+    color: var(--rca-ink-invert);
+    font-size: var(--rca-fs-lead);
+    font-weight: var(--rca-fw-semibold);
+}
+
+.portal-section { margin-bottom: var(--rca-space-6); }
+
+.portal-card
+{
+    padding: var(--rca-space-5);
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-lg, 12px);
+    background-color: var(--rca-surface);
+}
+
+.portal-card--quiet { border-style: dashed; background-color: transparent; }
+
+.portal-card-title
+{
+    margin: 0;
+    font-size: var(--rca-fs-body);
+    font-weight: var(--rca-fw-semibold);
+    color: var(--rca-navy);
+}
+
+.portal-card-sub
+{
+    margin: var(--rca-space-2) 0 0;
+    font-size: var(--rca-fs-small);
+    line-height: 1.6;
+    color: var(--rca-ink-soft);
+    overflow-wrap: anywhere;
+}
+
+/* --- tab bar -------------------------------------------------------------- */
+
+.portal-tabs
+{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Navbar.css styles the bare element selector `nav` with `position: fixed;
+       top: 0`, and this bar is a <nav>. Without an explicit `top: auto` it
+       inherits that and pins itself to the top of the screen. #107 scopes
+       those selectors to .site-nav; this stays as a guard either way. */
+    top: auto;
+    /* Above the floating WhatsApp/call buttons, which sit at 999. */
+    z-index: 1000;
+    display: flex;
+    max-width: none;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    border-top: 1px solid var(--rca-border);
+    background-color: var(--rca-surface);
+}
+
+.portal-tab
+{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 56px;
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+}
+
+.portal-tab--active { color: var(--rca-navy); font-weight: var(--rca-fw-semibold); }
+.portal-tab[aria-disabled="true"] { color: var(--rca-disabled-ink); }
+
+/* --- skeletons ------------------------------------------------------------ */
+
+.portal-skeleton { display: flex; flex-direction: column; gap: var(--rca-space-4); }
+
+.sk
+{
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-border);
+    /* Deliberately slow and low-contrast: a fast shimmer on a slow connection
+       reads as a stuck animation. */
+    animation: portal-pulse 1.6s ease-in-out infinite;
+}
+
+.sk-line { height: 14px; }
+.sk-line--sm { width: 35%; }
+.sk-line--lg { width: 65%; height: 28px; }
+.sk-card { height: 104px; }
+
+@keyframes portal-pulse
+{
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    .sk { animation: none; }
+}
+
+/* --- wider screens -------------------------------------------------------- */
+
+@media (min-width: 768px)
+{
+    .portal { padding-left: var(--rca-gutter); padding-right: var(--rca-gutter); }
+
+    /* The tab bar is phone chrome. With room for it, the account section on
+       the page is the way out, and a bar pinned to the bottom of a laptop
+       window is just in the way. */
+    .portal-tabs { display: none; }
+    .portal-home { padding-bottom: var(--rca-space-8); }
+}
+
+/* Courses + lessons (#137).
+
+   Same tokens as the rest of the portal. Every tappable row is at least 48px
+   tall, because these are read on a phone, often one-handed, often outdoors. */
+
+.portal-cached
+{
+    margin: 0 0 var(--rca-space-3);
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+}
+
+.portal-list
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--rca-space-3);
+}
+
+.portal-course
+{
+    display: grid;
+    gap: var(--rca-space-2);
+    padding: var(--rca-space-5);
+    min-height: 48px;
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-lg, 12px);
+    background-color: var(--rca-surface);
+    text-decoration: none;
+    color: inherit;
+}
+
+.portal-course:hover { border-color: var(--rca-border-strong); }
+.portal-course:focus-visible { outline: var(--rca-focus-ring); outline-offset: 2px; }
+
+.portal-course-title
+{
+    font-size: var(--rca-fs-body);
+    font-weight: var(--rca-fw-semibold);
+    color: var(--rca-navy);
+}
+
+.portal-course-sub,
+.portal-course-summary
+{
+    font-size: var(--rca-fs-small);
+    color: var(--rca-ink-soft);
+}
+
+.portal-course-summary { margin: 0 0 var(--rca-space-5); }
+
+.portal-course-meta
+{
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+}
+
+.portal-back
+{
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rca-space-2);
+    margin-bottom: var(--rca-space-4);
+    min-height: 44px;
+    font-size: var(--rca-fs-small);
+    color: var(--rca-ink-soft);
+    text-decoration: none;
+}
+
+.portal-back:hover { color: var(--rca-navy); }
+.portal-back:focus-visible { outline: var(--rca-focus-ring); outline-offset: 2px; }
+
+.portal-lessons
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--rca-space-2);
+    counter-reset: none;
+}
+
+.portal-lesson
+{
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-surface);
+    overflow: hidden;
+}
+
+.portal-lesson-head
+{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--rca-space-3);
+    width: 100%;
+    min-height: 48px;
+    padding: var(--rca-space-4) var(--rca-space-5);
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+}
+
+.portal-lesson-head:focus-visible { outline: var(--rca-focus-ring); outline-offset: -2px; }
+
+.portal-lesson-no
+{
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--rca-surface-subtle);
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    /* Tabular figures so lesson 9 and lesson 10 do not shift the title. */
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-lesson-title { font-size: var(--rca-fs-small); font-weight: var(--rca-fw-semibold); }
+
+.portal-lesson-meta
+{
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-lesson-body
+{
+    padding: 0 var(--rca-space-5) var(--rca-space-5);
+    border-top: 1px solid var(--rca-border);
+    padding-top: var(--rca-space-4);
+}
+
+.portal-lesson-notes
+{
+    margin: 0 0 var(--rca-space-3);
+    font-size: var(--rca-fs-small);
+    line-height: 1.6;
+    /* Notes are authored as markdown but rendered as text for now: no parser
+       shipped to the client, and no untrusted HTML either. */
+    white-space: pre-wrap;
+}

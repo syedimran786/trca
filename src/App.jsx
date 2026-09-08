@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Navbar from "./components/molecules/Navbar/Navbar"
 import Footer from "./components/organism/Footer/FooterComponent"
 import Banner from './components/organism/Banner/Banner'
@@ -13,6 +13,10 @@ import FAQ from "./components/Pages/FAQ";
 import Blog from "./components/Pages/Blog";
 import BlogPost from "./components/Pages/BlogPost";
 import ScrollToTop from "./components/ScrollToTop";
+import PortalRoute from "./components/portal/PortalRoute";
+import PortalLogin from "./components/portal/PortalLogin";
+import PortalHome from "./components/portal/PortalHome";
+import PortalCourse from "./components/portal/PortalCourse";
 import Modal from 'react-modal';
 import EnquiryForm from './components/forms/Enquiry Form/EnquiryForm';
 import EnrollForm from './components/forms/EnrollForm/EnrollForm';
@@ -23,6 +27,13 @@ import { ToastContainer, toast } from 'react-toastify';
  Modal.setAppElement('#root');
 
 function App() {
+  // The portal is an app surface, not a page of the marketing site (#110, #111).
+  // The navbar, the floating WhatsApp/call buttons and the site footer all
+  // render outside <Routes>, so without this they sit on top of the student
+  // home — and inside the Capacitor shell (#109) a "call us" bubble over a
+  // logged-in student's timetable makes no sense at all.
+  const isPortal = useLocation().pathname.startsWith("/portal");
+
   const [modalIsOpen, setIsOpen] = useState(false);
   const [enrollCourse, setEnrollCourse] = useState(null);
   // Which course the enquiry was opened from, so the form can say so and the
@@ -71,7 +82,7 @@ function App() {
 
   return (
     <AuthContext.Provider className="app" value={{ openModal, closeModal, openEnroll, closeEnroll, notify, enquiryCourse }}>
-      <Navbar />
+      {!isPortal && <Navbar />}
       <ToastContainer className={"toast"} autoClose={2500}/>
       <Modal
         isOpen={modalIsOpen}
@@ -101,10 +112,31 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        {/* Student portal (#110, #111). The login screen is public; everything
+            else under /portal goes through the guard, which reads /auth/me. */}
+        <Route path="/portal/login" element={<PortalLogin />} />
+        <Route
+          path="/portal"
+          element={
+            <PortalRoute>
+              {({ user, logout }) => <PortalHome user={user} logout={logout} />}
+            </PortalRoute>
+          }
+        />
+        {/* One course and its lessons (#137). Behind the same guard, so a
+            direct link from outside lands on login and returns here after. */}
+        <Route
+          path="/portal/courses/:slug"
+          element={
+            <PortalRoute>
+              <PortalCourse />
+            </PortalRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      <FloatingIcons/>
-      <Footer />
+      {!isPortal && <FloatingIcons/>}
+      {!isPortal && <Footer />}
     </AuthContext.Provider>
   );
 }
