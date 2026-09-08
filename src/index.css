@@ -39,6 +39,15 @@ html,body {
   /* min-height: 100vh; */
 }
 
+/* `body` is a flex container (above, from the Vite starter), which makes #root
+   a flex item — and a flex item sizes to its content, not to the line. So any
+   full-bleed band was only ever as wide as the widest thing inside it: at 1440
+   the footer's navy background stopped at 1248px and left 192px of white down
+   the right-hand side (#107). */
+#root {
+  width: 100%;
+}
+
 
 
 a
