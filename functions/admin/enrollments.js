@@ -32,17 +32,28 @@ function rupees(paise) {
 
 function rowHtml(r) {
   const paid = r.status === "paid";
+  // A payment we could not confirm with Razorpay (#165). The money is real, but
+  // we could not check which course it was for, so the row deliberately holds
+  // no course and no amount. Rendering it as "registered" like everything else
+  // that is not "paid" would show a student who HAS paid as one who has not —
+  // it needs its own badge and someone to reconcile it against the Razorpay
+  // dashboard using the payment id.
+  const review = r.status === "needs_review";
   const badge = paid
     ? `<span class="badge paid">paid</span>`
-    : `<span class="badge reg">registered</span>`;
+    : review
+      ? `<span class="badge review">needs review</span>`
+      : `<span class="badge reg">registered</span>`;
   return (
     "<tr>" +
     `<td>${escapeHtml(r.fullname)}</td>` +
     `<td><a href="tel:${escapeHtml(r.mobile)}">${escapeHtml(r.mobile)}</a></td>` +
     `<td>${r.email ? `<a href="mailto:${escapeHtml(r.email)}">${escapeHtml(r.email)}</a>` : "—"}</td>` +
-    `<td>${escapeHtml(r.course_name || r.course)}</td>` +
+    `<td>${escapeHtml(r.course_name || r.course) || "<em>unconfirmed</em>"}</td>` +
     `<td>${escapeHtml(r.batch) || "—"}</td>` +
-    `<td>${badge}${paid ? ` <span class="amt">${rupees(r.amount)}</span>` : ""}</td>` +
+    `<td>${badge}${typeof r.amount === "number" ? ` <span class="amt">${rupees(r.amount)}</span>` : ""}` +
+      (review ? ` <span class="pid">${escapeHtml(r.razorpay_payment_id)}</span>` : "") +
+      "</td>" +
     `<td>${escapeHtml(r.referral) || "—"}</td>` +
     `<td class="when">${escapeHtml(r.created_at)}</td>` +
     "</tr>"
@@ -76,6 +87,8 @@ function page(notice, count, body) {
   .badge { font-size:.72rem; font-weight:700; padding:.1rem .45rem; border-radius:999px; text-transform:uppercase; }
   .badge.paid { background:#e7f6ec; color:#1b6b3a; }
   .badge.reg { background:#eef1f8; color:#334; }
+  .badge.review { background:#fff4e5; color:#8a5300; }
+  .pid { font-family:ui-monospace,monospace; font-size:.72rem; color:#5b6472; white-space:nowrap; }
   .amt { font-weight:600; white-space:nowrap; }
 </style></head>
 <body>
