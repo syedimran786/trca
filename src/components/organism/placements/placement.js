@@ -50,6 +50,36 @@ import qsg from "../../../assets/clients/qsg.jpg"
 //                 rendering when the embed fails to load is documented in
 //                 `InstagramEmbed.jsx`. Wider scope (YouTube + LinkedIn URLs,
 //                 admin CRUD) is queued as portal work in #145.
+/**
+ * The bundled images, keyed so a D1 row can point at one (#145).
+ *
+ * Records added through /admin/placements carry ordinary URLs. The four
+ * original records cannot: their images are Vite asset imports whose real URLs
+ * contain a content hash that only exists after a build, so the seed rows in
+ * schema-placements.sql reference them as `bundled:<key>` and this map is what
+ * resolves that back to the imported asset. It is why switching the site from
+ * this array to D1 leaves those four pixel-identical.
+ */
+export const BUNDLED_ASSETS = {
+  ashish, sakshi, sujith, prajwala,
+  sapHybris, hcl, skad, qsg,
+};
+
+/** `bundled:hcl` → the imported asset; any other value passes through. */
+export function resolveAsset(value) {
+  if (typeof value !== "string") return value;
+  if (!value.startsWith("bundled:")) return value;
+  return BUNDLED_ASSETS[value.slice("bundled:".length)] || undefined;
+}
+
+/**
+ * The fallback list.
+ *
+ * The site reads placements from /api/placements/list now (#145). This array
+ * stays as what renders when that fetch fails — a network error, the function
+ * down, D1 unreachable. Placements are the most persuasive section on the
+ * site; an empty one is a worse failure than a slightly stale one.
+ */
 export let placements=[
     {
         name:"Ashish Jadhav",
