@@ -1,4 +1,5 @@
 import React from "react";
+import SocialMeta from "../atoms/SocialMeta/SocialMeta";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import { placements } from "../organism/placements/placement";
@@ -71,11 +72,14 @@ function PlacementsPage() {
     ],
   };
 
+  const title = "Student Placements — Real Outcomes | Rest Coder Academy";
+
   return (
     <>
-      <title>Student Placements — Real Outcomes | Rest Coder Academy</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={title} description={description} url={url} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <main className="pl">

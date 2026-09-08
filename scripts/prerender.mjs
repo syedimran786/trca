@@ -112,6 +112,17 @@ async function main() {
       };
       keepLast('head > meta[name="description"]');
       keepLast('head > link[rel="canonical"]');
+      // Same for the social card (#73). index.html ships a static set with the
+      // homepage's values; SocialMeta injects the per-route one after it. Without
+      // this every page would serve two of each tag, and a crawler that reads the
+      // first wins gets the homepage card again — the exact bug being fixed.
+      [
+        "og:type", "og:title", "og:description", "og:url",
+        "og:image", "og:image:width", "og:image:height", "og:locale",
+      ].forEach((p) => keepLast(`head > meta[property="${p}"]`));
+      [
+        "twitter:card", "twitter:title", "twitter:description", "twitter:image",
+      ].forEach((n) => keepLast(`head > meta[name="${n}"]`));
     });
 
     const html = "<!doctype html>\n" + (await page.evaluate(() => document.documentElement.outerHTML));
