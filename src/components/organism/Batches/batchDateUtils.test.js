@@ -4,6 +4,7 @@ import {
   isBatchUpcoming,
   formatBatchDateShort,
   getNextBatchForCourse,
+  getNextBatch,
 } from "./batchDateUtils";
 
 describe("parseBatchDate", () => {
@@ -74,5 +75,33 @@ describe("getNextBatchForCourse", () => {
   });
   it("matches the course name exactly (no fuzzy match)", () => {
     expect(getNextBatchForCourse("java full stack", batches)).toBeNull();
+  });
+});
+
+describe("getNextBatch", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 8, 20)); // 20 Sep 2026
+  });
+  afterEach(() => vi.useRealTimers());
+
+  const batches = [
+    { name: "Java Full Stack", date: "16-09-2026" },   // past
+    { name: "MERN Stack", date: "14-10-2026" },        // future, later
+    { name: "Python Full Stack", date: "23-09-2026" }, // future, earliest -> wins
+  ];
+
+  it("returns the soonest upcoming batch across every course", () => {
+    expect(getNextBatch(batches).date).toBe("23-09-2026");
+  });
+  it("ignores batches that have already started", () => {
+    expect(getNextBatch([{ date: "01-01-2020" }])).toBeNull();
+  });
+  it("returns null for an empty or missing list, so the hero just hides the date", () => {
+    expect(getNextBatch([])).toBeNull();
+    expect(getNextBatch(undefined)).toBeNull();
+  });
+  it("skips unparseable dates rather than throwing", () => {
+    expect(getNextBatch([{ date: "nope" }, { date: "30-09-2026" }]).date).toBe("30-09-2026");
   });
 });
