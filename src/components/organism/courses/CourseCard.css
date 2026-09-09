@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   background: var(--rca-surface, #fff);
-  border: 1px solid #e6e9f2;
+  border: 1px solid var(--rca-border);
   border-radius: var(--rca-radius-lg, 12px);
   overflow: hidden;
   box-shadow: var(--rca-shadow-card, 0 1px 3px rgba(3, 8, 76, 0.08));
@@ -18,7 +18,7 @@
 /* --- Navy header --- */
 .cc-head {
   background: var(--rca-navy, #03084c);
-  color: #fff;
+  color: var(--rca-ink-invert);
   padding: 20px 24px 18px;
 }
 .cc-title {
@@ -33,7 +33,7 @@
      it takes the body size here too, rather than 13px (#11). */
   font-size: var(--rca-fs-body);
   line-height: 1.5;
-  color: #aeb6e0;
+  color: var(--rca-ink-invert-soft);
 }
 .cc-trainer {
   display: flex;
@@ -41,7 +41,7 @@
   gap: 11px;
   margin-top: 15px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  border-top: 1px solid var(--rca-tint-on-dark);
 }
 .cc-avatar {
   width: 36px;
@@ -50,7 +50,7 @@
   border-radius: 999px;
   overflow: hidden;
   background: var(--rca-blue, #146389);
-  color: #fff;
+  color: var(--rca-ink-invert);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,10 +60,10 @@
 .cc-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .cc-trainer-text { display: flex; flex-direction: column; line-height: 1.35; }
 .cc-trainer-text b { font-size: 13px; font-weight: 600; }
-.cc-trainer-text span { font-size: 11.5px; color: #8e96c8; }
+.cc-trainer-text span { font-size: 11.5px; color: var(--rca-ink-invert-soft); }
 .cc-trainer--link { cursor: pointer; }
 .cc-trainer--link:hover .cc-trainer-text b { text-decoration: underline; }
-.cc-trainer--link:focus-visible { outline: 2px solid #ffb74d; outline-offset: 3px; border-radius: 6px; }
+.cc-trainer--link:focus-visible { outline: 2px solid var(--rca-orange); outline-offset: 3px; border-radius: 6px; }
 /* Sits directly under the trainer name (indented past the 36px avatar + 11px
    gap) so it reads as a sub-action of "Taught by …", not a stray amber line. */
 .cc-founder-link {
@@ -73,7 +73,7 @@
   margin: 5px 0 0 47px;
   font-size: 12px;
   font-weight: 600;
-  color: #ffb74d;
+  color: var(--rca-orange);
   text-decoration: none;
   opacity: 0.92;
 }
@@ -111,27 +111,12 @@
   letter-spacing: 0;
   color: var(--rca-ink-soft);
 }
-.cc-tag {
-  flex-shrink: 0;
-  background: rgba(255, 152, 0, 0.14);
-  color: #8a5200;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: var(--rca-radius-pill, 999px);
-  white-space: nowrap;
-}
-.cc-tag--muted {
-  background: var(--rca-disabled-bg, #e4e7ea);
-  color: var(--rca-disabled-ink, #9aa3aa);
-}
-
 /* Batch schedule, folded into the card (Courses + Upcoming Batches, one place). */
 .cc-schedule {
   margin-top: 14px;
   padding: 11px 14px;
-  background: #f5f7fb;
-  border: 1px solid #e6e9f2;
+  background: var(--rca-surface-subtle);
+  border: 1px solid var(--rca-border);
   border-radius: var(--rca-radius-md, 8px);
   display: flex;
   flex-direction: column;
@@ -151,10 +136,10 @@
 }
 .cc-sched-meta {
   font-size: 12px;
-  color: #45545d;
+  color: var(--rca-ink-soft);
 }
 .cc-schedule--soon {
-  color: #45545d;
+  color: var(--rca-ink-soft);
   font-size: 13px;
   font-style: italic;
 }
@@ -182,7 +167,7 @@
   gap: 8px;
 }
 .cc-syllabus li { display: flex; align-items: flex-start; gap: 10px; }
-.cc-syllabus li span { font-size: 13px; color: #333; line-height: 1.4; }
+.cc-syllabus li span { font-size: 13px; color: var(--rca-ink); line-height: 1.4; }
 .cc-check { flex-shrink: 0; margin-top: 1px; }
 
 .cc-foot { margin-top: 20px; }
@@ -195,7 +180,7 @@
   border: 1px solid transparent;
   border-radius: var(--rca-radius-md, 8px);
   background: var(--rca-navy, #03084c);
-  color: #fff;
+  color: var(--rca-ink-invert);
   cursor: pointer;
   transition: background 0.15s ease;
 }
