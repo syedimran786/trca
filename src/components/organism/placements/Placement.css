@@ -95,6 +95,24 @@
 
 }
 
+/* Instagram embeds ship with `min-width: 326px` on IG's own blockquote
+   wrapper plus 8px padding on each side, so ~342px of horizontal room is
+   the real minimum. The default `.card { width: 94% }` + `margin-left: 8px`
+   leaves ~330px on a 360px mobile slide and ~344px on the desktop
+   4-up carousel — either just short of what IG needs, which is why the
+   username row and comment box get clipped left and right by
+   `slick-list { overflow: hidden }`.
+   Give the IG-variant card the full slide width and drop the margin so
+   IG's chrome sits inside the slide instead of being cropped by slick's
+   mask. Background/border stay on `.card`; padding stays on `.card-content`. */
+.placements .MuiGrid-container .card.card--instagram {
+    width: 100% !important;
+    margin-left: 0;
+}
+.placements .card--instagram .card-content {
+    padding: 8px;
+}
+
 
 .placements .card-content {
     /* border: 2px solid brown; */
