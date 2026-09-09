@@ -41,9 +41,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 94%;
+  /* Symmetric horizontal margin creates a visible 16px gap between adjacent
+     tiles (8px + 8px). The original single-sided `margin-left` was swallowed
+     by slick's slide-width math, so tile borders sat flush against each
+     other and the row read as one continuous strip instead of separate
+     tiles. `calc(100% - 16px)` shrinks the tile to fit inside the slide
+     with room for the two 8px margins; `!important` on the width is needed
+     because MUI's own `MuiCard-root` class ships a width rule that would
+     otherwise re-inflate the tile to slide edge. */
+  width: calc(100% - 16px) !important;
   height: 10rem;
-  margin-left: var(--rca-space-2);
+  margin: 0 8px;
   border: 1px solid var(--rca-blue);
   /* radius-lg is the card radius the course cards use; this tile was on
      radius-sm (4px), the chip value, so it read as a different family. */
