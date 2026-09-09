@@ -95,22 +95,48 @@
 
 }
 
-/* Instagram embeds ship with `min-width: 326px` on IG's own blockquote
-   wrapper plus 8px padding on each side, so ~342px of horizontal room is
-   the real minimum. The default `.card { width: 94% }` + `margin-left: 8px`
-   leaves ~330px on a 360px mobile slide and ~344px on the desktop
-   4-up carousel — either just short of what IG needs, which is why the
-   username row and comment box get clipped left and right by
-   `slick-list { overflow: hidden }`.
-   Give the IG-variant card the full slide width and drop the margin so
-   IG's chrome sits inside the slide instead of being cropped by slick's
-   mask. Background/border stay on `.card`; padding stays on `.card-content`. */
+/* Instagram's embed script (`embed.js`) sets `min-width: 326px` on its own
+   `.instagram-media` blockquote AND renders the resulting iframe at that
+   fixed 326px width via an HTML `width` attribute. On the homepage carousel,
+   the slick-slide cell is narrower than 326px at every breakpoint that
+   shows more than one slide (289px at desktop 4-up, ~245px at 3-up on
+   tablet), so IG's iframe is wider than the card, centers itself, and gets
+   clipped ~18px on each side by `.card--instagram { overflow: hidden }` —
+   which is why Kota Akshay's face and the "GOT PLACED FOR 4 LPA PACKAGE"
+   pinned graphic lose their left and right edges on live today.
+
+   The fix is two-part:
+   1. Give the IG-variant card the full slide width (no 94% + margin cap),
+      so we spend every available horizontal pixel on the embed.
+   2. Override IG's own `min-width` on the blockquote AND the rendered
+      iframe, so both reflow to the card's actual width instead of holding
+      at 326px. IG's embed content (username row, main visual, comment box)
+      is already responsive inside the iframe — forcing `width: 100%` on
+      the iframe reflows the content instead of clipping it.
+
+   Author `!important` beats the iframe's presentation-attribute width, so
+   this override wins over IG's script. */
 .placements .MuiGrid-container .card.card--instagram {
     width: 100% !important;
     margin-left: 0;
 }
 .placements .card--instagram .card-content {
     padding: 8px;
+    /* Card-content is a centering flex column at parent scope. IG's iframe
+       needs to be constrained by width, not centered around a fixed 326px. */
+    width: 100%;
+    box-sizing: border-box;
+}
+.placements .card--instagram .instagram-media,
+.placements .card--instagram iframe.instagram-media,
+.placements .card--instagram iframe {
+    /* IG's own CSS: `.instagram-media { min-width: 326px; max-width: 540px; }`.
+       Override both bounds so the embed sizes to the card, not to IG's
+       preferred desktop width. */
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
 }
 
 
