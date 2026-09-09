@@ -1,6 +1,9 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useLocation, Navigate, Link } from "react-router-dom";
 import { usePortalSession } from "./usePortalSession";
+import { beginNativeSignIn } from "./nativeAuth";
+import { isNative } from "../../lib/apiBase";
 import PortalSkeleton from "./PortalSkeleton";
 import "./Portal.css";
 
@@ -25,6 +28,10 @@ const ERRORS = {
   bad_token: "We could not verify that sign-in. Please try again.",
   storage: "We could not save your account just now. Please try again shortly.",
   not_configured: "Student sign-in is not switched on yet.",
+  // Only reachable in the app (#163): the hand-off back from the browser did
+  // not complete. Says "start again" because that is genuinely the fix — the
+  // one-time code is spent either way.
+  offline: "We could not reach the academy to finish signing you in. Please try again.",
 };
 
 function ProviderMark({ name }) {
@@ -51,10 +58,13 @@ function ProviderMark({ name }) {
 ProviderMark.propTypes = { name: PropTypes.string.isRequired };
 
 function PortalLogin() {
-  const { status, providers } = usePortalSession();
+  const { status, providers, authError } = usePortalSession();
+  const [busy, setBusy] = useState(null);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const errorKey = params.get("error");
+  // In the app the failure comes back through the deep-link listener rather
+  // than a query string, because the callback never lands on this origin.
+  const errorKey = authError || params.get("error");
   const error = errorKey ? ERRORS[errorKey] || ERRORS.token_exchange : null;
 
   if (status === "loading") return <PortalSkeleton />;
@@ -62,6 +72,7 @@ function PortalLogin() {
 
   const next = (location.state && location.state.from) || "/portal";
   const offline = status === "offline";
+  const native = isNative();
 
   return (
     <main className="portal portal-login">
@@ -94,16 +105,44 @@ function PortalLogin() {
           </div>
         )}
 
-        {providers.map((p) => (
-          <a
-            key={p}
-            className="portal-provider"
-            href={`/auth/${p}/start?next=${encodeURIComponent(next)}`}
-          >
-            <ProviderMark name={p} />
-            <span>Sign in with {PROVIDER_LABEL[p] || p}</span>
-          </a>
-        ))}
+        {providers.map((p) =>
+          native ? (
+            // In the app this cannot be a link. A plain navigation would run
+            // consent inside the WebView, which Google rejects outright, so the
+            // flow is opened in a Custom Tab instead (#163).
+            <button
+              key={p}
+              type="button"
+              className="portal-provider"
+              disabled={Boolean(busy)}
+              onClick={async () => {
+                setBusy(p);
+                try {
+                  await beginNativeSignIn(p, next);
+                } finally {
+                  // The Custom Tab is up; the app is paused until the deep link
+                  // brings it back. Clearing this now means the button is live
+                  // again if the student cancels and returns.
+                  setBusy(null);
+                }
+              }}
+            >
+              <ProviderMark name={p} />
+              <span>
+                {busy === p ? "Opening…" : `Sign in with ${PROVIDER_LABEL[p] || p}`}
+              </span>
+            </button>
+          ) : (
+            <a
+              key={p}
+              className="portal-provider"
+              href={`/auth/${p}/start?next=${encodeURIComponent(next)}`}
+            >
+              <ProviderMark name={p} />
+              <span>Sign in with {PROVIDER_LABEL[p] || p}</span>
+            </a>
+          ),
+        )}
 
         <p className="portal-login-foot">
           Not a student yet? <Link to="/">See our courses</Link>

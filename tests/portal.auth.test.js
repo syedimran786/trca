@@ -173,7 +173,9 @@ describe("GET /auth/me", () => {
 
 describe("POST /auth/logout", () => {
   it("clears the session cookie", async () => {
-    const res = await logoutPost();
+    // Takes the request since #163: the attributes it clears with depend on
+    // whether the caller is the website or the app's WebView.
+    const res = await logoutPost({ request: new Request("https://x.test/auth/logout", { method: "POST" }) });
     expect(res.status).toBe(200);
     const cookie = res.headers.get("set-cookie");
     expect(cookie).toMatch(/rca_session=;/);

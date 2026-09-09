@@ -80,6 +80,17 @@ Environment variables → **add as Secret (encrypted)**, for Production:
 | `MS_CLIENT_SECRET` | the secret **Value** from step 2 |
 | `MS_TENANT` | `common` |
 
+There is also one table to create, for the Android app only:
+
+```bash
+npx wrangler d1 execute restcoder-enquiries --remote --file=schema-native-handoff.sql
+```
+
+Skipping it does not break the website. It breaks sign-in **in the app only**,
+and does so at the last step, after the student has already been through
+consent — which looks like the app rejecting a correct login. Worth running at
+the same time as the secrets so that never happens.
+
 Generate `SESSION_SECRET` with:
 
 ```bash
@@ -135,6 +146,11 @@ has to happen server-side where the client secret lives. So both providers
 redirect to this site's own origin, and the native shell is handed back at the
 end of the callback via the `rca://` deep link the app already registers. Do
 not create an "Android" OAuth client type — it will not be used.
+
+This also means **the redirect URIs above are the only ones to register**. The
+`rca://` hand-off happens entirely between our own callback and our own app,
+after the provider is done; neither Google nor Microsoft ever sees it. See
+*Signing in inside the app* in the README for how that hand-off works.
 
 **The Microsoft secret expires.** Google's client secret does not. Microsoft's
 does, on whatever expiry you chose. Diary it.
