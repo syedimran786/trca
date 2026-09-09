@@ -18,6 +18,23 @@
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!--
+      Preconnect + dns-prefetch to the Instagram origins that InstagramEmbed.jsx
+      calls into when the placement carousel hydrates. Placed at the top of
+      <head> so the DNS resolution and TLS handshake to instagram.com start
+      during HTML parse, saving ~200-400ms on the cold-cache load path that
+      Cmd+Shift+R exercises. Without this, embed.js only starts fetching when
+      the InstagramEmbed IntersectionObserver fires, and every one of the 10
+      IG-embed placement cards on /placements pays the full cold connect cost
+      then — which is what makes the section collapse-and-reform on hard
+      reload today. `crossorigin` is required on preconnect for the CDN
+      origins that serve font/font-file/media resources IG loads later.
+    -->
+    <link rel="preconnect" href="https://www.instagram.com" />
+    <link rel="dns-prefetch" href="https://www.instagram.com" />
+    <link rel="preconnect" href="https://static.cdninstagram.com" crossorigin />
+    <link rel="dns-prefetch" href="https://static.cdninstagram.com" />
+
     <!-- Primary SEO -->
     <title>Full Stack Coding Classes in Bengaluru — Java, Python & MERN | Rest Coder Academy</title>
     <meta name="description" content="Live, project-based Java, Python & MERN full-stack courses in Jayanagar, Bengaluru — with placement support and EMI. Plus weekly progress reports parents can actually see." />

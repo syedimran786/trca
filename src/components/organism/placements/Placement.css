@@ -2,7 +2,22 @@
     /* border: 2px solid red; */
     padding-left: 20px !important;
     /* height: 600px; */
-
+    /* Reserve vertical space for the whole section so the ~800px jump when
+       IG embeds hydrate stops pushing the footer down on cold reload
+       (Cmd+Shift+R). Sized to fit a row of hydrated Reel iframes (~700px)
+       plus the section title, hr, dots and "See full success stories" CTA
+       (~150px combined). Applied on tablet+ where the carousel shows more
+       than one slide side-by-side; mobile uses natural height because a
+       single stacked card already takes the whole viewport. Cannot go on
+       `.card--instagram` — a per-card min-height taller than slick's own
+       expected slide size makes slick's slick-list stack slides
+       vertically instead of tracking horizontally. */
+    box-sizing: border-box;
+}
+@media (min-width: 600px) {
+    .placements {
+        min-height: 900px;
+    }
 }
 
 .placements-more-link {
@@ -117,8 +132,20 @@
    Author `!important` beats the iframe's presentation-attribute width, so
    this override wins over IG's script. */
 .placements .MuiGrid-container .card.card--instagram {
-    width: 100% !important;
-    margin-left: 0;
+    /* Symmetric 4px margin creates 8px between adjacent IG cards without
+       leaning to one side (the original `.card { margin-left: 8px }` gave
+       a lopsided gap and no visual separation on the right edge of each).
+       `calc(100% - 8px)` keeps the card inside the slick-slide bounds so
+       the neighbouring slide isn't overrun. */
+    width: calc(100% - 8px) !important;
+    margin: 0 4px;
+    /* Deliberately NO `min-height` here. A per-card min-height that exceeds
+       the "natural" slick slide height (roughly the tallest sibling before
+       hydration, ~200px) makes slick's own layout math stack the slides
+       vertically instead of tracking them horizontally — verified locally,
+       section grew to ~9000px with 24 stacked slides. Vertical space for
+       the pre-hydration section is reserved on the outer `.placements`
+       above instead, which slick cannot override. */
 }
 .placements .card--instagram .card-content {
     padding: 8px;
@@ -137,6 +164,23 @@
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 auto !important;
+    /* Fade IG's iframe in when it replaces the blockquote so the swap
+       reads as a soft arrival rather than the previous instant pop-in.
+       200ms matches the current button hover transition on the site so
+       the whole page has one motion vocabulary. Respect
+       prefers-reduced-motion below. */
+    opacity: 1;
+    transition: opacity 200ms ease;
+}
+@starting-style {
+    .placements .card--instagram iframe {
+        opacity: 0;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .placements .card--instagram iframe {
+        transition: none;
+    }
 }
 
 
