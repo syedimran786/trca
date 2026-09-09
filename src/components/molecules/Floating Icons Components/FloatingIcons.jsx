@@ -18,9 +18,9 @@ import { trackLead } from '../../../lib/analytics';
 const WHATSAPP_MESSAGE_BY_PATH = {
   '/courses/forward-deployed-engineering':
     "Hi Rest Coder Academy, I'm interested in the Forward Deployed Engineering program — can we schedule a call?",
-  '/courses/full-stack-java':
+  '/courses/java-full-stack':
     "Hi Rest Coder Academy, I'd like to enquire about the Full Stack Java course.",
-  '/courses/full-stack-python':
+  '/courses/python-full-stack':
     "Hi Rest Coder Academy, I'd like to enquire about the Full Stack Python course.",
   '/courses/mern-stack':
     "Hi Rest Coder Academy, I'd like to enquire about the MERN Stack course.",
