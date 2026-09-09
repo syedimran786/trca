@@ -117,8 +117,24 @@
    Author `!important` beats the iframe's presentation-attribute width, so
    this override wins over IG's script. */
 .placements .MuiGrid-container .card.card--instagram {
-    width: 100% !important;
-    margin-left: 0;
+    /* Symmetric 4px margin creates 8px between adjacent IG cards without
+       leaning to one side (the original `.card { margin-left: 8px }` gave
+       a lopsided gap and no visual separation on the right edge of each).
+       `calc(100% - 8px)` keeps the card inside the slick-slide bounds so
+       the neighbouring slide isn't overrun. */
+    width: calc(100% - 8px) !important;
+    margin: 0 4px;
+    /* Reserve vertical space before IG's iframe arrives. The blockquote
+       fallback anchor is only ~30px tall, so without this the placements
+       section starts collapsed and grows ~600px when embeds hydrate —
+       every element below the section (the footer on the homepage) jumps
+       down by that much. `min-height: 640px` matches a typical IG Reel's
+       rendered iframe height (9:16 vertical video ≈ 590px + IG chrome
+       ~60px on top and bottom), so the moment IG's iframe replaces the
+       blockquote the card's own height barely moves. Slightly shorter
+       than the tallest IG post keeps the card from padding itself past
+       its content on desktop 4-up, where the cards line up. */
+    min-height: 640px;
 }
 .placements .card--instagram .card-content {
     padding: 8px;
@@ -126,6 +142,10 @@
        needs to be constrained by width, not centered around a fixed 326px. */
     width: 100%;
     box-sizing: border-box;
+    /* Match the card's reserved height so the flex column has real space
+       to lay the iframe out; without it the content collapses to the
+       blockquote's ~30px height, defeating the point of card min-height. */
+    min-height: 100%;
 }
 .placements .card--instagram .instagram-media,
 .placements .card--instagram iframe.instagram-media,
@@ -137,6 +157,23 @@
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 auto !important;
+    /* Fade IG's iframe in when it replaces the blockquote so the swap
+       reads as a soft arrival rather than the previous instant pop-in.
+       200ms matches the current button hover transition on the site so
+       the whole page has one motion vocabulary. Respect
+       prefers-reduced-motion below. */
+    opacity: 1;
+    transition: opacity 200ms ease;
+}
+@starting-style {
+    .placements .card--instagram iframe {
+        opacity: 0;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .placements .card--instagram iframe {
+        transition: none;
+    }
 }
 
 
