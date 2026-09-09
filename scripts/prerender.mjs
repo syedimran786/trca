@@ -85,11 +85,43 @@ async function main() {
 
   const browser = await chromium.launch();
   const page = await browser.newPage();
+
+  // Instagram embeds on /placements (see placement.js records with
+  // `instagram_url`) load `embed.js` and one iframe per card from
+  // instagram.com/www.cdninstagram.com. Those iframes keep the network
+  // busy long after the SPA has finished rendering — a video prefetch here,
+  // a metrics ping there — so `waitUntil: "networkidle"` was never reaching
+  // idle inside the 30s timeout once the fallback list carried more than
+  // one IG record. Abort every request to IG's origins during the snapshot;
+  // InstagramEmbed's blockquote fallback anchor stays visible, which is
+  // what a crawler should see anyway (a real link to the post, not an
+  // opaque iframe), and the client-side script still runs on the real
+  // page load for actual visitors. Same treatment for cdninstagram.com
+  // (media) and platform-lookaside.fbsbx.com (avatar CDN) so no lingering
+  // media request pins the network open.
+  await page.route("**/*", (route) => {
+    const host = new URL(route.request().url()).hostname;
+    if (
+      host === "www.instagram.com" ||
+      host === "instagram.com" ||
+      host.endsWith(".cdninstagram.com") ||
+      host.endsWith(".fbsbx.com")
+    ) {
+      return route.abort();
+    }
+    return route.continue();
+  });
+
   let ok = 0;
 
   for (const route of routes) {
     const target = base + route.path;
-    await page.goto(target, { waitUntil: "networkidle", timeout: 30000 });
+    // `waitUntil: "load"` fires after the SPA's scripts and stylesheets are
+    // in, without waiting for arbitrarily-lingering third-party requests.
+    // The `waitForSelector` below is what actually confirms the SPA rendered
+    // the route's own content — the network-idle wait was double-insurance
+    // that we no longer need, and which broke with IG embeds on the page.
+    await page.goto(target, { waitUntil: "load", timeout: 30000 });
     await page.waitForSelector(route.waitFor, { timeout: 20000 });
 
     // React 19 hoists per-route <title>/<meta> into a <head> that already holds
