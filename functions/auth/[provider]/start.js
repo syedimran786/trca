@@ -27,6 +27,10 @@ export async function onRequestGet(context) {
   const state = randomString(16);
   const verifier = randomString(32);
   const challenge = await codeChallenge(verifier);
+  // Binds the ID token to this browser (#159). PKCE already blocks replay of
+  // the code; the nonce is what stops a token minted elsewhere being swapped
+  // in at the callback.
+  const nonce = randomString(16);
 
   // Where to land inside the app afterwards. Only a same-site path is kept —
   // an absolute URL here would make this an open redirect.
@@ -41,6 +45,7 @@ export async function onRequestGet(context) {
   url.searchParams.set("state", state);
   url.searchParams.set("code_challenge", challenge);
   url.searchParams.set("code_challenge_method", "S256");
+  url.searchParams.set("nonce", nonce);
   // Ask for an account chooser rather than silently reusing whichever account
   // the phone happens to be signed into.
   url.searchParams.set("prompt", "select_account");
@@ -48,6 +53,7 @@ export async function onRequestGet(context) {
   const headers = new Headers({ location: url.toString() });
   headers.append("set-cookie", txCookie("rca_oauth_state", state));
   headers.append("set-cookie", txCookie("rca_oauth_verifier", verifier));
+  headers.append("set-cookie", txCookie("rca_oauth_nonce", nonce));
   headers.append("set-cookie", txCookie("rca_oauth_next", encodeURIComponent(next)));
   return new Response(null, { status: 302, headers });
 }

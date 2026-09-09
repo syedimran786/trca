@@ -40,6 +40,20 @@ export async function verifySession(token, secret) {
   const parts = token.split(".");
   if (parts.length !== 3) return null;
   const [header, body, sig] = parts;
+
+  // Pin the algorithm before doing anything with the token (#161). We are the
+  // only signer today and HMAC output is length-fixed, so this is unreachable
+  // as things stand. It stops being decorative the moment a second caller
+  // hands this helper an asymmetrically-signed token — that is the shape of
+  // alg-confusion, where a header of {"alg":"RS256"} gets verified against a
+  // public key being used as an HMAC secret.
+  try {
+    const hdr = JSON.parse(dec.decode(b64urlToBytes(header)));
+    if (!hdr || hdr.alg !== "HS256") return null;
+  } catch {
+    return null;
+  }
+
   const key = await hmacKey(secret);
   let ok = false;
   try {
