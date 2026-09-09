@@ -63,7 +63,18 @@ function PlacementsPage() {
               ...(p.journey ? { description: p.journey } : {}),
             }
           : undefined,
-        ...(p.linkedin ? { sameAs: [p.linkedin] } : {}),
+        // `sameAs` links the Person entity to authoritative external URLs
+        // that identify the same real person. LinkedIn is the classic
+        // fit; @restcoderacademy's placement announcement Reels are the
+        // second — the post is a first-party record of the placement with
+        // the student's face, salary and role in RCA's own captioned
+        // graphic, which SGE and AI Overviews follow when asked to
+        // verify "where a graduate ended up". Emit both when we have them;
+        // omit the whole field if neither is set, so the schema stays
+        // valid rather than carrying an empty array.
+        ...((p.linkedin || p.instagram_url)
+          ? { sameAs: [p.linkedin, p.instagram_url].filter(Boolean) }
+          : {}),
       })),
       {
         "@type": "ItemList",
