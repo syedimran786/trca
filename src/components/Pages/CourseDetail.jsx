@@ -1,4 +1,5 @@
 import React from "react";
+import SocialMeta from "../atoms/SocialMeta/SocialMeta";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import { courses } from "../organism/courses/courses";
@@ -89,12 +90,15 @@ function CourseDetail() {
       }
     : null;
 
+  const title = `${course.name} Course in Bengaluru — Rest Coder Academy`;
+
   return (
     <>
       {/* React 19 hoists these to <head>. */}
-      <title>{`${course.name} Course in Bengaluru — Rest Coder Academy`}</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={title} description={description} url={url} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }} />
       {faqSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />

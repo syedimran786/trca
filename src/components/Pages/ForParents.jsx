@@ -1,4 +1,5 @@
 import React from "react";
+import SocialMeta from "../atoms/SocialMeta/SocialMeta";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import "./ForParents.css";
@@ -23,11 +24,14 @@ function ForParents() {
     "attendance, scores and project progress every week — accountability, so you always know " +
     "how your child is doing.";
 
+  const title = "For Parents — Progress You Can Actually See | Rest Coder Academy";
+
   return (
     <>
-      <title>For Parents — Progress You Can Actually See | Rest Coder Academy</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={title} description={description} url={url} />
 
       <main className="fp">
         <header className="fp-hero">

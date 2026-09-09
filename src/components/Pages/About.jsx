@@ -1,4 +1,5 @@
 import React from "react";
+import SocialMeta from "../atoms/SocialMeta/SocialMeta";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import { useFounder, hasFounder } from "./useFounder";
@@ -34,11 +35,14 @@ function AboutFallback() {
     description,
     areaServed: "Bengaluru",
   };
+  const title = "About Rest Coder Academy — Live Full-Stack Coding in Bengaluru";
+
   return (
     <>
-      <title>About Rest Coder Academy — Live Full-Stack Coding in Bengaluru</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={title} description={description} url={url} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main className="ab">
         <header className="ab-hero">
@@ -92,11 +96,15 @@ function About() {
     ...(linkedin_url ? { sameAs: [linkedin_url] } : {}),
   };
 
+  // Not `title` — that name is already the founder's job title above.
+  const pageTitle = `About ${name} — Rest Coder Academy`;
+
   return (
     <>
-      <title>{`About ${name} — Rest Coder Academy`}</title>
+      <title>{pageTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={pageTitle} description={description} url={url} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <main className="ab">

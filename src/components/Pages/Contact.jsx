@@ -1,4 +1,5 @@
 import React from "react";
+import SocialMeta from "../atoms/SocialMeta/SocialMeta";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import "./Contact.css";
@@ -54,11 +55,14 @@ function Contact() {
     hasMap: MAP_URL,
   };
 
+  const title = "Contact Us — Rest Coder Academy, Jayanagar, Bengaluru";
+
   return (
     <>
-      <title>Contact Us — Rest Coder Academy, Jayanagar, Bengaluru</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={title} description={description} url={url} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <main className="ct">

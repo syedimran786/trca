@@ -1,4 +1,5 @@
 import React from "react";
+import SocialMeta from "../atoms/SocialMeta/SocialMeta";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { useAuth } from "../../App";
 import { getPost } from "./blog/posts";
@@ -48,11 +49,14 @@ function BlogPost() {
     url,
   };
 
+  const title = `${post.title} | Rest Coder Academy`;
+
   return (
     <>
-      <title>{`${post.title} | Rest Coder Academy`}</title>
+      <title>{title}</title>
       <meta name="description" content={post.description} />
       <link rel="canonical" href={url} />
+      <SocialMeta title={title} description={post.description} url={url} type="article" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <main className="bl">
