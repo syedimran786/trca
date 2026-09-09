@@ -79,49 +79,73 @@ export function resolveAsset(value) {
  * stays as what renders when that fetch fails — a network error, the function
  * down, D1 unreachable. Placements are the most persuasive section on the
  * site; an empty one is a worse failure than a slightly stale one.
+ *
+ * 2026-09-09 reconciliation: rewritten to the ten most recent placement
+ * announcement Reels/Posts on @restcoderacademy, ordered newest first to
+ * match the IG grid. The previous four testimonial-only records (Ashish,
+ * Sakshi, Sujith, Prajwala) had no verifiable IG post and were retired here;
+ * their photos remain bundled and resolvable via BUNDLED_ASSETS so a D1
+ * row can still reference `bundled:ashish` etc. without a code change if
+ * an old placement is restored through the admin portal. Kota Akshay's
+ * record is preserved as the anchor of the new list.
+ *
+ * Every URL below was verified against @restcoderacademy's own grid on the
+ * day this list was written; names, designations and one-line education
+ * lines are lifted directly from each post's caption or in-reel overlay,
+ * never invented — the "never fabricate" rule in the field docs above.
+ * Company names are conspicuously absent from RCA's post captions
+ * ("reputed company", "amazing package") so `company` stays unset.
  */
-export let placements=[
+export let placements = [
     {
-        name:"Ashish Jadhav",
-        designation:"SAP Hybris Developer",
-        image:ashish,
-        company:{name:"SAP Hybris", logo:sapHybris},
-        background:"Non-IT background from Maharashtra; moved to Bengaluru to switch into engineering.",
-        description:`Uday Sir is an exceptional mentor who transformed my career prospects. Despite being a non-IT background student from Maharashtra, I thrived under his guidance in Bangalore. His teaching style is concise, clear, and engaging. Uday Sir's patience and willingness to help are admirable. He creates a supportive environment, encouraging students to ask questions. His friendly nature makes complex concepts accessible and enjoyable.`
+        name: "Manideepika",
+        designation: "Software Engineer",
+        background: "B.Tech Computer Science graduate",
+        instagram_url: "https://www.instagram.com/reel/DdBgLQntnNb/",
     },
     {
-        name:"Sakshi",
-        designation:"Software Engineer",
-        image:sakshi,
-        company:{name:"HCL Technologies", logo:hcl},
-         description:`Uday Sir is an exceptional Java programming teacher, known for his deep knowledge and engaging teaching style. His ability to simplify complex concepts makes learning Java both easy and enjoyable. With a passion for coding and a dedication to his students' success, he ensures that everyone gains a strong foundation in programming. His guidance not only helps students master Java but also instills confidence in problem-solving and logical thinking.`
+        name: "Selvaraj Nandhini",
+        designation: "Software Engineer",
+        background: "Recent B.Tech graduate",
+        instagram_url: "https://www.instagram.com/reel/Dc_A6hYteGI/",
     },
-    {
-        name:"Sujith",
-        designation:"Software Engineer",
-        image:sujith,
-        company:{name:"SKAD IT Solutions", logo:skad},
-         description:`The coaching institute offers an exceptional Java and Python Full stack  course with comprehensive coverage of Core Java, Springs,Hibernate,SQL,Python,Django. Uday sir's expert guidance on backend development is complemented perfectly. His combined industry experience and personalized mentoring ensure students gain practical skills through hands-on projects. The institute maintains small batch sizes, creating an interactive learning environment.`
-
-    },
-    {
-        name:"Prajwala R",
-        designation:"Test Automation Engineer",
-        image:prajwala,
-        company:{name:"Quality Service Group", logo:qsg},
-         description:`Uday sir is a fantastic Java trainer who breaks down complex topics into simple, easy-to-grasp concepts. He creates a supportive learning environment that encourages students to ask questions and grow. What sets him apart is his ability to adapt to different learning styles and pace.I'm grateful for his mentorship, which helped me achieve my goals. Finally thanks to all the team members of rest coder academy.`
-
-    },
-    // First IG-embed-only placement — proof-of-concept for the pattern
-    // described in #145. Kota Akshay's placement was announced on
-    // @restcoderacademy on 2026-09-06 (post ID Dc5o-Uatcxz). Photo, company
-    // and testimonial aren't in `placement.js` yet — the embed carries all
-    // of that visually. When the D1 + admin CRUD lands, this record migrates
-    // as-is (the instagram_url field becomes an instagram_url column).
     {
         name: "Kota Akshay Rathna Kumar",
         background: "B.Tech CSE, 2026 graduate",
         instagram_url: "https://www.instagram.com/p/Dc5o-Uatcxz/",
     },
-
+    {
+        name: "Prateeksha",
+        designation: "Software Developer",
+        instagram_url: "https://www.instagram.com/reel/Dc0gG5xNvtI/",
+    },
+    {
+        name: "Praveenkumar",
+        background: "B.Tech IT, 2024 graduate",
+        instagram_url: "https://www.instagram.com/reel/DcxX5ouNVy0/",
+    },
+    {
+        name: "Dharati J M",
+        designation: "Software Engineer Trainee",
+        instagram_url: "https://www.instagram.com/reel/DcsNkJWNfCl/",
+    },
+    {
+        name: "Uday Srinivas",
+        instagram_url: "https://www.instagram.com/reel/DclQQ2QNHlj/",
+    },
+    {
+        name: "Bayannaboina Jayasimha",
+        designation: "Java Developer",
+        instagram_url: "https://www.instagram.com/p/DclARHCtJPT/",
+    },
+    {
+        name: "Shreenidhi A Goud",
+        designation: "Software Engineer",
+        instagram_url: "https://www.instagram.com/p/DcibeXsNfmP/",
+    },
+    {
+        name: "Pritiprasanna Nayak",
+        designation: "Graduate Engineer Trainee",
+        instagram_url: "https://www.instagram.com/reel/DcIy0antGCX/",
+    },
 ]
