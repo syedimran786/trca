@@ -38,6 +38,36 @@ test("logos keep their aspect ratio instead of being cropped to a circle", async
   await expect(logo).toHaveCSS("object-fit", "contain");
 });
 
+test("adjacent tiles have a visible horizontal gap", async ({ page }) => {
+  // Nikshep on 2026-09-09: the row read as one continuous strip because the
+  // single-sided `margin-left` on `.card` was swallowed by slick's slide-width
+  // math — tiles sat flush border-to-border. Symmetric `margin: 0 8px` +
+  // `width: calc(100% - 16px)` restores a real 16px gap between adjacent tiles.
+  // Guard the outcome: any two neighbouring tiles in the visible window should
+  // have at least 10px of clear space between them.
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  const rects = await page.evaluate(() => {
+    return [...document.querySelectorAll("#Clients .card")]
+      .map((el) => {
+        const r = el.getBoundingClientRect();
+        return { left: Math.round(r.left), right: Math.round(r.right) };
+      })
+      .filter((r) => r.left >= -50 && r.left < window.innerWidth + 50)
+      .sort((a, b) => a.left - b.left);
+  });
+
+  expect(rects.length, "at least three tiles visible for gap checks").toBeGreaterThanOrEqual(3);
+  for (let i = 1; i < rects.length; i++) {
+    const gap = rects[i].left - rects[i - 1].right;
+    expect(
+      gap,
+      `adjacent tiles ${i - 1}→${i} touched (gap=${gap}px, expected ≥10px)`,
+    ).toBeGreaterThanOrEqual(10);
+  }
+});
+
 test("every visible logo renders at a consistent size", async ({ page }) => {
   // Nikshep on 2026-09-09: the row read as "jumbled" because each wordmark
   // rendered at its intrinsic aspect ratio — Mindtree at 47px, Accenture and
