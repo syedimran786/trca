@@ -1,4 +1,10 @@
 import { test, expect } from "@playwright/test";
+import {
+  IG_MIN_WIDTH,
+  scrollToPlacements,
+  stubInstagram,
+  waitForStubbedEmbeds,
+} from "./fixtures/instagram.js";
 
 // Issue: on the homepage `Placements` carousel, Kota Akshay's Instagram-embed
 // variant card was clipping IG's chrome (username row, "GOT PLACED FOR" banner,
@@ -25,38 +31,23 @@ const VIEWPORTS = [
   { name: "desktop-1440", width: 1440, height: 900, slidesToShow: 4 },
 ];
 
-// Slow selectors: IG's embed script is loaded lazily by an IntersectionObserver
-// inside `InstagramEmbed.jsx`, then IG replaces the blockquote with an iframe.
-// Each step takes a couple of seconds on a warm dev server.
+// The embed is stubbed rather than fetched. See ./fixtures/instagram.js — the
+// stub applies IG's `min-width: 326px` stylesheet and its `width="326"`
+// presentation attribute every single run, which is the hostile input these
+// tests exist to prove our CSS beats. Waiting on the real script made the
+// outcome depend on IG's response time instead.
+//
+// One intersection is enough for all of them: `InstagramEmbed.jsx` loads the
+// script once per page, and `process()` then scans every blockquote in the
+// DOM. So there is no carousel-advancing loop here any more — that loop was
+// clicking a "next" arrow up to twelve times with the failure swallowed,
+// which quietly did nothing whenever the arrow was not where it expected.
 async function bringKotaIntoView(page) {
-  await page.locator("#Placements").scrollIntoViewIfNeeded();
-  // Wait for the placement carousel to hydrate.
-  await page.waitForSelector(".placements .slick-slide .card--instagram", {
+  await scrollToPlacements(page);
+  await waitForStubbedEmbeds(page);
+  await page.waitForSelector(".placements .slick-active .card--instagram iframe", {
     timeout: 15_000,
   });
-  // Force slick to the slide with the IG card. Slick clones slides for
-  // infinite mode; use the un-cloned instance and scroll it into the active
-  // window so IntersectionObserver fires.
-  const igCard = page
-    .locator(".placements .slick-slide:not(.slick-cloned) .card--instagram")
-    .first();
-  await igCard.scrollIntoViewIfNeeded();
-  // Advance the carousel until the IG card sits in an active slide — that
-  // is what triggers the lazy embed load.
-  for (let i = 0; i < 12; i++) {
-    const isActive = await page
-      .locator(".placements .slick-active .card--instagram")
-      .count();
-    if (isActive > 0) break;
-    await page.locator(".placements .slick-next, .placements .slick-arrow.slick-next, .placements button[aria-label*='Next']").first().click().catch(() => {});
-    await page.waitForTimeout(500);
-  }
-  // Wait for IG's script to run and the iframe to be inserted.
-  await page.waitForSelector(".placements .slick-active .card--instagram iframe", {
-    timeout: 20_000,
-  });
-  // Give IG a beat to finalise iframe layout after its own postMessage resize.
-  await page.waitForTimeout(1500);
 }
 
 async function measure(page) {
@@ -89,6 +80,7 @@ async function measure(page) {
 for (const vp of VIEWPORTS) {
   test(`Instagram embed fits inside its card at ${vp.name}`, async ({ page }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
+    await stubInstagram(page);
     await page.goto("/");
     await bringKotaIntoView(page);
 
@@ -109,6 +101,7 @@ for (const vp of VIEWPORTS) {
 
 test("IG's blockquote and iframe min-width overrides are actually applied", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
+  await stubInstagram(page);
   await page.goto("/");
   await bringKotaIntoView(page);
   const m = await measure(page);
@@ -120,4 +113,22 @@ test("IG's blockquote and iframe min-width overrides are actually applied", asyn
   // wider than the card and we don't know why".
   expect(m.blockquoteMinWidth, "blockquote min-width should be 0 not 326px").toBe("0px");
   expect(m.iframeMinWidth, "iframe min-width should be 0 not 326px").toBe("0px");
+
+  // Guard the guard. If the stub ever stopped applying IG's rule, the two
+  // assertions above would pass against nothing and quietly stop defending
+  // the override they exist for.
+  const hostileRuleApplied = await page.evaluate(
+    () => !!document.querySelector("style[data-ig-stub]"),
+  );
+  expect(hostileRuleApplied, "the stub must impose IG's own min-width rule").toBe(true);
+
+  // And the iframe still carries IG's width attribute, which author
+  // `!important` is what beats.
+  const widthAttr = await page.evaluate(
+    () =>
+      document
+        .querySelector(".placements .slick-active .card--instagram iframe")
+        ?.getAttribute("width"),
+  );
+  expect(Number(widthAttr)).toBe(IG_MIN_WIDTH);
 });
