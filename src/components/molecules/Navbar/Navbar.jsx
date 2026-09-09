@@ -22,7 +22,15 @@ import { scroller } from 'react-scroll';
 import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
 const drawerWidth = 240;
 // const navItems = ['Home', 'Fish', 'Stones','Plants','Food','Lights','Air Pumps','Tanks & Bowls'];
-const navItems = ['Courses',  'Reviews','Clients','Placements'];
+// Label and scroll-target were the same string, so the visible word could not
+// be changed without moving the anchor (#169). They are separate now: `id` is
+// the section's DOM id, `label` is what a visitor reads.
+const navItems = [
+  { id: 'Courses', label: 'Courses' },
+  { id: 'Reviews', label: 'Reviews' },
+  { id: 'Clients', label: 'Alumni' },
+  { id: 'Placements', label: 'Placements' },
+];
 // Real pages added over the SEO push — router links, not homepage-section scrolls.
 const pageItems = [{ label: 'For Parents', to: '/for-parents' }, { label: 'About', to: '/about' }];
 
@@ -56,9 +64,9 @@ function Navbar(props) {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+          <ListItem key={item.id} disablePadding>
             <ListItemButton sx={{ textAlign: 'center', minHeight: 44 }}>
-              <ListItemText primary={<span style={{ cursor: 'pointer' }} onClick={() => goToSection(item)}>{item}</span>} />
+              <ListItemText primary={<span style={{ cursor: 'pointer' }} onClick={() => goToSection(item.id)}>{item.label}</span>} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -111,8 +119,8 @@ function Navbar(props) {
           {/* </Typography> */}
           <Box sx={{ display: { xs: 'none', md: 'block' }, marginLeft: "auto" }}>
             {navItems.map((item) => (
-              <ButtonComponent key={item} variant='text' onBtnClick={() => goToSection(item)}>
-                  {item}
+              <ButtonComponent key={item.id} variant='text' onBtnClick={() => goToSection(item.id)}>
+                  {item.label}
                 </ButtonComponent>
 
             ))}

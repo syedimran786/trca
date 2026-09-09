@@ -1,167 +1,78 @@
-.clients
-{
-    /* border: 2px solid red; */
-    padding-left: 20px!important;
-    /* height: 600px; */
-}
-.clients hr
-{
-    width: 5%;
-    margin: 1rem auto;
-    height: .18rem;
-    background-color: var(--rca-blue);
-}
-.clients .MuiGrid-container
-{
-    width: 100%!important;
-    /* border: 2px solid orange; */ 
-    margin: 0;
-}
-.clients .MuiGrid-container .MuiGrid-item
-{
-    border-radius: 0;
-    width: 100%!important;
-    /* border: 2px solid green; */
-    margin: 0;
-    justify-content: center;
-    align-items: center;
-    padding: .5rem;
+/* "Our students work at" — company wordmarks (#169).
+   Rewritten from the original: roughly a third of the file was commented-out
+   CSS, four media queries declared a breakpoint and did nothing, and every
+   rule carried !important. Colour, radius and spacing come from
+   design/tokens.css. */
 
-}
-.slider-container
-{
-    /* border: 2px  dotted pink; */
-    width: 100%;
-}
-.slick-slide {
-    /* margin: 10px 1rem; */
+.clients {
+  padding-left: var(--rca-space-5);
 }
 
-/* the parent */
-.slick-list {
-    /* margin: 0 -27px; */
-}
-.slick-slide img {
-    /* display: block; */
-    /* width: 100%; */
-    /* height: auto; */
- }
-/* .clients .MuiGrid-container
-{
-    padding: 0;
-} */
-.clients .MuiGrid-container  .card
-{
-    width: 94%!important;
-    border: var(--rca-blue) 1px solid!important;
-    box-shadow: none;
-    border-radius: var(--rca-radius-sm);
-    /* margin: 1rem; */
-    margin-left: 8px;
-   display: flex!important;
-   justify-content: center;
-   align-items: center;
-   height: 10rem;
-   
-
+.clients hr {
+  width: 5%;
+  margin: var(--rca-space-4) auto;
+  height: 0.18rem;
+  border: 0;
+  background-color: var(--rca-blue);
 }
 
-.clients .MuiGrid-container .card img
-{
-    width: 100%;
-    height: 100%!important;
-    border-radius: 50%;
+.clients .MuiGrid-container {
+  width: 100%;
+  margin: 0;
 }
 
-.clients .card-content
-{
-/* border: 2px solid brown; */
-   /* width: 80%; */
-   display: flex!important;
-   justify-content: center;
-   align-items: center;
+.clients .MuiGrid-container .MuiGrid-item {
+  width: 100%;
+  margin: 0;
+  padding: var(--rca-space-2);
+  border-radius: 0;
+  justify-content: center;
+  align-items: center;
 }
 
-.clients .card-content p:last-child
-{
-    color: var(--rca-ink);
-    line-height: 1.3rem;
-    text-align: justify;
-    margin-top: 1rem;
-    
+.slider-container {
+  width: 100%;
 }
 
-/* .clients .card-content p:last-child::before {
-    content: open-quote;
-    font-size: 2.5rem;
+/* The logo tile. MUI's Card sets its own background, radius and elevation from
+   the theme, so these three need the specificity of the class chain to win —
+   that is why the selector is long rather than !important. */
+.clients .card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 94%;
+  height: 10rem;
+  margin-left: var(--rca-space-2);
+  border: 1px solid var(--rca-blue);
+  /* radius-lg is the card radius the course cards use; this tile was on
+     radius-sm (4px), the chip value, so it read as a different family. */
+  border-radius: var(--rca-radius-lg);
+  box-shadow: none;
 }
-.clients .card-content p:last-child::after {
-    content: close-quote;
-    font-size: 2.5rem;
-} */
-.clients .card svg
-{
-    /* font-size: 1.2rem; */
-    /* background-color: var(--rca-blue); */
-    /* color: white; */
-    /* border-radius: 100%; */
-    /* padding: 9px; */
+
+.clients .card-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Wordmarks are rectangular. The old rule cropped them to a circle with
+   border-radius: 50% and stretched them to fill, which cut the ends off
+   longer logos (Tech Mahindra, Capgemini). Contain keeps each mark whole. */
+.clients .card-content img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
 
+@media (min-width: 320px) and (max-width: 479.98px) {
+  .clients {
+    margin-left: 0;
+    margin-right: 0;
+  }
 
-/* ? media quries */
-        /* Custom, iPhone Retina */ 
-        @media (min-width:320px) and  (max-width:479.98px) {
-            .clients
-            {
-                /* padding: 0!important; */
-                margin-left: 0!important;
-                margin-right: 0!important;
-
-            }
-            /* .clients .MuiGrid-container .MuiGrid-item
-            {
-                padding: .8rem 1.6rem;
-            } */
-         
-          
-            .clients .MuiGrid-container .card 
-            {
-                box-shadow: none!important;
-                /* border: none; */
-                /* width: 364px!important; */
-                margin-left: 8px;
-                box-shadow: var(--rca-shadow-card)!important;
-
-            }
-
-        }
-/* Extra Small Devices, Phones */ 
-        @media (min-width: 480px) and (max-width: 575.98px) {
-
-            
-        }
-/* Small Devices, Tablets */
-        @media (min-width: 576px) and (max-width:767.98px) {
-
-            
-        }
-/* Medium Devices, Desktops */
-        
-        @media (min-width: 768px) and (max-width:991.98px ) {
-
-           .clients .card-content
-           {
-            opacity: 0;
-           }
-           
-
-        }
-
-        /* Large Devices, Wide Screens */
-
-        @media (min-width: 992px) and (max-width:1200px ) {
-
-           
-        }
+  .clients .card {
+    box-shadow: var(--rca-shadow-card);
+  }
+}
