@@ -8,8 +8,9 @@ import { test, expect } from "@playwright/test";
 //
 // The invariants this file pins:
 //
-// 1. `.card--instagram` has a real reserved height BEFORE IG hydrates, so
-//    the section doesn't collapse to the blockquote's ~30px.
+// 1. The `.placements` section as a whole reserves real vertical space
+//    BEFORE any IG iframes hydrate, so nothing below the section (the
+//    homepage footer) needs to move down when they resolve.
 // 2. The section's own bounding-rect height is close (within a small
 //    tolerance) to what it becomes after all iframes have loaded — i.e., the
 //    "sudden reveal" jump is small enough that the user does not perceive a
@@ -20,8 +21,13 @@ import { test, expect } from "@playwright/test";
 //
 // Together these three form the outcome Nikshep asked for: "no gap between
 // videos" and "the whole site collapses" both stop being true.
+//
+// Reservation is applied to `.placements` (the outer section) rather than
+// per-card, because a per-card `min-height` taller than slick's natural
+// slide size breaks slick's own layout math — it stops tracking horizontally
+// and stacks slides vertically. Verified in-branch and reverted.
 
-const CARD_MIN_HEIGHT = 640; // in sync with Placement.css `.card--instagram { min-height: 640px }`
+const SECTION_MIN_HEIGHT = 900; // in sync with Placement.css `.placements { min-height: 900px }` at ≥600px viewports
 
 async function scrollToPlacements(page) {
   await page.locator("#Placements").scrollIntoViewIfNeeded();
@@ -29,7 +35,7 @@ async function scrollToPlacements(page) {
   await page.waitForSelector(".placements .card--instagram", { timeout: 15_000 });
 }
 
-test("Placement carousel card reserves height before IG hydrates", async ({ page }) => {
+test("Placement section reserves vertical space before IG hydrates", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   // Kill all IG requests so the fallback anchor stays and IG never inflates
   // the iframe. This is precisely the state a fresh cold-cache Cmd+Shift+R
@@ -45,17 +51,16 @@ test("Placement carousel card reserves height before IG hydrates", async ({ page
   await page.goto("/");
   await scrollToPlacements(page);
 
-  // Every visible IG card sits above the min-height threshold even with
-  // no iframe present. If someone rips out `min-height: 640px` thinking it's
-  // dead CSS, this test fails with a specific number.
-  const heights = await page.evaluate(() => {
-    return [...document.querySelectorAll(".placements .card--instagram")].map(
-      (el) => Math.round(el.getBoundingClientRect().height),
-    );
-  });
-  for (const h of heights) {
-    expect(h, "IG card height before hydration").toBeGreaterThanOrEqual(CARD_MIN_HEIGHT - 5);
-  }
+  // Section total height with only blockquote fallbacks + no IG hydration.
+  // The reservation on `.placements` should keep the section at least
+  // SECTION_MIN_HEIGHT tall regardless of what's inside.
+  const sectionHeight = await page.locator("#Placements").evaluate(
+    (el) => Math.round(el.getBoundingClientRect().height),
+  );
+  expect(
+    sectionHeight,
+    `Placements section is only ${sectionHeight}px tall pre-hydrate — the section min-height reservation regressed`,
+  ).toBeGreaterThanOrEqual(SECTION_MIN_HEIGHT - 5);
 });
 
 test("Placement section does not jump when IG embeds hydrate", async ({ page }) => {

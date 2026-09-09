@@ -2,7 +2,22 @@
     /* border: 2px solid red; */
     padding-left: 20px !important;
     /* height: 600px; */
-
+    /* Reserve vertical space for the whole section so the ~800px jump when
+       IG embeds hydrate stops pushing the footer down on cold reload
+       (Cmd+Shift+R). Sized to fit a row of hydrated Reel iframes (~700px)
+       plus the section title, hr, dots and "See full success stories" CTA
+       (~150px combined). Applied on tablet+ where the carousel shows more
+       than one slide side-by-side; mobile uses natural height because a
+       single stacked card already takes the whole viewport. Cannot go on
+       `.card--instagram` — a per-card min-height taller than slick's own
+       expected slide size makes slick's slick-list stack slides
+       vertically instead of tracking horizontally. */
+    box-sizing: border-box;
+}
+@media (min-width: 600px) {
+    .placements {
+        min-height: 900px;
+    }
 }
 
 .placements-more-link {
@@ -124,17 +139,13 @@
        the neighbouring slide isn't overrun. */
     width: calc(100% - 8px) !important;
     margin: 0 4px;
-    /* Reserve vertical space before IG's iframe arrives. The blockquote
-       fallback anchor is only ~30px tall, so without this the placements
-       section starts collapsed and grows ~600px when embeds hydrate —
-       every element below the section (the footer on the homepage) jumps
-       down by that much. `min-height: 640px` matches a typical IG Reel's
-       rendered iframe height (9:16 vertical video ≈ 590px + IG chrome
-       ~60px on top and bottom), so the moment IG's iframe replaces the
-       blockquote the card's own height barely moves. Slightly shorter
-       than the tallest IG post keeps the card from padding itself past
-       its content on desktop 4-up, where the cards line up. */
-    min-height: 640px;
+    /* Deliberately NO `min-height` here. A per-card min-height that exceeds
+       the "natural" slick slide height (roughly the tallest sibling before
+       hydration, ~200px) makes slick's own layout math stack the slides
+       vertically instead of tracking them horizontally — verified locally,
+       section grew to ~9000px with 24 stacked slides. Vertical space for
+       the pre-hydration section is reserved on the outer `.placements`
+       above instead, which slick cannot override. */
 }
 .placements .card--instagram .card-content {
     padding: 8px;
@@ -142,10 +153,6 @@
        needs to be constrained by width, not centered around a fixed 326px. */
     width: 100%;
     box-sizing: border-box;
-    /* Match the card's reserved height so the flex column has real space
-       to lay the iframe out; without it the content collapses to the
-       blockquote's ~30px height, defeating the point of card min-height. */
-    min-height: 100%;
 }
 .placements .card--instagram .instagram-media,
 .placements .card--instagram iframe.instagram-media,
