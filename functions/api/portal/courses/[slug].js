@@ -5,28 +5,34 @@
 // outsider should be able to learn by guessing slugs.
 import { getSession } from "../../../../shared/auth.js";
 import { getEnrolledCourse } from "../../../../shared/courses.js";
+import { nativeCorsHeaders, nativeCorsPreflight } from "../../../../shared/nativeCors.js";
 
-const json = (body, status = 200) =>
+const json = (body, status = 200, extra = {}) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "content-type": "application/json", "cache-control": "no-store" },
+    headers: { "content-type": "application/json", "cache-control": "no-store", ...extra },
   });
+
+// Cross-origin from the Android shell, which serves the bundle off
+// `https://localhost` (#163).
+export const onRequestOptions = ({ request }) => nativeCorsPreflight(request);
 
 export async function onRequestGet(context) {
   const { request, env, params } = context;
+  const cors = nativeCorsHeaders(request);
 
   const session = await getSession(request, env);
-  if (!session) return json({ error: "unauthenticated" }, 401);
-  if (!env.DB) return json({ error: "unavailable" }, 503);
+  if (!session) return json({ error: "unauthenticated" }, 401, cors);
+  if (!env.DB) return json({ error: "unavailable" }, 503, cors);
 
   const slug = String(params.slug || "");
-  if (!slug) return json({ error: "not_found" }, 404);
+  if (!slug) return json({ error: "not_found" }, 404, cors);
 
   try {
     const course = await getEnrolledCourse(env.DB, session.uid, slug);
-    if (!course) return json({ error: "not_found" }, 404);
-    return json({ course });
+    if (!course) return json({ error: "not_found" }, 404, cors);
+    return json({ course }, 200, cors);
   } catch {
-    return json({ error: "unavailable" }, 503);
+    return json({ error: "unavailable" }, 503, cors);
   }
 }

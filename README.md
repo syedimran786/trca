@@ -250,18 +250,65 @@ at the end of the callback.
 
 ```
 npx wrangler d1 execute restcoder-enquiries --file=./schema-users.sql
+npx wrangler d1 execute restcoder-enquiries --file=./schema-native-handoff.sql
 ```
+
+The second table is only used by the Android app — see *Signing in inside the
+app* below. Without it, web sign-in works and app sign-in fails.
 
 ### The endpoints
 
 | Route | What it does |
 |---|---|
 | `GET /auth/:provider/start` | redirect to consent, with PKCE + state in HttpOnly cookies. **503 when unconfigured.** |
-| `GET /auth/:provider/callback` | exchange the code, **verify the ID token against the provider's JWKS**, upsert into `users`, issue the session cookie |
+| `GET /auth/:provider/callback` | exchange the code, **verify the ID token against the provider's JWKS**, upsert into `users`, issue the session cookie — or, for the app, redirect to `rca://` with a one-time code |
+| `POST /auth/native/exchange` | the app trades that code for a session cookie in its own WebView |
 | `GET /auth/me` | the current user, or 401. Also reports which providers are configured. |
 | `POST /auth/logout` | clear the session cookie |
 | `GET /api/portal/courses` | the signed-in student's enrolled courses, or 401 |
 | `GET /api/portal/courses/:slug` | one enrolled course with its published lessons. **404 when the student is not enrolled**, so slugs cannot be probed. |
+
+### Signing in inside the app (#163)
+
+Sign-in in the app is not the web flow in a smaller window, because two things
+about Android make it impossible for it to be.
+
+**Google refuses OAuth in an embedded WebView** (`disallowed_useragent`), so
+consent has to run in a Custom Tab. That is a different browser with a
+different cookie jar, so the callback's `Set-Cookie` lands somewhere the app
+cannot read. Coming back over `rca://auth/callback` resumes the app but does
+not sign it in — its next `/auth/me` is still a 401.
+
+So the deep link carries a **one-time code** rather than the session:
+
+1. Before opening the Custom Tab, the app generates a verifier and sends only
+   its SHA-256 to `/auth/:provider/start?native=1&hc=…`. The flag and the
+   digest are kept in HttpOnly cookies, so the callback cannot be told it is
+   native by anything that can reach its URL.
+2. The callback finishes the normal verified flow, then — instead of setting a
+   cookie in a browser the student will never look at again — stores the
+   session behind a one-time code and redirects to `rca://auth/callback?code=…`.
+3. The app posts that code **and the verifier** to `/auth/native/exchange`
+   **from inside its WebView**. That is the whole trick: the response's
+   `Set-Cookie` lands in the jar the app actually uses.
+
+Android lets **any** installed app register `rca://`, so the redirect can be
+intercepted. The verifier is what makes that not matter — it never travels
+through the URL, so an intercepted code redeems nothing. Codes are also
+single-use and expire in 90 seconds.
+
+Because the app is served from `https://localhost` (Capacitor's
+`androidScheme`), its portal calls are cross-origin. `shared/nativeCors.js`
+allowlists exactly the Capacitor origins, and the app's session cookie is
+issued `SameSite=None` — the website's stays `SameSite=Lax`. The two surfaces
+have separate cookie jars and each gets its own variant.
+
+`src/lib/apiBase.js` is what points the app at `https://restcoderacademy.in`
+instead of at itself; override it for a staging build with `VITE_API_ORIGIN`.
+
+> **Not yet provable end to end.** All of the above is code. Actually signing
+> in still needs the owner-provisioned OAuth clients and secrets above — until
+> those exist, the app's login screen correctly says "coming soon".
 
 ### Course content (Phase 2)
 

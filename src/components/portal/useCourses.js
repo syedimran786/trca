@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { apiCredentials, apiUrl } from "../../lib/apiBase";
 import { readCache, writeCache } from "./coursesCache";
 
 /**
@@ -29,7 +30,7 @@ export function useCourses(userId) {
     }
 
     try {
-      const res = await fetch("/api/portal/courses", { credentials: "same-origin" });
+      const res = await fetch(apiUrl("/api/portal/courses"), { credentials: apiCredentials() });
       if (!res.ok) {
         // 503 means the academy's side is down. If a saved copy is already on
         // screen it stays there; there is nothing better to show.

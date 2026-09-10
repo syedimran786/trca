@@ -4,6 +4,7 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import PortalSkeleton from "./PortalSkeleton";
 import { formatDuration } from "./coursesCache";
 import "./Portal.css";
+import { apiCredentials, apiUrl } from "../../lib/apiBase";
 
 /**
  * /portal/courses/:slug — one course and its lessons (#137).
@@ -22,8 +23,8 @@ function PortalCourse() {
     let live = true;
     (async () => {
       try {
-        const res = await fetch(`/api/portal/courses/${encodeURIComponent(slug)}`, {
-          credentials: "same-origin",
+        const res = await fetch(apiUrl(`/api/portal/courses/${encodeURIComponent(slug)}`), {
+          credentials: apiCredentials(),
         });
         if (!live) return;
         if (res.status === 404) return setState({ status: "not_found", course: null });
