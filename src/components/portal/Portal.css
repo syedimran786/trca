@@ -514,3 +514,67 @@
        shipped to the client, and no untrusted HTML either. */
     white-space: pre-wrap;
 }
+
+/* --- lesson video (#188) --------------------------------------------------- */
+
+.portal-video { margin: 0 0 var(--rca-space-3); }
+
+/* Before the tap: the size and length, and nothing downloading */
+.portal-video--idle
+{
+    display: grid;
+    justify-items: start;
+    gap: var(--rca-space-2);
+    padding: var(--rca-space-4);
+    border: 1px dashed var(--rca-border);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-surface-subtle);
+}
+
+.portal-video-start
+{
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rca-space-2);
+    min-height: var(--rca-control-h-mobile);
+    padding: 0 var(--rca-space-5);
+    border: 0;
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-navy);
+    color: var(--rca-ink-invert);
+    font: inherit;
+    font-size: var(--rca-fs-body);
+    font-weight: var(--rca-fw-semibold);
+    cursor: pointer;
+    transition: background-color var(--rca-transition);
+}
+
+.portal-video-start:hover { background-color: var(--rca-navy-hover); }
+.portal-video-start:active { background-color: var(--rca-navy-pressed); }
+.portal-video-start:focus-visible { outline: none; box-shadow: var(--rca-focus-ring); }
+
+.portal-video-meta
+{
+    margin: 0;
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-video-note
+{
+    margin: 0;
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+}
+
+.portal-video-note--problem { color: var(--rca-ink); font-weight: var(--rca-fw-semibold); }
+
+.portal-video-player
+{
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-ink);
+}

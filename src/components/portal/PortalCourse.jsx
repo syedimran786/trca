@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import PortalSkeleton from "./PortalSkeleton";
+import LessonVideo from "./LessonVideo";
 import { formatDuration } from "./coursesCache";
 import "./Portal.css";
 import { apiCredentials, apiUrl } from "../../lib/apiBase";
@@ -10,11 +12,12 @@ import { apiCredentials, apiUrl } from "../../lib/apiBase";
  * /portal/courses/:slug — one course and its lessons (#137).
  *
  * Notes are the readable half of a lesson and cost a few kilobytes; video is
- * the expensive half and is not this ticket. Each lesson expands in place
+ * the expensive half, and loads only when the student taps it (#188). Each
+ * lesson expands in place
  * rather than pushing the student to a per-lesson route, so reading a course
  * end to end on a phone is one screen and no further requests.
  */
-function PortalCourse() {
+function PortalCourse({ user }) {
   const { slug } = useParams();
   const [state, setState] = useState({ status: "loading", course: null });
   const [openId, setOpenId] = useState(null);
@@ -118,10 +121,13 @@ function PortalCourse() {
                     ) : (
                       <p className="portal-card-sub">No notes for this lesson yet.</p>
                     )}
-                    {/* Video is deliberately absent until the storage decision
-                        on #43 is made. A dead play button would be worse than
-                        an honest line of text. */}
-                    <p className="portal-card-sub">Video for this lesson is coming soon.</p>
+                    {/* A lesson without video yet says so, rather than showing
+                        a play button that goes nowhere. */}
+                    {l.video_url ? (
+                      <LessonVideo lesson={l} userId={user?.id} />
+                    ) : (
+                      <p className="portal-card-sub">Video for this lesson is coming soon.</p>
+                    )}
                   </div>
                 )}
               </li>
@@ -132,5 +138,11 @@ function PortalCourse() {
     </main>
   );
 }
+
+PortalCourse.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  }),
+};
 
 export default PortalCourse;
