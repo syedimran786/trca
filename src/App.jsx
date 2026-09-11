@@ -129,7 +129,7 @@ function App() {
           path="/portal/courses/:slug"
           element={
             <PortalRoute>
-              <PortalCourse />
+              {({ user }) => <PortalCourse user={user} />}
             </PortalRoute>
           }
         />
