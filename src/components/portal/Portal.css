@@ -578,3 +578,76 @@
     border-radius: var(--rca-radius-md);
     background-color: var(--rca-ink);
 }
+
+/* --- saving a lesson for offline, in the app (#189) ------------------------ */
+
+.portal-save
+{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rca-space-2) var(--rca-space-3);
+    margin: 0 0 var(--rca-space-3);
+}
+
+/* Secondary to Play: outlined, but the same thumb-sized height */
+.portal-save-btn
+{
+    display: inline-flex;
+    align-items: center;
+    gap: var(--rca-space-2);
+    min-height: var(--rca-control-h-mobile);
+    padding: 0 var(--rca-space-4);
+    border: 1px solid var(--rca-border-strong);
+    border-radius: var(--rca-radius-md);
+    background-color: var(--rca-surface);
+    color: var(--rca-ink);
+    font: inherit;
+    font-size: var(--rca-fs-small);
+    font-weight: var(--rca-fw-semibold);
+    cursor: pointer;
+    transition: background-color var(--rca-transition);
+}
+
+.portal-save-btn:hover { background-color: var(--rca-surface-subtle); }
+.portal-save-btn:focus-visible { outline: none; box-shadow: var(--rca-focus-ring); }
+.portal-save-btn:disabled { color: var(--rca-disabled-ink); cursor: not-allowed; background-color: transparent; }
+
+.portal-save-btn--quiet { border-color: transparent; background-color: transparent; color: var(--rca-ink-soft); }
+
+.portal-save-status
+{
+    margin: 0;
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-save-bar
+{
+    flex-basis: 100%;
+    width: 100%;
+    height: 6px;
+    accent-color: var(--rca-navy);
+}
+
+.portal-save .portal-video-note { flex-basis: 100%; }
+
+/* How much space this course's saved lessons take, and one tap to free it */
+.portal-saved-usage
+{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--rca-space-2);
+    margin: 0 0 var(--rca-space-5);
+    padding: var(--rca-space-2) var(--rca-space-2) var(--rca-space-2) var(--rca-space-4);
+    border: 1px solid var(--rca-border);
+    border-radius: var(--rca-radius-md);
+    font-size: var(--rca-fs-caption);
+    color: var(--rca-ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-saved-usage p { margin: 0; }

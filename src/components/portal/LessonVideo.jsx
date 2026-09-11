@@ -24,19 +24,24 @@ const SAVE_EVERY_SECONDS = 5;
  * element at all, so no browser or WebView can preload a byte on a metered
  * connection. The button says how big the lesson is first, and plays from
  * where the student stopped last time.
+ *
+ * `offlineSrc` is a lesson saved on the phone (#189): it plays from there,
+ * with or without a connection, and costs no data.
  */
-function LessonVideo({ lesson, userId }) {
-  const [started, setStarted] = useState(false);
+function LessonVideo({ lesson, userId, offlineSrc }) {
+  const [source, setSource] = useState(null); // what is playing; null before the tap
   const [problem, setProblem] = useState(null); // null | "offline" | "failed"
   const [resumeAt, setResumeAt] = useState(() => readPosition(userId, lesson.id));
   const videoRef = useRef(null);
   const lastSaved = useRef(0);
+  const started = source !== null;
 
   const origin = apiOrigin();
-  const src = videoSource(lesson.video_url, origin);
   // Inside the app the API is cross-origin, so the session cookie only travels
-  // with a credentialed request, as every other portal call does.
-  const credentialed = apiCredentials() === "include" && origin !== "" && src.startsWith(origin);
+  // with a credentialed request, as every other portal call does. A saved copy
+  // is on the phone and needs none.
+  const credentialed =
+    started && !source.offline && apiCredentials() === "include" && origin !== "" && source.url.startsWith(origin);
 
   // Leaving the page mid-lesson still saves where the student got to
   useEffect(() => {
@@ -52,20 +57,23 @@ function LessonVideo({ lesson, userId }) {
   };
 
   const start = () => {
-    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+    if (!offlineSrc && typeof navigator !== "undefined" && navigator.onLine === false) {
       setProblem("offline");
       return;
     }
     setProblem(null);
-    setStarted(true);
+    // Fixed at the tap, so a download finishing mid-lesson does not restart it
+    setSource(offlineSrc ? { url: offlineSrc, offline: true } : { url: videoSource(lesson.video_url, origin), offline: false });
   };
 
   if (!started) {
     const duration = formatDuration(lesson.duration_seconds);
     // The API's size when it gives one; otherwise an estimate for the 360p copy
-    const size = lesson.size_bytes
-      ? formatBytes(lesson.size_bytes)
-      : formatBytes(estimateBytes(lesson.duration_seconds)) && `about ${formatBytes(estimateBytes(lesson.duration_seconds))}`;
+    const size = offlineSrc
+      ? "saved on this phone"
+      : lesson.size_bytes
+        ? formatBytes(lesson.size_bytes)
+        : formatBytes(estimateBytes(lesson.duration_seconds)) && `about ${formatBytes(estimateBytes(lesson.duration_seconds))}`;
     const meta = [duration !== "—" ? duration : "", size].filter(Boolean).join(" · ");
 
     return (
@@ -75,7 +83,7 @@ function LessonVideo({ lesson, userId }) {
           {resumeAt > 0 ? `Resume from ${formatClock(resumeAt)}` : "Play lesson"}
         </button>
         {meta && <p className="portal-video-meta">{meta}</p>}
-        {onMeteredConnection() && (
+        {!offlineSrc && onMeteredConnection() && (
           <p className="portal-video-note">You are on a slow or metered connection. Nothing downloads until you tap.</p>
         )}
         {problem === "offline" && (
@@ -97,7 +105,7 @@ function LessonVideo({ lesson, userId }) {
       <video
         ref={videoRef}
         className="portal-video-player"
-        src={src}
+        src={source.url}
         crossOrigin={credentialed ? "use-credentials" : undefined}
         controls
         autoPlay
@@ -118,9 +126,10 @@ function LessonVideo({ lesson, userId }) {
         }}
         onError={() => {
           // Back to the button, with a way to try again, rather than a dead player
+          const offline = !source.offline && typeof navigator !== "undefined" && navigator.onLine === false;
           setResumeAt(readPosition(userId, lesson.id));
-          setStarted(false);
-          setProblem(typeof navigator !== "undefined" && navigator.onLine === false ? "offline" : "failed");
+          setSource(null);
+          setProblem(offline ? "offline" : "failed");
         }}
       />
     </div>
@@ -135,6 +144,7 @@ LessonVideo.propTypes = {
     size_bytes: PropTypes.number, // not sent yet; the size is estimated until #187 adds it
   }).isRequired,
   userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  offlineSrc: PropTypes.string, // a copy saved on the phone (#189)
 };
 
 export default LessonVideo;
