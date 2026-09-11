@@ -9,3 +9,7 @@ pages_build_output_dir = "dist"
 binding = "DB"
 database_name = "restcoder-enquiries"
 database_id = "1c557470-b96a-4005-8dd8-6baa2ebb21e8"
+# Portal tables (portal_users, portal_sessions, parent_students) live in this
+# same database — apply schema-portal.sql to add them:
+#   local:  npx wrangler d1 execute restcoder-enquiries --local --file=schema-portal.sql
+#   remote: npx wrangler d1 execute restcoder-enquiries --remote --file=schema-portal.sql
